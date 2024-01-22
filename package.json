@@ -1,0 +1,22 @@
+{
+  "name": "front_end",
+  "version": "1.0.0",
+  "description": "front end for 401 desktop app ",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/CSCI401TEAM/XXXFront-end.git"
+  },
+  "author": "Sid Qian",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CSCI401TEAM/XXXFront-end/issues"
+  },
+  "homepage": "https://github.com/CSCI401TEAM/XXXFront-end#readme",
+  "dependencies": {
+    "electron": "^28.1.4"
+  }
+}
