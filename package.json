@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/CSCI401TEAM/XXXFront-end#readme",
   "dependencies": {
+    "cesium": "^1.113.0",
     "electron": "^28.1.4"
   }
 }

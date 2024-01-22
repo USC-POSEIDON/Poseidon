@@ -1,10 +1,35 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Wow desktop app</title>
-    </head>
-    <body>
-        <h1>Wow desktop app</h1>
-        <p>Wow desktop app</p>
-        <button id="login">Useless Button</button>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <title>Amazing</title>
+  <script src="./node_modules/cesium/Build/Cesium/Cesium.js"></script>
+  <style>
+      @import url(./node_modules/cesium/Build/Cesium/Widgets/widgets.css);
+      html, body, #cesiumContainer {
+          height: 100%; margin: 0; padding: 0; overflow: hidden;
+      }
+  </style>
+</head>
+<body>
+  <div id="cesiumContainer"></div>
+  <script>
+    var viewer = new Cesium.Viewer('cesiumContainer', {
+      animation: false,      
+      baseLayerPicker: false, 
+      fullscreenButton: false, 
+      vrButton: false,        
+      geocoder: false,        
+      homeButton: false,      
+      infoBox: false,         
+      sceneModePicker: false, 
+      selectionIndicator: false, 
+      timeline: false,        
+      navigationHelpButton: false, 
+      navigationInstructionsInitiallyVisible: false,
+      creditContainer: document.createElement('div') 
+    });
+  </script>
+</body>
 </html>
