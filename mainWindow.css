@@ -67,3 +67,33 @@ iframe {
     height: 100%;
 }
 
+#chatBox {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    width: 200px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    z-index: 20; 
+    opacity: 0.5;
+}
+
+#messages {
+    height: 200px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+    padding: 5px;
+}
+
+#chatInput {
+    width: calc(100% - 70px);
+    padding: 5px;
+}
+
+#sendButton {
+    width: 60px;
+}
