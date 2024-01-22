@@ -1,35 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
-  <title>Amazing</title>
-  <script src="./node_modules/cesium/Build/Cesium/Cesium.js"></script>
-  <style>
-      @import url(./node_modules/cesium/Build/Cesium/Widgets/widgets.css);
-      html, body, #cesiumContainer {
-          height: 100%; margin: 0; padding: 0; overflow: hidden;
-      }
-  </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <title>Amazing</title>
+    <script src="./node_modules/cesium/Build/Cesium/Cesium.js"></script>
+    <link rel="stylesheet" type="text/css" href="mainWindow.css">
 </head>
 <body>
-  <div id="cesiumContainer"></div>
-  <script>
-    var viewer = new Cesium.Viewer('cesiumContainer', {
-      animation: false,      
-      baseLayerPicker: false, 
-      fullscreenButton: false, 
-      vrButton: false,        
-      geocoder: false,        
-      homeButton: false,      
-      infoBox: false,         
-      sceneModePicker: false, 
-      selectionIndicator: false, 
-      timeline: false,        
-      navigationHelpButton: false, 
-      navigationInstructionsInitiallyVisible: false,
-      creditContainer: document.createElement('div') 
-    });
-  </script>
+    <div id="container">
+        <button id="calendarButton">Show Calendar</button>
+        <div id="cesiumContainer"></div>
+    </div>
+    <div id="calendarModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <iframe src="https://calendar.google.com/calendar/embed?src=c_115d4ae4a982a5a6e7a8d404ed46f3ab67dd2fac63a7ffb242ca6a5940b47bbd%40group.calendar.google.com&ctz=Your_Timezone" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+        </div>
+    </div>
+    <script src="cal.js"></script>
+    <script src="cesium.js"></script>
 </body>
 </html>
