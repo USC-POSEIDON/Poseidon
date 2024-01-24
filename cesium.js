@@ -13,7 +13,8 @@ var viewer = new Cesium.Viewer('cesiumContainer', {
     navigationInstructionsInitiallyVisible: false,
     creditContainer: document.createElement('div') 
   });
-
+  viewer.scene.globe.enableLighting = true;
+  viewer.clock.shouldAnimate = true;
   viewer.camera.flyTo({
     destination: Cesium.Cartesian3.fromDegrees(-10, 0, 20000000), 
     orientation: {
@@ -22,4 +23,16 @@ var viewer = new Cesium.Viewer('cesiumContainer', {
         roll: 0.0
     },
     duration: 2  
+});
+
+document.getElementById('toggleViewButton').addEventListener('click', function() {
+  var scene = viewer.scene;
+  
+  if (scene.mode !== Cesium.SceneMode.SCENE2D) {
+      viewer.scene.morphTo2D(0.5); 
+      this.textContent = 'Switch to 3D';
+  } else {
+      viewer.scene.morphTo3D(0.5); 
+      this.textContent = 'Switch to 2D';
+  }
 });

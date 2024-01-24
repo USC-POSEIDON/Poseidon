@@ -97,3 +97,10 @@ iframe {
 #sendButton {
     width: 60px;
 }
+
+#toggleViewButton {
+    position: absolute;
+    top: 10px;  
+    left: 120px; 
+    z-index: 10; 
+}
