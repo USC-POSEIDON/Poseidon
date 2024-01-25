@@ -81,3 +81,9 @@ iframe {
     left: 120px; 
     z-index: 10; 
 }
+
+#toggleViewButton {
+    top: 10px;  
+    left: 10px; 
+    z-index: 10; 
+}
