@@ -6,25 +6,34 @@
     <title>Amazing</title>
     <script src="./node_modules/cesium/Build/Cesium/Cesium.js"></script>
     <link rel="stylesheet" type="text/css" href="mainWindow.css">
+    <link href="https://golden-layout.com/assets/css/goldenlayout-base.css" rel="stylesheet" />
+    <link href="https://golden-layout.com/assets/css/goldenlayout-dark-theme.css" rel="stylesheet" />
 </head>
 <body>
-    <div id="container">
-        <button id="calendarButton">Show Calendar</button>
-        <button id="toggleViewButton">Switch to 2D</button>
+    <div id="goldenLayoutContainer"></div> 
+
+    <div style="display: none;">
         <div id="cesiumContainer"></div>
         <div id="chatBox">
             <div id="messages"></div>
             <input type="text" id="chatInput" placeholder="Type a message...">
             <button id="sendButton">Send</button>
         </div>
-    </div>
-    <div id="calendarModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
+        <div id="calendarModal">
             <iframe src="https://calendar.google.com/calendar/embed?src=c_115d4ae4a982a5a6e7a8d404ed46f3ab67dd2fac63a7ffb242ca6a5940b47bbd%40group.calendar.google.com&ctz=Your_Timezone" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
         </div>
+        </div>
     </div>
+
     <script src="cal.js"></script>
     <script src="cesium.js"></script>
+   
+    <script>
+        try {
+            require('./renderer.js');
+        } catch (e) {
+            require('./src/renderer.js');
+        }
+    </script>
 </body>
 </html>

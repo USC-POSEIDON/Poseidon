@@ -4,7 +4,7 @@
   "description": "front end for 401 desktop app ",
   "main": "main.js",
   "scripts": {
-    "start": "electron ." ,
+    "start": "electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
   },
@@ -19,9 +19,11 @@
   },
   "homepage": "https://github.com/CSCI401TEAM/XXXFront-end#readme",
   "dependencies": {
-    "cesium": "^1.113.0"
+    "cesium": "^1.113.0",
+    "golden-layout": "^1.5.9"
   },
   "devDependencies": {
+    "electron": "^28.2.0",
     "electron-builder": "^24.9.1"
   }
 }
