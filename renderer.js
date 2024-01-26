@@ -8,7 +8,6 @@ let goldenLayout = new GoldenLayout({
     },
     content: [{
         type: 'column',
-        height: 100,
         content: [
           {
             type: 'row',
@@ -34,6 +33,7 @@ let goldenLayout = new GoldenLayout({
           },
           {
             type: 'row',
+            height: 30,
             content: [
               {
                 type: 'component',

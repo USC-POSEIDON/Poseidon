@@ -87,3 +87,13 @@ iframe {
     left: 10px; 
     z-index: 10; 
 }
+
+#PassTimeTable {
+    background-color: #fefefe;
+    height: 100%;
+    width: 100%;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
