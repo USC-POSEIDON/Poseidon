@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
-    <title>Amazing</title>
+    <title>POSEIDON</title>
     <script src="./node_modules/cesium/Build/Cesium/Cesium.js"></script>
     <link rel="stylesheet" type="text/css" href="mainWindow.css">
     <link href="https://golden-layout.com/assets/css/goldenlayout-base.css" rel="stylesheet" />
@@ -25,6 +25,15 @@
             <iframe src="https://calendar.google.com/calendar/embed?src=c_115d4ae4a982a5a6e7a8d404ed46f3ab67dd2fac63a7ffb242ca6a5940b47bbd%40group.calendar.google.com&ctz=Your_Timezone" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
         </div>
         </div>
+        <div id="PassTimeContainer">
+            <!-- TODO -->
+        </div>
+        <div id="MotorContainer">
+            <!-- TODO -->
+        </div>
+        <div id="SignalContainer">
+             <!-- TODO -->
+        </div>
     </div>
 
     <script src="cal.js"></script>
@@ -34,7 +43,7 @@
         try {
             require('./renderer.js');
         } catch (e) {
-            require('./src/renderer.js');
+            require('renderer.js');
         }
     </script>
 </body>

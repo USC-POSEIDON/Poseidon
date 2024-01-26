@@ -36,3 +36,4 @@ document.getElementById('toggleViewButton').addEventListener('click', function()
       this.textContent = 'Switch to 2D';
   }
 });
+
