@@ -13,7 +13,7 @@
 <body>
     <div id="goldenLayoutContainer"></div> 
 
-    <div style="display: none;">
+    <div>
         <div id="cesiumContainer">
             <button id="toggleViewButton">Switch to 2D</button>
         </div>
@@ -25,8 +25,7 @@
         <div id="calendarModal">
             <iframe src="https://calendar.google.com/calendar/embed?src=c_115d4ae4a982a5a6e7a8d404ed46f3ab67dd2fac63a7ffb242ca6a5940b47bbd%40group.calendar.google.com&ctz=Your_Timezone" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
         </div>
-        </div>
-        <div id="PassTimeContainer">
+        <div id="PassTime"> 
             <table id="PassTimeTable">
                 <tr>
                     <th>Start</th>
@@ -35,32 +34,21 @@
                     <th>Max Elv</th>
                     <th>Max Azimuth</th>
                 </tr>
-                <tr>
-                    <th>1</th>
-                    <th>1</th>
-                    <th>1</th>
-                    <th>1</th>
-                    <th>1</th>
-                </tr>
-                <tr>
-                    <th>1</th>
-                    <th>1</th>
-                    <th>1</th>
-                    <th>1</th>
-                    <th>1</th>
-                </tr>
+            </table>
         </div>
         <div id="MotorContainer">
-            <!-- TODO -->
+            <input type="text" id="tleLine1" placeholder="Enter TLE Line 1">
+            <input type="text" id="tleLine2" placeholder="Enter TLE Line 2">
+            <button onclick="updateSatelliteTLE()">Update Satellite</button>
         </div>
         <div id="SignalContainer">
-             <!-- TODO -->
+            <h1>Signal</h1>
         </div>
     </div>
 
     <script src="cal.js"></script>
     <script src="cesium.js"></script>
-   <script src="orbit.js"></script>
+    <script src="orbit.js"></script>
     <script>
         try {
             require('./renderer.js');

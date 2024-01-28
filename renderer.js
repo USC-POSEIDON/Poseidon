@@ -8,8 +8,7 @@ let goldenLayout = new GoldenLayout({
     },
     content: [{
         type: 'column',
-        content: [
-          {
+        content: [{
             type: 'row',
             content: [{
                 type: 'component',
@@ -49,10 +48,8 @@ let goldenLayout = new GoldenLayout({
                 type: 'component',
                 componentName: 'Signal_component',
                 title: 'Signal'
-              }
-            ]
-          }
-        ]
+              }]
+          }]
     }]
 });
 
@@ -62,7 +59,6 @@ goldenLayout.registerComponent('cesium_component', function(container, state) {
 
 goldenLayout.registerComponent('calendar_component', function(container, state) {
     container.getElement().html($('#calendarModal'));
-    $('#calendarModal').show(); 
 });
 
 goldenLayout.registerComponent('chat_component', function(container, state) {
@@ -70,15 +66,15 @@ goldenLayout.registerComponent('chat_component', function(container, state) {
 });
 
 goldenLayout.registerComponent('PassTime_component', function(container, state) {
-    container.getElement().html($('#PassTimeContainer'));
-});
-
-goldenLayout.registerComponent('Signal_component', function(container, state) {
-    container.getElement().html($('#SignalContainer'));
+    container.getElement().html($('#PassTime'));
 });
 
 goldenLayout.registerComponent('Motor_component', function(container, state) {
     container.getElement().html($('#MotorContainer'));
+});
+
+goldenLayout.registerComponent('Signal_component', function(container, state) {
+  container.getElement().html($('#SignalContainer'));
 });
 
 goldenLayout.init();

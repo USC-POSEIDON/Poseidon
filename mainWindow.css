@@ -3,30 +3,6 @@
           height: 100%; margin: 0; padding: 0; overflow: hidden;
       }
 
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.4);
-}
-
-.modal-content {
-    background-color: #fefefe;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 700px; 
-    height: 400px; 
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    overflow: hidden; 
-}
 
 iframe {
     width: 100%; /* Make iframe fill the container */
@@ -46,6 +22,16 @@ iframe {
 }
 
 #calendarModal {
+    width: 100%;
+    height: 100%;
+}
+
+#MotorContainer {
+    width: 100%;
+    height: 100%;
+}
+
+#SignalContainer {
     width: 100%;
     height: 100%;
 }

@@ -1,8 +1,26 @@
 // TLE data mock
-var tleLine1 = '1 25544U 98067A   20053.19547778  .00000739  00000-0  21903-4 0  9991',
-    tleLine2 = '2 25544  51.6415 357.7365 0004954 276.8582  58.3016 15.49238122215825';
+var defaultTleLine1 = '1 25544U 98067A   20053.19547778  .00000739  00000-0  21903-4 0  9991',
+defaultTleLine2 = '2 25544  51.6415 357.7365 0004954 276.8582  58.3016 15.49238122215825';
 
-var satrec = satellite.twoline2satrec(tleLine1, tleLine2);
+var satrec = satellite.twoline2satrec(defaultTleLine1, defaultTleLine2);
+
+ // update tle form user input
+function updateSatelliteTLE() {
+    var tleLine1 = document.getElementById('tleLine1').value || defaultTleLine1;
+    var tleLine2 = document.getElementById('tleLine2').value || defaultTleLine2;
+
+    satrec = satellite.twoline2satrec(tleLine1, tleLine2);
+
+    var orbitPath = computeOrbitPath(satrec);
+    orbitEntity.polyline.positions = new Cesium.CallbackProperty(function() {
+        return computeOrbitPath(satrec);
+    }, false);
+
+    satelliteEntity.position = new Cesium.CallbackProperty(function() {
+        return updateSatellitePosition();
+    }, false);
+}
+
 
 var satelliteEntity = viewer.entities.add({
     id: 'satellite',
