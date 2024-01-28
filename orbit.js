@@ -55,3 +55,24 @@ function computeOrbitPath(satrec) {
 
 //could be optional here
 //viewer.trackedEntity = satelliteEntity;
+
+// mock location for the ground station
+var groundStationPosition = Cesium.Cartesian3.fromDegrees(-74.0060, 40.7128);
+
+// Ccreate the entity
+var groundStationEntity = viewer.entities.add({
+    id: 'groundStation',
+    position: groundStationPosition,
+    point: {
+        pixelSize: 10,
+        color: Cesium.Color.BLUE
+    },
+    label: {
+        text: 'NYC',
+        font: '12pt monospace',
+        style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+        outlineWidth: 2,
+        verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+        pixelOffset: new Cesium.Cartesian2(0, -9)
+    }
+});
