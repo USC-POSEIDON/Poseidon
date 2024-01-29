@@ -5,20 +5,33 @@ defaultTleLine2 = '2 25544  51.6415 357.7365 0004954 276.8582  58.3016 15.492381
 var satrec = satellite.twoline2satrec(defaultTleLine1, defaultTleLine2);
 
  // update tle form user input
-function updateSatelliteTLE() {
-    var tleLine1 = document.getElementById('tleLine1').value || defaultTleLine1;
-    var tleLine2 = document.getElementById('tleLine2').value || defaultTleLine2;
+ function updateSatelliteTLE() {
+    var tleLine1 = document.getElementById('tleLine1').value;
+    var tleLine2 = document.getElementById('tleLine2').value;
 
-    satrec = satellite.twoline2satrec(tleLine1, tleLine2);
+    if (isValidTLE(tleLine1, tleLine2)) {
+        satrec = satellite.twoline2satrec(tleLine1, tleLine2);
+        var orbitPath = computeOrbitPath(satrec);
+        orbitEntity.polyline.positions = new Cesium.CallbackProperty(function() {
+            return computeOrbitPath(satrec);
+        }, false);
 
-    var orbitPath = computeOrbitPath(satrec);
-    orbitEntity.polyline.positions = new Cesium.CallbackProperty(function() {
-        return computeOrbitPath(satrec);
-    }, false);
+        satelliteEntity.position = new Cesium.CallbackProperty(function() {
+            return updateSatellitePosition();
+        }, false);
+    } else {
+        alert("Invalid TLE data. Please check and try again.");
+    }
+}
 
-    satelliteEntity.position = new Cesium.CallbackProperty(function() {
-        return updateSatellitePosition();
-    }, false);
+function isValidTLE(line1, line2) {
+    if (line1.length !== 69 || line2.length !== 69) {
+        return false;
+    }
+    if (line1.charAt(0) !== '1' || line2.charAt(0) !== '2') {
+        return false;
+    }
+    return true;
 }
 
 
