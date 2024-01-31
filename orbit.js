@@ -61,6 +61,14 @@ function updateSatellitePosition() {
     return getSatellitePosition(now, satrec);
 }
 
+//update orbit path
+function updateOrbitPath() {
+    var newOrbitPath = computeOrbitPath(satrec);
+    orbitEntity.polyline.positions = newOrbitPath;
+}
+
+setInterval(updateOrbitPath, 50 * 60 * 1000); 
+
 // compute satellite position at a given time
 function getSatellitePosition(time, satrec) {
     var positionAndVelocity = satellite.propagate(satrec, time);
@@ -90,7 +98,7 @@ function computeOrbitPath(satrec) {
 // mock location for the ground station
 var groundStationPosition = Cesium.Cartesian3.fromDegrees(-74.0060, 40.7128);
 
-// Ccreate the entity
+// create the ground station marker
 var groundStationEntity = viewer.entities.add({
     id: 'groundStation',
     position: groundStationPosition,
@@ -107,3 +115,40 @@ var groundStationEntity = viewer.entities.add({
         pixelOffset: new Cesium.Cartesian2(0, -9)
     }
 });
+
+function getSatelliteAltitude(position) {
+    var earthRadius = Cesium.Ellipsoid.WGS84.maximumRadius; 
+    var altitude = Cesium.Cartesian3.magnitude(position) - earthRadius;
+    return Math.max(0, altitude);
+}
+
+
+function calculateFootprintRadius(altitude) {
+    const earthRadius = 6371; 
+    return earthRadius * Math.acos(earthRadius / (earthRadius + altitude));
+}
+
+// range circle
+var rangeCircleEntity = viewer.entities.add({
+    id: 'rangeCircle',
+    ellipse: {
+        semiMajorAxis: new Cesium.CallbackProperty(function() {
+            var position = satelliteEntity.position.getValue(viewer.clock.currentTime);
+            var altitude = getSatelliteAltitude(position); 
+            return calculateFootprintRadius(altitude / 1000) * 1000; 
+        }, false),
+        semiMinorAxis: new Cesium.CallbackProperty(function() {
+            var position = satelliteEntity.position.getValue(viewer.clock.currentTime);
+            var altitude = getSatelliteAltitude(position); 
+            return calculateFootprintRadius(altitude / 1000) * 1000; 
+        }, false),
+        material: Cesium.Color.BLUE.withAlpha(0.3),
+        height: 0 
+    }
+});
+
+// update the range circle position
+rangeCircleEntity.position = new Cesium.CallbackProperty(function() {
+    var position = satelliteEntity.position.getValue(viewer.clock.currentTime);
+    return Cesium.Ellipsoid.WGS84.scaleToGeodeticSurface(position);
+}, false);
