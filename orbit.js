@@ -67,7 +67,7 @@ function updateOrbitPath() {
     orbitEntity.polyline.positions = newOrbitPath;
 }
 
-setInterval(updateOrbitPath, 50 * 60 * 1000); 
+setInterval(updateOrbitPath, 60000); 
 
 // compute satellite position at a given time
 function getSatellitePosition(time, satrec) {
