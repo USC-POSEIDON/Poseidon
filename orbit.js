@@ -24,6 +24,7 @@ var satrec = satellite.twoline2satrec(defaultTleLine1, defaultTleLine2);
     }
 }
 
+// JJM: There is a checksum at the end of each line in the TLE. 
 function isValidTLE(line1, line2) {
     if (line1.length !== 69 || line2.length !== 69) {
         return false;
@@ -81,10 +82,17 @@ function getSatellitePosition(time, satrec) {
 }
 
 // compute orbit path
+// JJM: There are a few alternative methods here we can explore. I like the method of doing an orbital period from where it crosses 
+// the equator to when it crosses it at the end of its orbital period. It is clearner this way. Rather than assume all orbits are
+// 90 minutes, we can do the math to determine the number of seconds in an orbital period. Then divide that number of seconds by the
+// a number of acceptable bits, say ever 15 seconds of that orbital period. 30 seconds might still look great.  
+// If I am reading this below correctly, you are asking cesium to update the satellite position every loop through orbit.js for the
+// next 90 minutes in intervals of 60k seconds? Why not plot out the ground track after it completes say a quarter or a half of the 
+// orbital period? 
 function computeOrbitPath(satrec) {
     var positions = [];
     var now = new Date();
-    for (var i = 0; i < 90; i++) {
+    for (var i = 0; i < 90; i++) { 
         var time = new Date(now.getTime() + i * 60000); // Compute for next 90 minutes
         var position = getSatellitePosition(time, satrec);
         positions.push(position);
@@ -125,9 +133,10 @@ function getSatelliteAltitude(position) {
 
 function calculateFootprintRadius(altitude) {
     const earthRadius = 6371; 
-    return earthRadius * Math.acos(earthRadius / (earthRadius + altitude));
+    return earthRadius * Math.acos(earthRadius / (earthRadius + altitude)); 
 }
 
+//JJM: It looks like your semi-major equals your semi-minor which means a circle. Lets circle back to this
 // range circle
 var rangeCircleEntity = viewer.entities.add({
     id: 'rangeCircle',
