@@ -13,14 +13,26 @@
 <body>
     <div id="topMenuBar">
         <ul>
-            <li>File</li>
-            <li>Edit</li>
+            <li>File
+                <div class="dropdown-content">
+                    <a href="#New">New</a>
+                    <a href="#Open">Open</a>
+                    <a href="#Save">Save</a>
+                </div>
+            </li>
+            <li>Edit
+                <div class="dropdown-content">
+                    <a href="#Undo">Undo</a>
+                    <a href="#Redo">Redo</a>
+                </div>
+            </li>
             <li>View</li>
             <li>Controls</li>
             <li>Window</li>
             <li>Help</li>
         </ul>
     </div>
+    
     <div id="goldenLayoutContainer"></div> 
 
     <div>
@@ -59,6 +71,7 @@
     <script src="cal.js"></script>
     <script src="cesium.js"></script>
     <script src="orbit.js"></script>
+    <script src="menu.js"></script>
     <script>
         try {
             require('./renderer.js');
