@@ -61,16 +61,10 @@ iframe {
     width: 60px;
 }
 
-#toggleViewButton {
+#demensionBtn {
     position: absolute;
     top: 10px;  
-    left: 120px; 
-    z-index: 10; 
-}
-
-#toggleViewButton {
-    top: 10px;  
-    left: 10px; 
+    left: 12px; 
     z-index: 10; 
 }
 
@@ -128,4 +122,47 @@ table, th, td {
 }
 
 #topMenuBar .dropdown-content a:hover {background-color: #f1f1f1}
+
+#presetListContainer {
+    position: absolute; 
+    top: 10px; 
+    right: 10px; 
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid #ccc;
+    padding: 10px; 
+    max-width: 120px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
+    z-index: 12; 
+}
+
+
+#addSatelliteContainer {
+    position: absolute; 
+    bottom: 10px;
+    left: 50%; 
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid #ccc; 
+    padding: 10px;
+    width: 250px; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
+    z-index: 10; 
+}
+
+#presetList {
+    list-style-type: none; 
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+#addSatelliteContainer input,
+#addSatelliteContainer button {
+    padding: 5px 10px; 
+    margin-right: 5px; 
+}
+
+#addSatelliteContainer button {
+    cursor: pointer;
+}
 

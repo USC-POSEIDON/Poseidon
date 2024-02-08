@@ -159,16 +159,3 @@ function calculateFootprintRadius(altitude) {
 
 initializeViewer(); 
 startOrbitUpdatesPerOrbitalPeriod(satrec);
-
-// // JJM: There is a checksum at the end of each line in the TLE. 
-
-// // compute orbit path
-// // JJM: There are a few alternative methods here we can explore. I like the method of doing an orbital period from where it crosses 
-// // the equator to when it crosses it at the end of its orbital period. It is clearner this way. Rather than assume all orbits are
-// // 90 minutes, we can do the math to determine the number of seconds in an orbital period. Then divide that number of seconds by the
-// // a number of acceptable bits, say ever 15 seconds of that orbital period. 30 seconds might still look great.  
-// // If I am reading this below correctly, you are asking cesium to update the satellite position every loop through orbit.js for the
-// // next 90 minutes in intervals of 60k seconds? Why not plot out the ground track after it completes say a quarter or a half of the 
-// // orbital period? 
-
-//JJM: It looks like your semi-major equals your semi-minor which means a circle. Lets circle back to this

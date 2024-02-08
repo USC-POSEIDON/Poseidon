@@ -48,6 +48,11 @@ let goldenLayout = new GoldenLayout({
                 type: 'component',
                 componentName: 'Signal_component',
                 title: 'Signal'
+              },
+              {
+                type: 'component',
+                componentName: 'Control_component',
+                title: 'Control'
               }]
           }]
     }]
@@ -55,6 +60,10 @@ let goldenLayout = new GoldenLayout({
 
 goldenLayout.registerComponent('cesium_component', function(container, state) {
     container.getElement().html($('#cesiumContainer'));
+});
+
+goldenLayout.registerComponent('Control_component', function(container, state) {
+  container.getElement().html($('#satelliteControlPanel'));
 });
 
 goldenLayout.registerComponent('calendar_component', function(container, state) {

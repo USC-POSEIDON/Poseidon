@@ -16,7 +16,7 @@ var viewer = new Cesium.Viewer('cesiumContainer', {
   viewer.scene.globe.enableLighting = true;
   viewer.clock.shouldAnimate = true;
   viewer.camera.flyTo({
-    destination: Cesium.Cartesian3.fromDegrees(-10, 0, 20000000), 
+    destination: Cesium.Cartesian3.fromDegrees(-10, 0, 30000000), 
     orientation: {
         heading: Cesium.Math.toRadians(0),   
         pitch: Cesium.Math.toRadians(-90),   
@@ -25,7 +25,7 @@ var viewer = new Cesium.Viewer('cesiumContainer', {
     duration: 2  
 });
 
-document.getElementById('toggleViewButton').addEventListener('click', function() {
+document.getElementById('demensionBtn').addEventListener('click', function() {
   var scene = viewer.scene;
   
   if (scene.mode !== Cesium.SceneMode.SCENE2D) {

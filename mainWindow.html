@@ -37,7 +37,63 @@
 
     <div>
         <div id="cesiumContainer">
-            <button id="toggleViewButton">Switch to 2D</button>
+            <button id="demensionBtn">Switch to 2D</button>
+            <div id="presetListContainer">
+                <p>PresetList</p>
+                <ul id="presetList">
+                    <!-- Presets will be populated dynamically -->
+                    <li>
+                            <input type="checkbox" checked> Satellite 1
+                    </li>
+                    <li>
+                        <label>
+                            <input type="checkbox"> Satellite  2
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="checkbox"> Satellite 3
+                        </label>
+                    </li>
+                </ul>
+                <div id="presetSelectionToShow">
+                    <select id="presetSelectionToShow">
+                        <option value="" disabled selected>Change Preset</option>
+                        <!-- Mock preset options -->
+                        <option value="preset1">Preset 1</option>
+                        <option value="preset2">Preset 2</option>
+                        <option value="preset3">Preset 3</option>
+                        <!-- More options can be added here -->
+                    </select>
+                </div>
+                <button onclick="managePresets()">Manage presets</button>
+              </div>
+              
+              <div id="addSatelliteContainer">
+                <div id="presetSelection">
+                    <select id="presetDropdown">
+                        <option value="" disabled selected>Select preset to add to</option>
+                        <!-- Mock preset options -->
+                        <option value="preset1">Preset 1</option>
+                        <option value="preset2">Preset 2</option>
+                        <option value="preset3">Preset 3</option>
+                        <!-- More options can be added here -->
+                    </select>
+                </div>
+                <div id="searchBox">
+                    <input type="text" id="satelliteSearchInput" placeholder="Search...">
+                    <button id="searchButton">Search</button>
+                </div>
+                <div id="searchOptions">
+                    <label>
+                        <input type="radio" name="searchType" value="name" checked> By Name
+                    </label>
+                    <label>
+                        <input type="radio" name="searchType" value="catalog"> By Catalog #
+                    </label>
+                </div>
+            </div>
+            
         </div>
         <div id="chatBox">
             <div id="messages"></div>
