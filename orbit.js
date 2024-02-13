@@ -1,6 +1,7 @@
-// Default TLE data for initialization
+// TODO: Mock Data Here
 var defaultTleLine1 = '1 25544U 98067A   20053.19547778  .00000739  00000-0  21903-4 0  9991';
 var defaultTleLine2 = '2 25544  51.6415 357.7365 0004954 276.8582  58.3016 15.49238122215825';
+
 
 // Initialize satellite record from default TLE
 var satrec = satellite.twoline2satrec(defaultTleLine1, defaultTleLine2);
@@ -30,6 +31,7 @@ function initializeViewer() {
     });
     
     // Ground Station Entity
+    //TODO: Mock Data Here
     var groundStationPosition = Cesium.Cartesian3.fromDegrees(-74.0060, 40.7128);
     viewer.entities.add({
         id: 'groundStation',
@@ -159,3 +161,5 @@ function calculateFootprintRadius(altitude) {
 
 initializeViewer(); 
 startOrbitUpdatesPerOrbitalPeriod(satrec);
+
+

@@ -47,7 +47,7 @@ let goldenLayout = new GoldenLayout({
               {
                 type: 'component',
                 componentName: 'Signal_component',
-                title: 'Signal'
+                title: 'TelemetryData' //TODO: Change this to TelemetryData
               },
               {
                 type: 'component',
@@ -87,3 +87,5 @@ goldenLayout.registerComponent('Signal_component', function(container, state) {
 });
 
 goldenLayout.init();
+
+

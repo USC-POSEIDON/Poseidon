@@ -120,7 +120,45 @@
             <button onclick="updateSatelliteTLE()">Update Satellite</button>
         </div>
         <div id="SignalContainer">
-            <h1>Signal</h1>
+            <table id="telemetryTable">
+                <tr>
+                    <th>Property</th>
+                    <th>Value</th>
+                </tr>
+                <tr>
+                    <td>Azimuth</td>
+                    <td id="azimuth">-</td>
+                </tr>
+                <tr>
+                    <td>Elevation</td>
+                    <td id="elevation">-</td>
+                </tr>
+                <tr>
+                    <td>Slant Range</td>
+                    <td id="slantRange">-</td>
+                </tr>
+                <tr>
+                    <td>Range Rate</td>
+                    <td id="rangeRate">-</td>
+                </tr>
+                <tr>
+                    <td>Altitude</td>
+                    <td id="altitude">-</td>
+                </tr>
+                <tr>
+                    <td>Footprint</td>
+                    <td id="footprint">-</td>
+                </tr>
+                <tr>
+                    <td>Velocity</td>
+                    <td id="velocity">-</td>
+                </tr>
+                <tr>
+                    <td>Doppler Shift</td>
+                    <td id="doppler">-</td>
+                </tr>
+                <!-- Add other rows here as needed -->
+            </table>
         </div>
     </div>
 
@@ -128,6 +166,7 @@
     <script src="cesium.js"></script>
     <script src="orbit.js"></script>
     <script src="menu.js"></script>
+    <script src="telemetry.js"></script>
     <script>
         try {
             require('./renderer.js');
