@@ -34,6 +34,7 @@ iframe {
 #SignalContainer {
     width: 100%;
     height: 100%;
+    overflow: auto;
 }
 
 #chatBox {
@@ -166,3 +167,24 @@ table, th, td {
     cursor: pointer;
 }
 
+#telemetryTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#telemetryTable td, #telemetryTable th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#telemetryTable tr{
+    background-color: #f2f2f2;
+}
+
+#telemetryTable th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+}
