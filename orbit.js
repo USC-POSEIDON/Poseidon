@@ -33,6 +33,39 @@ function initializeViewer() {
     // Ground Station Entity
     //TODO: Mock Data Here
     var groundStationPosition = Cesium.Cartesian3.fromDegrees(-74.0060, 40.7128);
+
+    document.getElementById('updatePosition').addEventListener('click', function() {
+        var latitude = document.getElementById('latitude').value;
+        var longitude = document.getElementById('longitude').value;
+        groundStationPosition = {latitude: latitude, longitude: longitude};
+        console.log('Updated groundStationPosition:', groundStationPosition);
+        document.getElementById('groundStationModal').style.display = "none";
+      });
+      
+      document.getElementById('closeModal').addEventListener('click', function() {
+        document.getElementById('groundStationModal').style.display = "none";
+      });
+
+      document.getElementById('updatePosition').addEventListener('click', function() {
+        var latitude = parseFloat(document.getElementById('latitude').value);
+        var longitude = parseFloat(document.getElementById('longitude').value);
+    
+        // Convert latitude and longitude to Cesium Cartesian3 coordinates
+        var newGroundStationPosition = Cesium.Cartesian3.fromDegrees(longitude, latitude);
+    
+        // Update the entity's position
+        var groundStationEntity = viewer.entities.getById('groundStation');
+        if (groundStationEntity) {
+            groundStationEntity.position = newGroundStationPosition;
+            console.log('Ground Station position updated to:', latitude, longitude);
+        } else {
+            console.log('Ground Station entity not found.');
+        }
+    
+        // Close the modal
+        document.getElementById('groundStationModal').style.display = "none";
+    });
+
     viewer.entities.add({
         id: 'groundStation',
         position: groundStationPosition,
@@ -41,7 +74,7 @@ function initializeViewer() {
             color: Cesium.Color.BLUE
         },
         label: {
-            text: 'NYC',
+            text: 'GS',
             font: '12pt monospace',
             style: Cesium.LabelStyle.FILL_AND_OUTLINE,
             outlineWidth: 2,

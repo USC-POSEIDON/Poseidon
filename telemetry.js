@@ -1,11 +1,12 @@
 function updateTelemetryData() {
     var now = new Date();
 
-    //TODO: Mock Data Here
-    var observerPos = {
-        latitude: 40.7128,
-        longitude: -74.0060,
-        height: 0
+    var groundStationEntity = viewer.entities.getById('groundStation');
+    var groundStationCartographic = Cesium.Cartographic.fromCartesian(groundStationEntity.position.getValue(now));
+    var groundStationPosition = {
+        latitude: Cesium.Math.toDegrees(groundStationCartographic.latitude),
+        longitude: Cesium.Math.toDegrees(groundStationCartographic.longitude),
+        height: groundStationCartographic.height
     };
 
     var positionAndVelocity = satellite.propagate(satrec, now);
@@ -15,34 +16,32 @@ function updateTelemetryData() {
 
     if (positionEci && positionEci.x !== undefined && positionEci.y !== undefined && positionEci.z !== undefined) {
         var observerGd = {
-            longitude: satellite.degreesToRadians(observerPos.longitude),
-            latitude: satellite.degreesToRadians(observerPos.latitude),
-            height: observerPos.height
+            longitude: satellite.degreesToRadians(groundStationPosition.longitude),
+            latitude: satellite.degreesToRadians(groundStationPosition.latitude),
+            height: groundStationPosition.height
         };
-        
+
         var positionEcf = satellite.eciToEcf(positionEci, gmst);
         var lookAngles = satellite.ecfToLookAngles(observerGd, positionEcf);
         var altitude = calculateAltitude(positionEci);
         var footprint = calculateFootprint(altitude);
         var velocity = calculateVelocity(velocityEci);
 
-        // Check if look angles are defined before updating the HTML
         if (lookAngles && lookAngles.azimuth !== undefined && lookAngles.elevation !== undefined) {
             var azimuth = satellite.radiansToDegrees(lookAngles.azimuth);
             var elevation = satellite.radiansToDegrees(lookAngles.elevation);
 
-            //TODO: fix here
-            var rangeRate = lookAngles.rangeRate; 
+            var observerEcf = satellite.geodeticToEcf(observerGd);
+            var rangeRate = calculateRangeRate(observerEcf, positionEci, velocityEci, gmst);
 
             //TODO: Mock Data Here
-            var frequency = 437.5; 
+            var frequency = 437.5;
             var doppler = calculateDoppler(frequency, rangeRate);
 
             document.getElementById('azimuth').textContent = azimuth.toFixed(2) + '°';
             document.getElementById('elevation').textContent = elevation.toFixed(2) + '°';
-            document.getElementById('slantRange').textContent = (lookAngles.range * 0.001).toFixed(2) + ' km'; 
-            //TODO: Fix here once rangeRate is fixed
-            //document.getElementById('rangeRate').textContent = rangeRate.toFixed(2) + ' m/s';
+            document.getElementById('slantRange').textContent = (lookAngles.range * 0.001).toFixed(2) + ' km';
+            document.getElementById('rangeRate').textContent = rangeRate.toFixed(2) + ' m/s';
             document.getElementById('altitude').textContent = altitude.toFixed(2) + ' km';
             document.getElementById('footprint').textContent = footprint.toFixed(2) + ' km';
             document.getElementById('velocity').textContent = velocity.toFixed(2) + ' km/s';
@@ -90,6 +89,40 @@ function calculateDoppler(frequency, rangeRate) {
     var speedOfLight = 299792.458; 
     var dopplerShift = -(frequency * (rangeRate / speedOfLight));
     return dopplerShift; 
+}
+
+function calculateRangeRate(observerEcf, positionEci, velocityEci, gmst) {
+    var positionEcf = satellite.eciToEcf(positionEci, gmst);
+
+    var observerVelocityEcf = {
+        x: 0,
+        y: 0,
+        z: 0
+    };
+
+    var relativeVelocityEcf = {
+        x: velocityEci.x - observerVelocityEcf.x,
+        y: velocityEci.y - observerVelocityEcf.y,
+        z: velocityEci.z - observerVelocityEcf.z
+    };
+
+    var rangeEcf = {
+        x: positionEcf.x - observerEcf.x,
+        y: positionEcf.y - observerEcf.y,
+        z: positionEcf.z - observerEcf.z
+    };
+
+    var rangeUnitVector = {
+        x: rangeEcf.x / Math.sqrt(rangeEcf.x * rangeEcf.x + rangeEcf.y * rangeEcf.y + rangeEcf.z * rangeEcf.z),
+        y: rangeEcf.y / Math.sqrt(rangeEcf.x * rangeEcf.x + rangeEcf.y * rangeEcf.y + rangeEcf.z * rangeEcf.z),
+        z: rangeEcf.z / Math.sqrt(rangeEcf.x * rangeEcf.x + rangeEcf.y * rangeEcf.y + rangeEcf.z * rangeEcf.z)
+    };
+
+    var rangeRate = relativeVelocityEcf.x * rangeUnitVector.x +
+                    relativeVelocityEcf.y * rangeUnitVector.y +
+                    relativeVelocityEcf.z * rangeUnitVector.z;
+
+    return rangeRate; 
 }
 
 

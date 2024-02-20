@@ -13,24 +13,24 @@
 <body>
     <div id="topMenuBar">
         <ul>
-            <li>File
+            <li>Config
                 <div class="dropdown-content">
-                    <a href="#New">New</a>
-                    <a href="#Open">Open</a>
-                    <a href="#Save">Save</a>
+                    <a href="#Ground_Station" id="groundStationLink">Ground Station</a>
                 </div>
             </li>
-            <li>Edit
-                <div class="dropdown-content">
-                    <a href="#Undo">Undo</a>
-                    <a href="#Redo">Redo</a>
-                </div>
-            </li>
-            <li>View</li>
-            <li>Controls</li>
-            <li>Window</li>
-            <li>Help</li>
         </ul>
+    </div>
+
+    <div id="groundStationModal">
+        <div>
+            <h2>Update Ground Station Position</h2>
+            <label for="latitude">Latitude:</label>
+            <input type="text" id="latitude" name="latitude"><br><br>
+            <label for="longitude">Longitude:</label>
+            <input type="text" id="longitude" name="longitude"><br><br>
+            <button id="updatePosition">Update</button>
+            <button id="closeModal">Close</button>
+        </div>
     </div>
     
     <div id="goldenLayoutContainer"></div> 
