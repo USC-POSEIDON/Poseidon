@@ -7,8 +7,8 @@
     <script src="./node_modules/cesium/Build/Cesium/Cesium.js"></script>
     <script src="./node_modules/satellite.js/dist/satellite.min.js"></script>
     <link rel="stylesheet" type="text/css" href="mainWindow.css">
-    <link href="https://golden-layout.com/assets/css/goldenlayout-base.css" rel="stylesheet" />
-    <link href="https://golden-layout.com/assets/css/goldenlayout-dark-theme.css" rel="stylesheet" />
+    <link rel="stylesheet" href="./node_modules/golden-layout/src/css/goldenlayout-base.css">
+    <link rel="stylesheet" href="./node_modules/golden-layout/src/css/goldenlayout-dark-theme.css">
 </head>
 <body>
     <div id="topMenuBar">
@@ -17,6 +17,10 @@
                 <div class="dropdown-content">
                     <a href="#Ground_Station" id="groundStationLink">Ground Station</a>
                     <a href="#Debug_Window" id="debugWindow">Debug Window</a>
+                </div>
+            </li>
+            <li>Windows
+                <div class="dropdown-content" id="windowsDropdownContent">
                 </div>
             </li>
         </ul>
@@ -166,14 +170,9 @@
     <script src="cal.js"></script>
     <script src="cesium.js"></script>
     <script src="orbit.js"></script>
+    <script src="renderer.js"></script>
     <script src="menu.js"></script>
     <script src="telemetry.js"></script>
-    <script>
-        try {
-            require('./renderer.js');
-        } catch (e) {
-            require('renderer.js');
-        }
-    </script>
+
 </body>
 </html>
