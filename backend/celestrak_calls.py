@@ -4,7 +4,6 @@ import requests
 from flask import Flask, request, jsonify
 
 from database import *
-
 app = Flask(__name__)
 
 DODONA_CATNR = 51084
@@ -13,6 +12,8 @@ TEST_SATLIST = [25544, 123, 1253, 2, 900, 51084]
 BASE_URL = "https://celestrak.org/NORAD/elements/gp.php"
 DEFAULT_FORMAT = "FORMAT=TLE"
 FILE_EXT = "txt"
+
+
 
 @app.route('/api/data', methods=['POST'])
 def handle_post_request():
@@ -149,6 +150,8 @@ def updateTLEs():
 
     # TODO: when TLEs are updated, pass times should also be
     return "Success"
+
+import orbit_calculations
 
 if __name__ == "__main__":
     print("flask startup :)")

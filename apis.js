@@ -23,23 +23,4 @@ function getNameSearchResults(){
     // Handle errors here
     console.log(error);
     });
-
-    // Get names
-    
-    // fetch(`http://127.0.0.1:5000/satellites/get/names/${name}`)
-    // .then(function (response) {
-    //     if (!response.ok) {
-    //     throw new Error("HTTP error, status = " + response.status);
-    //     }
-    //     return response.text();
-    // })
-    // .then(function (data) {
-    //     // Handle the data here
-    //     alert("get" + data);
-    // })
-    // .catch(function (error) {
-    //     // Handle errors here
-    //     alert(error);
-    // });
-
 }
