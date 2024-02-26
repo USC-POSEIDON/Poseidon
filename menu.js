@@ -1,3 +1,5 @@
+const { ipcRenderer } = require('electron');
+
 document.querySelectorAll('#topMenuBar > ul > li').forEach(item => {
   item.addEventListener('click', function() {
       var dropdownContent = this.getElementsByClassName('dropdown-content')[0];
@@ -20,6 +22,11 @@ document.getElementById('groundStationLink').addEventListener('click', function(
   document.getElementById('groundStationModal').style.display = 'block';
 });
 
+document.getElementById('debugWindow').addEventListener('click', function(event) {
+    event.preventDefault();
+    ipcRenderer.send('open-devtools', 'please');
+  });
+
 window.onclick = function(event) {
   if (!event.target.matches('#topMenuBar > ul > li')) {
       var dropdowns = document.getElementsByClassName("dropdown-content");
@@ -34,5 +41,4 @@ window.onclick = function(event) {
       document.getElementById('groundStationModal').style.display = "none";
   }
 };
-
 
