@@ -4,7 +4,7 @@ const GoldenLayout = require('golden-layout');
 
 let goldenLayout = new GoldenLayout({
     settings: {
-        showPopoutIcon: false 
+        //showPopoutIcon: false 
     },
     content: [{
         type: 'column',
@@ -46,8 +46,8 @@ let goldenLayout = new GoldenLayout({
               },
               {
                 type: 'component',
-                componentName: 'Signal_component',
-                title: 'TelemetryData' //TODO: Change this to TelemetryData
+                componentName: 'Telemetry_component',
+                title: 'TelemetryData' 
               },
               {
                 type: 'component',
@@ -59,31 +59,31 @@ let goldenLayout = new GoldenLayout({
 });
 
 goldenLayout.registerComponent('cesium_component', function(container, state) {
-    container.getElement().html($('#cesiumContainer'));
+    container.getElement().append($('#cesiumContainer'));
 });
 
 goldenLayout.registerComponent('Control_component', function(container, state) {
-  container.getElement().html($('#satelliteControlPanel'));
+  container.getElement().append($('#satelliteControlPanel'));
 });
 
 goldenLayout.registerComponent('calendar_component', function(container, state) {
-    container.getElement().html($('#calendarModal'));
+    container.getElement().append($('#calendarModal'));
 });
 
 goldenLayout.registerComponent('chat_component', function(container, state) {
-    container.getElement().html($('#chatBox'));
+    container.getElement().append($('#chatBox'));
 });
 
 goldenLayout.registerComponent('PassTime_component', function(container, state) {
-    container.getElement().html($('#PassTime'));
+    container.getElement().append($('#PassTime'));
 });
 
 goldenLayout.registerComponent('Motor_component', function(container, state) {
-    container.getElement().html($('#MotorContainer'));
+    container.getElement().append($('#MotorContainer'));
 });
 
-goldenLayout.registerComponent('Signal_component', function(container, state) {
-  container.getElement().html($('#SignalContainer'));
+goldenLayout.registerComponent('Telemetry_component', function(container, state) {
+  container.getElement().append($('#TelemetryContainer'));
 });
 
 goldenLayout.init();
