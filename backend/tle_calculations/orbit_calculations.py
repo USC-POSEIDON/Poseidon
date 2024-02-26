@@ -9,7 +9,7 @@ from skyfield.api import EarthSatellite, load, wgs84
 import scipy.constants as const
 from flask import Flask, request, jsonify
 
-from celestrak_calls import app
+from tle_calculations import app
 
 # Constants
 GS_LATITUDE = 34.0208
@@ -37,7 +37,7 @@ class Pass:
         self.culminate = culminate
         self.set = set
 
-@app.route('/satellites/passes', methods=['GET'])
+@app.route('/calculations/passes', methods=['GET'])
 def getPassTimeInfo():
     """Get pass time info.
 
@@ -141,7 +141,7 @@ def getPassDict(satellites):
     for catnr in satellites:
         pass
 
-@app.route('/satellites/telemetry', methods=['GET'])
+@app.route('/calculations/telemetry', methods=['GET'])
 def getCurrentTelemetry():
     """Get realtime Doppler-adjusted transmit/receive frequencies.
 
@@ -165,8 +165,6 @@ def getCurrentTelemetry():
             rec (MHz)
             trans (MHz)
     """
-    print("hellobello")
-    sys.stdout.flush()
 
     s = request.args.get('s')
     t = request.args.get('t')
@@ -206,10 +204,11 @@ def getCurrentTelemetry():
 
     json_string =  json.dumps(ans)
     print(json_string)
+    sys.stdout.flush()
     return json_string, 200
 
 
-@app.route('/satellites/groundstation', methods=['POST'])
+@app.route('/calculations/groundstation', methods=['POST'])
 def changeGroundStation():
     """Change the global observer object.
 

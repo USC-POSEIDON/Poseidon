@@ -18,12 +18,12 @@ app.on('ready', function(){
         }
     });
 
-    var python = require('child_process').spawn('py', ['./backend/celestrak_calls.py']);
-    python.stdout.on('data', function (data) {
-        console.log("data: ", data.toString('utf8'));
+    var tle_flask = require('child_process').spawn('py', ['-m', 'tle_calculations.run']);
+    tle_flask.stdout.on('data', function (data) {
+        console.log("TLE data: ", data.toString('utf8'));
     });
-    python.stderr.on('data', (data) => {
-        console.log(`stderr: ${data}`); // when error
+    tle_flask.stderr.on('data', (data) => {
+        console.log(`TLE stderr: ${data}`); // when error
     });
 
     // Open the DevTools.

@@ -3,8 +3,9 @@ import sys
 import requests
 from flask import Flask, request, jsonify
 
-from database import *
-app = Flask(__name__)
+from tle_calculations.database import *
+from tle_calculations import app
+# app = Flask(__name__)
 
 DODONA_CATNR = 51084
 TEST_SATLIST = [25544, 123, 1253, 2, 900, 51084]
@@ -150,8 +151,6 @@ def updateTLEs():
 
     # TODO: when TLEs are updated, pass times should also be
     return "Success"
-
-import orbit_calculations
 
 if __name__ == "__main__":
     print("flask startup :)")
