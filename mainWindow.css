@@ -211,3 +211,8 @@ table, th, td {
     border: 1px solid #888;
     width: 30%; 
 }
+
+#PassTime {
+    max-height: 300px; /* Adjust the height as needed */
+    overflow: auto;
+}

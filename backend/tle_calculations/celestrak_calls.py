@@ -68,14 +68,19 @@ def getNames(name):
     
     return [line.rstrip() for line in response[0::3]]
 
-@app.route('/satellites/get/preset/<listname>', methods=['get'])
+@app.route('/satellites/get/preset/<listname>', methods=['GET'])
 def getPresetList(listname):
     '''Get a list of satellites in a particular preset list (listname).
     
     Returns:
         list of satellites (catnr, name, TLE line 1, TLE line 2)
     '''
-    return getSatellitesInPreset(listname)
+    list = getSatellitesInPreset(listname) # [sat[1] for sat in list]
+    return jsonify({"satellites": list})
+
+@app.route('/satellites/get/allpresets', methods=['GET'])
+def getAllPresets():
+    return jsonify({"names": getAllPresetNames()})
 
 @app.route('/satellites/post/catnr/<catnr>', methods=['POST'])
 def addNewTLEByCATNR(catnr):

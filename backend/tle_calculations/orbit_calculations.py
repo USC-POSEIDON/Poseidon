@@ -47,6 +47,7 @@ def getPassTimeInfo():
     Required params:
         s: TLE line 1.
         t: TLE line 2.
+        catnr
     Optional params:
         name: Satellite name
         days: Number of days to predict (default 7).
@@ -120,13 +121,17 @@ def getPassTimeInfo():
             culminate = PassLine(date, az.degrees, alt.degrees, range.km)
         else:
             set = PassLine(date, az.degrees, alt.degrees, range.km)
-            if rise == None:
-                raise RuntimeError
+            # if rise == None:
+            #     raise RuntimeError
             passes.append(Pass(catnr, rise, culminate, set))
 
+    print("GETTING PASSES!!!!!!!!!!!!!!")
     json_string = json.dumps(passes, default=vars, indent=4)
     print(json_string)
-    return passes, json_string
+    # jsonobj = jsonify(passes)
+    # print(jsonobj)
+    sys.stdout.flush()
+    return json_string, 200
 
 def getPassDict(satellites):
     """Get pass times for a list of satellites.

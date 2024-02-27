@@ -260,6 +260,29 @@ def getAllCatnrs():
 
     return rows
 
+def getAllPresetNames():
+    '''Get a list of all preset names.'''
+    conn = psycopg2.connect(database=params.get('database'), # database is the name of the database on local postgresql 
+                            host="localhost", # host is the name of the host on local postgresql, usually localhost
+                            user=params.get('user'), # user is the name of the user on local postgresql, whatever you named it
+                            password=params.get('password'), # password is the password of the user on local postgresql
+                            port="5432") # port is the port number of the local postgresql, usually 5432
+
+    # Open a cursor to perform database operations
+    cur = conn.cursor()
+
+    # Execute a SELECT statement
+    cur.execute("SELECT DISTINCT type FROM Satellites ORDER BY type ASC")
+
+    # Retrieve the results
+    rows = cur.fetchall()
+
+    # Close the cursor and the connection
+    cur.close()
+    conn.close()
+
+    return rows
+
 def getSatellitesInPreset(type):
     '''Get a list of satellites in a particular preset list (type).
     
