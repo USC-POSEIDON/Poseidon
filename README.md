@@ -35,6 +35,12 @@ npm install electron-builder --save-dev
 Then, run:
 
 ```bash
+# For your current platform
 npm run dist
+
+# For a specific platform
+npm run dist --mac
+npm run dist --win
+npm run dist --linux
 ```
 
