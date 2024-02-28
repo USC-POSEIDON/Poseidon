@@ -5,7 +5,7 @@ let closedComponents = [];
 
 let goldenLayout = new GoldenLayout({
     settings: {
-        showPopoutIcon: false 
+        showPopoutIcon: true 
     },
     content: [{
         type: 'column',
@@ -68,63 +68,117 @@ let goldenLayout = new GoldenLayout({
 
 
 goldenLayout.registerComponent('cesium_component', function(container, state) {
-  // Assuming $('#cesiumContainer') is the content for this component
-  const cesiumContainer = $('#cesiumContainer').detach(); // Detach but keep reference
-  container.getElement().append(cesiumContainer);
+  // Check if the cesiumContainer is already detached and stored
+  let cesiumContainer = $('#cesiumContainer');
+  if (cesiumContainer.length === 0) { // If not found in DOM, it might have been detached previously
+    cesiumContainer = closedComponents['cesium_component']; // Retrieve from stored detached elements
+  }
+
+  container.getElement().append(cesiumContainer); // Reattach
+
   container.on('destroy', function() {
-      cesiumContainer.detach(); // Detach on destroy
-      trackComponentState('cesium_component', false);
-      updateWindowsDropdown();
+    closedComponents['cesium_component'] = cesiumContainer.detach(); // Detach and store
+    trackComponentState('cesium_component', false);
+    updateWindowsDropdown();
   });
 });
 
+
 goldenLayout.registerComponent('Control_component', function(container, state) {
-  container.getElement().append($('#satelliteControlPanel'));
+  let controlPanel = $('#satelliteControlPanel');
+  if (controlPanel.length === 0) {
+    controlPanel = closedComponents['Control_component'];
+  }
+
+  container.getElement().append(controlPanel);
+
   container.on('destroy', function() {
+    closedComponents['Control_component'] = controlPanel.detach();
     trackComponentState('Control_component', false);
     updateWindowsDropdown();
   });
 });
 
+
 goldenLayout.registerComponent('calendar_component', function(container, state) {
-    container.getElement().append($('#calendarModal'));
-    container.on('destroy', function() {
-      trackComponentState('calendar_component', false);
-      updateWindowsDropdown();
-    });
+  let calendarModal = $('#calendarModal');
+  if (calendarModal.length === 0) {
+    calendarModal = closedComponents['calendar_component'];
+  }
+
+  container.getElement().append(calendarModal);
+
+  container.on('destroy', function() {
+    closedComponents['calendar_component'] = calendarModal.detach();
+    trackComponentState('calendar_component', false);
+    updateWindowsDropdown();
+  });
 });
+
 
 goldenLayout.registerComponent('chat_component', function(container, state) {
-    container.getElement().append($('#chatBox'));
-    container.on('destroy', function() {
-      trackComponentState('chat_component', false);
-      updateWindowsDropdown();
-    });
+  let chatBox = $('#chatBox');
+  if (chatBox.length === 0) {
+    chatBox = closedComponents['chat_component'];
+  }
+
+  container.getElement().append(chatBox);
+
+  container.on('destroy', function() {
+    closedComponents['chat_component'] = chatBox.detach();
+    trackComponentState('chat_component', false);
+    updateWindowsDropdown();
+  });
 });
+
 
 goldenLayout.registerComponent('PassTime_component', function(container, state) {
-    container.getElement().append($('#PassTime'));
-    container.on('destroy', function() {
-      trackComponentState('PassTime_component', false);
-      updateWindowsDropdown();
-    });
+  let passTime = $('#PassTime');
+  if (passTime.length === 0) {
+    passTime = closedComponents['PassTime_component'];
+  }
+
+  container.getElement().append(passTime);
+
+  container.on('destroy', function() {
+    closedComponents['PassTime_component'] = passTime.detach();
+    trackComponentState('PassTime_component', false);
+    updateWindowsDropdown();
+  });
 });
+
 
 goldenLayout.registerComponent('Motor_component', function(container, state) {
-    container.getElement().append($('#MotorContainer'));
-    container.on('destroy', function() {
-      trackComponentState('Motor_component', false);
-      updateWindowsDropdown();
-    });
+  let MotorContainer = $('#MotorContainer');
+  if (MotorContainer.length === 0) {
+    MotorContainer = closedComponents['Motor_component'];
+  }
+
+  container.getElement().append(MotorContainer);
+
+  container.on('destroy', function() {
+    closedComponents['Motor_component'] = MotorContainer.detach();
+    trackComponentState('Motor_component', false);
+    updateWindowsDropdown();
+  });
 });
 
+
 goldenLayout.registerComponent('Telemetry_component', function(container, state) {
-  container.getElement().append($('#TelemetryContainer'));
+  let telemetryContainer = $('#TelemetryContainer');
+  if (telemetryContainer.length === 0) {
+    telemetryContainer = closedComponents['Telemetry_component'];
+  }
+
+  container.getElement().append(telemetryContainer);
+
   container.on('destroy', function() {
+    closedComponents['Telemetry_component'] = telemetryContainer.detach();
     trackComponentState('Telemetry_component', false);
     updateWindowsDropdown();
   });
 });
+
 
 let componentStates = {};
 
