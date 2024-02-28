@@ -147,6 +147,7 @@ function handleCheckboxChange() {
         if (checkbox.checked) {
             checkedCount++;
             satellite = checkbox.BasicSatellite;
+            updateTelemetryTLE(satellite.line1, satellite.line2);
         }
     });
     

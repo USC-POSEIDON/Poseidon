@@ -1,7 +1,13 @@
+var defaultTleLine1 = '1 25544U 98067A   20053.19547778  .00000739  00000-0  21903-4 0  9991';
+var defaultTleLine2 = '2 25544  51.6415 357.7365 0004954 276.8582  58.3016 15.49238122215825';
+
+function updateTelemetryTLE(line1, line2){
+    defaultTleLine1 = line1;
+    defaultTleLine2 = line2;
+}
+
 function updateTelemetryData() {
     // TODO: get TLE data depending on which satellite is selected
-    var defaultTleLine1 = '1 25544U 98067A   20053.19547778  .00000739  00000-0  21903-4 0  9991';
-    var defaultTleLine2 = '2 25544  51.6415 357.7365 0004954 276.8582  58.3016 15.49238122215825';
 
     fetch(`http://127.0.0.1:5000/calculations/telemetry?`+ new URLSearchParams({
         s: defaultTleLine1,
