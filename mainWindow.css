@@ -204,7 +204,7 @@ table, th, td {
     color: white;
 }
 
-#groundStationModal {
+#groundStationModal, #managePresetModal {
     display: none; 
     position: fixed; 
     z-index: 2000; 
@@ -218,7 +218,7 @@ table, th, td {
     padding-top: 60px;
 }
 
-#groundStationModal > div {
+#groundStationModal > div, #managePresetModal > div {
     background-color: #fefefe;
     margin: auto;
     padding: 20px;

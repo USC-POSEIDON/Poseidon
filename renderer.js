@@ -5,7 +5,7 @@ let closedComponents = [];
 
 let goldenLayout = new GoldenLayout({
     settings: {
-        showPopoutIcon: true 
+        showPopoutIcon: false,
     },
     content: [{
         type: 'column',

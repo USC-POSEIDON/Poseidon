@@ -37,6 +37,34 @@
             <button id="closeModal">Close</button>
         </div>
     </div>
+
+    <div id="managePresetModal" style="display: none;">
+        <div>
+            <h2>Manage Preset List</h2>
+            <div>
+                <label for="addPresetInput">Add New List:</label>
+                <input type="text" id="addPresetInput" name="addPresetInput">
+                <button id="addPresetBtn">Add</button>
+            </div>
+            <div>
+                <label for="deletePresetDropdown">Delete List:</label>
+                <select id="deletePresetDropdown">
+                    <!-- Options will be populated dynamically -->
+                </select>
+                <button id="deletePresetBtn">Delete</button>
+            </div>
+            <div>
+                <label for="renamePresetDropdown">Rename List:</label>
+                <select id="renamePresetDropdown">
+                    <!-- Options will be populated dynamically -->
+                </select>
+                <input type="text" id="renamePresetInput" name="renamePresetInput" placeholder="New name">
+                <button id="renamePresetBtn">Rename</button>
+            </div>
+            <button id="closePresetModal">Close</button>
+        </div>
+    </div>
+    
     
     <div id="goldenLayoutContainer"></div> 
 
@@ -71,7 +99,7 @@
                         <!-- More options can be added here -->
                     </select>
                 </div>
-                <button onclick="managePresets()">Manage presets</button>
+                <button id="managePresets">Manage presets</button>
               </div>
               
               <div id="addSatelliteContainer">
@@ -100,6 +128,7 @@
             </div>
             
         </div>
+</div>
         <div id="chatBox">
             <div id="messages"></div>
             <input type="text" id="chatInput" placeholder="Type a message...">
@@ -173,6 +202,7 @@
     <script src="renderer.js"></script>
     <script src="menu.js"></script>
     <script src="telemetry.js"></script>
+    <script src="presetList.js"></script>
 
 </body>
 </html>
