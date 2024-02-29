@@ -1,6 +1,8 @@
 const electron = require('electron');
 const url = require('url');
 const path = require('path');
+const sqlite3 = require('sqlite3').verbose();
+
 
 const { app, BrowserWindow, Menu } = electron;
 
@@ -17,6 +19,8 @@ app.on('ready', function(){
             webSecurity: false
         }
     });
+
+    const db = new sqlite3.Database('poseidon.db');
 
     const spawn = require('child_process').spawn;
     const pythonCommand = process.platform === "win32" ? "py" : "python3"; 
@@ -38,6 +42,7 @@ app.on('ready', function(){
     }));
 
     mainWindow.on('closed', function(){
+        db.close();
         const { exec } = require('child_process');
         exec('taskkill /f /t /im celestrak_calls.exe', (err, stdout, stderr) => {
         if (err) {
