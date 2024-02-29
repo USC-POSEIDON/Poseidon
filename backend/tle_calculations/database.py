@@ -5,6 +5,7 @@ import sqlite3
 import os
 
 params: dict
+db_path = "backend/poseidon.db"
 
 def getLogin(filename='backend/database.ini'):
     parser = ConfigParser()
@@ -13,7 +14,7 @@ def getLogin(filename='backend/database.ini'):
     params = dict(parser.items('postgresql'))
 
 def createTables():
-    conn = sqlite3.connect('poseidon.db')
+    conn = sqlite3.connect(db_path)
 
     # Open a cursor to perform database operations
     cur = conn.cursor()
@@ -72,7 +73,7 @@ def createTables():
     conn.close()
 
 def insertSatellite(tle_id, catnr, name, type):
-    conn = sqlite3.connect('poseidon.db')
+    conn = sqlite3.connect(db_path)
 
     # Open a cursor to perform database operations
     cur = conn.cursor()
@@ -95,7 +96,7 @@ def insertSatellite(tle_id, catnr, name, type):
 
 def insertTLE(catnr, line1, line2):
     epoch = float(line1[18:32])
-    conn = sqlite3.connect('poseidon.db')
+    conn = sqlite3.connect(db_path)
 
     # Open a cursor to perform database operations
     cur = conn.cursor()
@@ -114,7 +115,7 @@ def insertTLE(catnr, line1, line2):
     conn.close()
 
 def insertPass(satellite_id, time, azm, elv, range):
-    conn = sqlite3.connect('poseidon.db')
+    conn = sqlite3.connect(db_path)
 
     # Open a cursor to perform database operations
     cur = conn.cursor()
@@ -133,7 +134,7 @@ def insertPass(satellite_id, time, azm, elv, range):
     conn.close()
 
 def getSatelliteID(catnr):
-    conn = sqlite3.connect('poseidon.db')
+    conn = sqlite3.connect(db_path)
 
     # Open a cursor to perform database operations
     cur = conn.cursor()
@@ -156,7 +157,7 @@ def getSatelliteID(catnr):
 
 
 def getPassesbyName(name):
-    conn = sqlite3.connect('poseidon.db')
+    conn = sqlite3.connect(db_path)
                             
     # Open a cursor to perform database operations
     cur = conn.cursor()
@@ -183,7 +184,7 @@ def getPassesbyName(name):
 
 
 def getPassesbyName(name):
-    conn = sqlite3.connect('poseidon.db')
+    conn = sqlite3.connect(db_path)
 
     # Open a cursor to perform database operations
     cur = conn.cursor()
@@ -211,7 +212,7 @@ def getPassesbyName(name):
 
 def getAllCatnrs():
     '''Get a list of catalog numbers of all satellites.'''
-    conn = sqlite3.connect('poseidon.db')
+    conn = sqlite3.connect(db_path)
 
     # Open a cursor to perform database operations
     cur = conn.cursor()
@@ -230,7 +231,7 @@ def getAllCatnrs():
 
 def getAllPresetNames():
     '''Get a list of all preset names.'''
-    conn = sqlite3.connect('poseidon.db')
+    conn = sqlite3.connect(db_path)
 
     # Open a cursor to perform database operations
     cur = conn.cursor()
@@ -253,7 +254,7 @@ def getSatellitesInPreset(type):
     Returns:
         list of satellites (catnr, name, TLE line 1, TLE line 2)
     '''
-    conn = sqlite3.connect('poseidon.db')
+    conn = sqlite3.connect(db_path)
 
     # Open a cursor to perform database operations
     cur = conn.cursor()
@@ -279,7 +280,7 @@ def getSatellitesInPreset(type):
     return rows
 
 def getAllTLEs():
-    conn = sqlite3.connect('poseidon.db')
+    conn = sqlite3.connect(db_path)
 
     # Open a cursor to perform database operations
     cur = conn.cursor()
@@ -297,7 +298,7 @@ def getAllTLEs():
     return rows
     
 def deletePresetList(type):
-    conn = sqlite3.connect('poseidon.db')
+    conn = sqlite3.connect(db_path)
 
     # Open a cursor to perform database operations
     cur = conn.cursor()
@@ -332,7 +333,7 @@ def deletePresetList(type):
     conn.close()
 
 def deleteSatelliteFromList(catnr, type):
-    conn = sqlite3.connect('poseidon.db')
+    conn = sqlite3.connect(db_path)
 
     # Open a cursor to perform database operations
     cur = conn.cursor()
@@ -365,7 +366,7 @@ def deleteSatelliteFromList(catnr, type):
 
     
 def updateTLE(catnr, line1, line2):
-    conn = sqlite3.connect('poseidon.db')
+    conn = sqlite3.connect(db_path)
     
     # Open a cursor to perform database operations
     cur = conn.cursor()
@@ -386,7 +387,7 @@ def updateTLE(catnr, line1, line2):
     conn.close()
 
 def printTLE():
-    conn = sqlite3.connect('poseidon.db')
+    conn = sqlite3.connect(db_path)
 
     # Open a cursor to perform database operations
     cur = conn.cursor()
