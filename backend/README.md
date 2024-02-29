@@ -11,6 +11,7 @@ Python dependencies in the Flask App:
 - sgp4
 - psycopg2
 - requests
+- skyfield
 
 From backend directory:
 ```

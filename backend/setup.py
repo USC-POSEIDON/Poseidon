@@ -9,6 +9,8 @@ setup(
         'sgp4',
         'scipy',
         'requests',
-        'psycopg2'
+        'psycopg2',
+        'skyfield',
+        'psycopg2-binary',
     ],
 )
