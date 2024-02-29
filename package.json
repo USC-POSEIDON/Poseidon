@@ -34,7 +34,8 @@
   "dependencies": {
     "cesium": "^1.113.0",
     "golden-layout": "^1.5.9",
-    "satellite.js": "^5.0.0"
+    "satellite.js": "^5.0.0",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "electron": "^28.2.0",
