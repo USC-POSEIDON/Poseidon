@@ -130,6 +130,7 @@ dist
 .pnp.*
 
 __pycache__
+.db
 backend/tle_calculations.egg-info/dependency_links.txt
 backend/tle_calculations.egg-info/PKG-INFO
 backend/tle_calculations.egg-info/requires.txt

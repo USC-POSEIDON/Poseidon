@@ -18,12 +18,12 @@ def createTables():
     # Open a cursor to perform database operations
     cur = conn.cursor()
 
-    # Define the tables to be dropped
-    tables_to_drop = ['Satellites', 'TLE_Data', 'Satellite_Passes']
+    # # Define the tables to be dropped
+    # tables_to_drop = ['Satellites', 'TLE_Data', 'Satellite_Passes']
 
-    # Loop through each table name and drop it if it exists
-    for table_name in tables_to_drop:
-        cur.execute(f"DROP TABLE IF EXISTS {table_name}")
+    # # Loop through each table name and drop it if it exists
+    # for table_name in tables_to_drop:
+    #     cur.execute(f"DROP TABLE IF EXISTS {table_name}")
 
     conn.commit()
 
