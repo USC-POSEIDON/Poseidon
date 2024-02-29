@@ -36,11 +36,11 @@ Then, run:
 
 ```bash
 # For your current platform
-npm run build
+npm run dist
 
 # For a specific platform
-npm run build --mac
-npm run build --win
-npm run build --linux
+npm run dist --mac
+npm run dist --win
+npm run dist --linux
 ```
 

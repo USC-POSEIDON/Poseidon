@@ -7,8 +7,8 @@
     <script src="./node_modules/cesium/Build/Cesium/Cesium.js"></script>
     <script src="./node_modules/satellite.js/dist/satellite.min.js"></script>
     <link rel="stylesheet" type="text/css" href="mainWindow.css">
-    <link href="https://golden-layout.com/assets/css/goldenlayout-base.css" rel="stylesheet" />
-    <link href="https://golden-layout.com/assets/css/goldenlayout-dark-theme.css" rel="stylesheet" />
+    <link rel="stylesheet" href="./node_modules/golden-layout/src/css/goldenlayout-base.css">
+    <link rel="stylesheet" href="./node_modules/golden-layout/src/css/goldenlayout-dark-theme.css">
 </head>
 <body>
     <div id="topMenuBar">
@@ -16,6 +16,11 @@
             <li>Config
                 <div class="dropdown-content">
                     <a href="#Ground_Station" id="groundStationLink">Ground Station</a>
+                    <a href="#Debug_Window" id="debugWindow">Debug Window</a>
+                </div>
+            </li>
+            <li>Windows
+                <div class="dropdown-content" id="windowsDropdownContent">
                 </div>
             </li>
         </ul>
@@ -32,6 +37,34 @@
             <button id="closeModal">Close</button>
         </div>
     </div>
+
+    <div id="managePresetModal" style="display: none;">
+        <div>
+            <h2>Manage Preset List</h2>
+            <div>
+                <label for="addPresetInput">Add New List:</label>
+                <input type="text" id="addPresetInput" name="addPresetInput">
+                <button id="addPresetBtn">Add</button>
+            </div>
+            <div>
+                <label for="deletePresetDropdown">Delete List:</label>
+                <select id="deletePresetDropdown">
+                    <!-- Options will be populated dynamically -->
+                </select>
+                <button id="deletePresetBtn">Delete</button>
+            </div>
+            <div>
+                <label for="renamePresetDropdown">Rename List:</label>
+                <select id="renamePresetDropdown">
+                    <!-- Options will be populated dynamically -->
+                </select>
+                <input type="text" id="renamePresetInput" name="renamePresetInput" placeholder="New name">
+                <button id="renamePresetBtn">Rename</button>
+            </div>
+            <button id="closePresetModal">Close</button>
+        </div>
+    </div>
+    
     
     <div id="goldenLayoutContainer"></div> 
 
@@ -61,7 +94,7 @@
                         <option value="" disabled selected>Change Preset</option>
                     </select>
                 </div>
-                <button onclick="managePresets()">Manage presets</button>
+                <button id="managePresets">Manage presets</button>
               </div>
               
               <div id="addSatelliteContainer">
@@ -90,6 +123,7 @@
             </div>
             
         </div>
+</div>
         <div id="chatBox">
             <div id="messages"></div>
             <input type="text" id="chatInput" placeholder="Type a message...">
@@ -118,7 +152,7 @@
             <input type="text" id="tleLine2" placeholder="Enter TLE Line 2">
             <button onclick="updateSatelliteTLE()">Update Satellite</button>
         </div>
-        <div id="SignalContainer">
+        <div id="TelemetryContainer">
             <table id="telemetryTable">
                 <tr>
                     <th>Property</th>
@@ -168,15 +202,11 @@
     <script src="cal.js"></script>
     <script src="cesium.js"></script>
     <script src="orbit.js"></script>
+    <script src="renderer.js"></script>
     <script src="menu.js"></script>
     <script src="telemetry.js"></script>
-    <script src="apis.js"></script>
-    <script>
-        try {
-            require('./renderer.js');
-        } catch (e) {
-            require('renderer.js');
-        }
-    </script>
+
+    <script src="presetList.js"></script>
+
 </body>
 </html>

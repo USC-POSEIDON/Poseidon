@@ -115,12 +115,26 @@ table, th, td {
     z-index: 900;
 }
 
+#topMenuBar .dropdown-content .menu-item {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+#topMenuBar .dropdown-content .menu-item:hover {
+    background-color: #f1f1f1;
+}
+
+
 #topMenuBar .dropdown-content a {
     color: black;
     padding: 12px 16px;
     text-decoration: none;
     display: block;
 }
+
+
 
 #topMenuBar .dropdown-content a:hover {background-color: #f1f1f1}
 
@@ -190,7 +204,7 @@ table, th, td {
     color: white;
 }
 
-#groundStationModal {
+#groundStationModal, #managePresetModal {
     display: none; 
     position: fixed; 
     z-index: 2000; 
@@ -204,7 +218,7 @@ table, th, td {
     padding-top: 60px;
 }
 
-#groundStationModal > div {
+#groundStationModal > div, #managePresetModal > div {
     background-color: #fefefe;
     margin: auto;
     padding: 20px;
@@ -212,7 +226,9 @@ table, th, td {
     width: 30%; 
 }
 
+
 #PassTime {
     max-height: 300px; /* Adjust the height as needed */
     overflow: auto;
 }
+
