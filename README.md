@@ -27,7 +27,7 @@ npm start # Start the application
 ```
 
 **Note for error "“run” can’t be opened because Apple cannot check it for malicious software."
-Right-click (or control-click) on the run executable in Finder, and select Open from the context menu. This action brings up a dialog with an option to open the app anyway. This method only needs to be done once, as macOS will remember your choice for this app in the future.
+Right-click (or control-click) on the backend/dist/run executable in Finder, and select Open from the context menu. This action brings up a dialog with an option to open the app anyway. This method only needs to be done once, as macOS will remember your choice for this app in the future.
 
 ## Packaging the Application
 For packaging the application, electron-builder is preferred. It can easily package and build a ready-for-distribution Electron app for macOS, Windows, and Linux.
