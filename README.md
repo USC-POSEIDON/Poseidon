@@ -1,4 +1,4 @@
-# Poseidon Satellite Mission Control Software (V. 0.1.5)
+# Poseidon Satellite Mission Control Software (V. 0.2.5)
 
 This desktop application is built with Electron and integrates various functionalities to track and visualize satellite orbits using Cesium, a powerful library for 3D globes and maps. The app provides a real-time 3D visualization of satellite orbits with the ability to input Two-Line Element set (TLE) data for accurate tracking. It includes a chat window for command input, a calendar for scheduling, and additional modules for motor control and signal processing that are under development. (See the lastest commit for the most up to date source code)
 
@@ -9,6 +9,7 @@ This desktop application is built with Electron and integrates various functiona
 ## Features
 
 - **3D Orbit Visualization**: Real-time satellite orbit visualization with Cesium.
+- **Telemetry Data Calculation And Visualization: Real-time telemetry data update for corresponding TLE/satellite input
 - **TLE Data Input**: Input box for TLE data with validation functionality.
 - **Command Input**: Chat window for command input (backend development in progress).
 - **Calendar**: Calendar window for scheduling (waiting for backend integration).
