@@ -19,7 +19,7 @@ app.on('ready', function(){
     });
 
     const spawn = require('child_process').spawn;
-    const pythonCommand = process.platform === "win32" ? "py" : "python3"; 
+    const pythonCommand = process.platform === "win64" ? "py" : "python3"; 
     var tle_flask = spawn(pythonCommand, ['-m', 'tle_calculations.run']);    
     tle_flask.stdout.on('data', function (data) {
         console.log("TLE data: ", data.toString('utf8'));
