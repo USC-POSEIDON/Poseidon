@@ -7,6 +7,7 @@ class BasicSatellite {
     }
 }
 
+
 function getNameSearchResults(){
     var name = document.getElementById('satelliteSearchInput').value;
 
