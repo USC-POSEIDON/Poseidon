@@ -128,11 +128,3 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
-
-__pycache__
-*.db
-backend/tle_calculations.egg-info/dependency_links.txt
-backend/tle_calculations.egg-info/PKG-INFO
-backend/tle_calculations.egg-info/requires.txt
-backend/tle_calculations.egg-info/SOURCES.txt
-backend/tle_calculations.egg-info/top_level.txt
