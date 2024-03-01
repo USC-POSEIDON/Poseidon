@@ -72,8 +72,8 @@
         <div id="cesiumContainer">
             <button id="demensionBtn">Switch to 2D</button>
             <div id="presetListContainer">
-                <p>PresetList</p>
-                <ul id="presetList">
+                <p id="presetListTitle">PresetList</p>
+                <ul id="presetList" style="font-size: 12px;">
                     <!-- Presets will be populated dynamically -->
                     <li>
                             <input type="checkbox" checked> Satellite 1
@@ -90,13 +90,8 @@
                     </li>
                 </ul>
                 <div id="presetSelectionToShow">
-                    <select id="presetSelectionToShow">
+                    <select id="presetSelectionToShowing" onclick="showPresetSelectOptions()" onchange="updatePresetListDisplay()">
                         <option value="" disabled selected>Change Preset</option>
-                        <!-- Mock preset options -->
-                        <option value="preset1">Preset 1</option>
-                        <option value="preset2">Preset 2</option>
-                        <option value="preset3">Preset 3</option>
-                        <!-- More options can be added here -->
                     </select>
                 </div>
                 <button id="managePresets">Manage presets</button>
@@ -107,15 +102,15 @@
                     <select id="presetDropdown">
                         <option value="" disabled selected>Select preset to add to</option>
                         <!-- Mock preset options -->
-                        <option value="preset1">Preset 1</option>
-                        <option value="preset2">Preset 2</option>
-                        <option value="preset3">Preset 3</option>
+                        <option value="Preset 1">Preset 1</option>
+                        <option value="Preset 2">Preset 2</option>
+                        <option value="Preset 3">Preset 3</option>
                         <!-- More options can be added here -->
                     </select>
                 </div>
                 <div id="searchBox">
                     <input type="text" id="satelliteSearchInput" placeholder="Search...">
-                    <button id="searchButton">Search</button>
+                    <button id="searchButton" onClick="getNameSearchResults()">Search</button>
                 </div>
                 <div id="searchOptions">
                     <label>
@@ -139,13 +134,17 @@
         </div>
         <div id="PassTime"> 
             <table id="PassTimeTable">
-                <tr>
-                    <th>Start</th>
-                    <th>End</th>
-                    <th>Duration</th>
-                    <th>Max Elv</th>
-                    <th>Max Azimuth</th>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Az</th>
+                        <th>El</th>
+                        <th>Range</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Rows will be dynamically added here -->
+                </tbody>
             </table>
         </div>
         <div id="MotorContainer">
@@ -188,8 +187,12 @@
                     <td id="velocity">-</td>
                 </tr>
                 <tr>
-                    <td>Doppler Shift</td>
-                    <td id="doppler">-</td>
+                    <td>Receive</td>
+                    <td id="receive">-</td>
+                </tr>
+                <tr>
+                    <td>Transmit</td>
+                    <td id="transmit">-</td>
                 </tr>
                 <!-- Add other rows here as needed -->
             </table>
@@ -202,6 +205,8 @@
     <script src="renderer.js"></script>
     <script src="menu.js"></script>
     <script src="telemetry.js"></script>
+    <script src="apis.js"></script>
+
     <script src="presetList.js"></script>
 
 </body>

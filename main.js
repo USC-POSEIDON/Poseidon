@@ -18,6 +18,16 @@ app.on('ready', function(){
         }
     });
 
+    const spawn = require('child_process').spawn;
+    const pythonCommand = process.platform === "win32" ? "py" : "python3"; 
+    var tle_flask = spawn(pythonCommand, ['-m', 'tle_calculations.run']);    
+    tle_flask.stdout.on('data', function (data) {
+        console.log("TLE data: ", data.toString('utf8'));
+    });
+    tle_flask.stderr.on('data', (data) => {
+        console.log(`TLE stderr: ${data}`); // when error
+    });
+
     // Open the DevTools.
    // mainWindow.webContents.openDevTools();
    
@@ -37,6 +47,15 @@ app.on('ready', function(){
     });
 
     mainWindow.on('closed', function(){
+        const { exec } = require('child_process');
+        exec('taskkill /f /t /im celestrak_calls.exe', (err, stdout, stderr) => {
+        if (err) {
+            console.log(err)
+            return;
+        }
+        console.log(`stdout: ${stdout}`);
+        console.log(`stderr: ${stderr}`);
+        });
         app.quit();
     });
 });
