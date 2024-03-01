@@ -13,7 +13,7 @@ function checkBackendReadiness() {
         let attempts = 0;
 
         const tryConnect = () => {
-            fetch('http://localhost:5000/health') // Adjust the port and endpoint as necessary
+            fetch('http://127.0.0.1:8000/health') // Adjust the port and endpoint as necessary
                 .then(response => {
                     if (response.ok) { // Checks if the response status code is 2xx
                         console.log("Backend is ready.");
