@@ -3,3 +3,4 @@ sgp4
 scipy
 requests
 skyfield
+setuptools

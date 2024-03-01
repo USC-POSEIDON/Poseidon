@@ -21,13 +21,27 @@ Ensure Node.js and npm are installed on your system. Open a terminal or command 
 
 ```bash
 npm install # Install dependencies
+cd backend # Get into the backend dir
+pip install -e . # Install necessary python package
 npm start # Start the application
 ```
 
 ## Packaging the Application
 For packaging the application, electron-builder is preferred. It can easily package and build a ready-for-distribution Electron app for macOS, Windows, and Linux.
 
-First, install electron-builder as a dev dependency:
+First, package the python environment:
+
+```bash
+cd backend
+python setup.py sdist
+python3 -m venv myenv
+source myenv/bin/activate  # On Windows use `myenv\Scripts\activate`
+pip install backend/dist/tle_calculations-<version>.tar.gz
+pip install flask sgp4 scipy requests skyfield
+pyinstaller --onefile --add-data 'backend/tle_calculations:tle_calculations' tle_calculations/run.py
+```
+
+Second, install electron-builder as a dev dependency:
 ```bash
 npm install electron-builder --save-dev
 ```
@@ -43,4 +57,5 @@ npm run dist --mac
 npm run dist --win
 npm run dist --linux
 ```
+
 

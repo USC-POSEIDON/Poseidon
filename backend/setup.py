@@ -10,5 +10,6 @@ setup(
         'scipy',
         'requests',
         'skyfield',
+        'setuptools',
     ],
 )

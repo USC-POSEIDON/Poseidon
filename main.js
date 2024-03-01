@@ -19,15 +19,23 @@ app.on('ready', function() {
         }
     });
 
-    const pythonCommand = process.platform === "win32" ? "py" : "python3.10";
-    tleFlaskProcess = spawn(pythonCommand, ['-m', 'tle_calculations.run']);
+    const pythonExecutable = path.join(__dirname, 'backend/dist', process.platform === "win32" ? "run.exe" : "run");
+    console.log("Python executable: ", pythonExecutable);
+    
+    // Spawn the Python process
+    tleFlaskProcess = spawn(pythonExecutable);
 
+    // Listen to the stdout and stderr of the spawned Python process
     tleFlaskProcess.stdout.on('data', function(data) {
-        console.log("TLE data: ", data.toString('utf8'));
+        console.log("TLE data: ", data.toString());
     });
 
     tleFlaskProcess.stderr.on('data', (data) => {
-        console.error(`TLE stderr: ${data}`); // when error
+        console.error(`TLE stderr: ${data}`);
+    });
+
+    tleFlaskProcess.on('error', (err) => {
+        console.error('Failed to start subprocess.', err);
     });
 
     mainWindow.loadURL(url.format({
@@ -49,12 +57,17 @@ app.on('ready', function() {
     });
 });
 
+// This is incorrect - you should not attach these event listeners to the global process object.
+// Removed these listeners.
+
 app.on('window-all-closed', () => {
-    app.quit(); 
+    // Ensure all windows are closed before quitting the app
+    app.quit();
 });
 
 app.on('before-quit', () => {
+    // Gracefully terminate your Python process before the app quits
     if (tleFlaskProcess !== null) {
-        tleFlaskProcess.kill('SIGINT'); 
+        tleFlaskProcess.kill('SIGINT');
     }
 });
