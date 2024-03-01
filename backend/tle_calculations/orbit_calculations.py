@@ -212,6 +212,11 @@ def getCurrentTelemetry():
     sys.stdout.flush()
     return json_string, 200
 
+@app.route('/health', methods=['GET'])
+def health_check():
+    # This endpoint is used for indicating that the backend is up and running
+    return jsonify({'status': 'up'}), 200
+
 
 @app.route('/calculations/groundstation', methods=['POST'])
 def changeGroundStation():
@@ -226,6 +231,7 @@ def changeGroundStation():
 
     global observer
     observer = wgs84.latlon(lat, lon)
+
 
 
 if __name__ == "__main__":

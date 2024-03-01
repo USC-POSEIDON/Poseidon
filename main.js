@@ -5,9 +5,40 @@ const { app, BrowserWindow, ipcMain } = electron;
 const spawn = require('child_process').spawn;
 
 let mainWindow;
-let tleFlaskProcess = null; // Variable to hold the Flask process
+let tleFlaskProcess = null; 
 
-app.on('ready', function() {
+function checkBackendReadiness() {
+    return new Promise((resolve, reject) => {
+        const maxAttempts = 20;
+        let attempts = 0;
+
+        const tryConnect = () => {
+            fetch('http://localhost:5000/health') // Adjust the port and endpoint as necessary
+                .then(response => {
+                    if (response.ok) { // Checks if the response status code is 2xx
+                        console.log("Backend is ready.");
+                        resolve();
+                    } else {
+                        throw new Error('Backend not ready');
+                    }
+                })
+                .catch(error => {
+                    if (attempts < maxAttempts) {
+                        console.log(`Waiting for backend... attempt ${attempts}`);
+                        setTimeout(tryConnect, 1000); // Retry every second
+                    } else {
+                        console.error("Backend failed to become ready in time.");
+                        reject(new Error('Backend failed to become ready in time.'));
+                    }
+                });
+        };
+
+        tryConnect();
+    });
+}
+
+
+app.on('ready', async function() {
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
@@ -19,11 +50,15 @@ app.on('ready', function() {
         }
     });
 
-    const pythonExecutable = path.join(__dirname, 'backend/dist', process.platform === "win32" ? "run.exe" : "run");
-    console.log("Python executable: ", pythonExecutable);
+    // production mode only
+    // const pythonExecutable = path.join(__dirname, 'backend/dist', process.platform === "win32" ? "run.exe" : "run");
+    // console.log("Python executable: ", pythonExecutable);
     
-    // Spawn the Python process
-    tleFlaskProcess = spawn(pythonExecutable);
+    // // Spawn the Python process
+    // tleFlaskProcess = spawn(pythonExecutable);
+
+    const pythonCommand = process.platform === "win32" ? "py" : "python3.10";
+    tleFlaskProcess = spawn(pythonCommand, ['-m', 'tle_calculations.run']);
 
     // Listen to the stdout and stderr of the spawned Python process
     tleFlaskProcess.stdout.on('data', function(data) {
@@ -38,35 +73,25 @@ app.on('ready', function() {
         console.error('Failed to start subprocess.', err);
     });
 
-    mainWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'mainWindow.html'),
-        protocol: 'file:',
-        slashes: true
-    }));
-
-    ipcMain.on('open-devtools', (event, arg) => {
-        const webContents = event.sender;
-        const window = BrowserWindow.fromWebContents(webContents);
-        if (window) {
-            window.webContents.openDevTools();
-        }
-    });
-
-    mainWindow.on('closed', function() {
-        mainWindow = null;
-    });
+    // Wait for the backend to be ready
+    try {
+        await checkBackendReadiness();
+        mainWindow.loadURL(url.format({
+            pathname: path.join(__dirname, 'mainWindow.html'),
+            protocol: 'file:',
+            slashes: true
+        }));
+    } catch (error) {
+        console.error("Backend readiness check failed:", error.message);
+        app.quit(); // Quit the app if the backend isn't ready in time
+    }
 });
 
-// This is incorrect - you should not attach these event listeners to the global process object.
-// Removed these listeners.
-
 app.on('window-all-closed', () => {
-    // Ensure all windows are closed before quitting the app
     app.quit();
 });
 
 app.on('before-quit', () => {
-    // Gracefully terminate your Python process before the app quits
     if (tleFlaskProcess !== null) {
         tleFlaskProcess.kill('SIGINT');
     }

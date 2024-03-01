@@ -1,9 +1,16 @@
 from datetime import datetime, timedelta
 from configparser import ConfigParser
+import os
 import sqlite3
+import sys
 
 params: dict
-db_path = "backend/poseidon.db"
+if getattr(sys, 'frozen', False):
+        # If so, the database is located in the same directory as the executable
+    db_path = os.path.join(sys._MEIPASS, 'poseidon.db')
+else:
+        # If not, use a development path or a relative path
+    db_path = "backend/poseidon.db"
 
 def createTables():
     conn = sqlite3.connect(db_path)
