@@ -40,9 +40,9 @@ cd backend
 python setup.py sdist
 python3 -m venv myenv
 source myenv/bin/activate  # On Windows use `myenv\Scripts\activate`
-pip install backend/dist/tle_calculations-<version>.tar.gz
+pip install dist/tle_calculations-<version>.tar.gz
 pip install flask sgp4 scipy requests skyfield
-pyinstaller --onefile --add-data 'backend/tle_calculations:tle_calculations' tle_calculations/run.py
+pyinstaller --onefile --add-data 'tle_calculations:tle_calculations' tle_calculations/run.py
 ```
 
 Second, install electron-builder as a dev dependency:
