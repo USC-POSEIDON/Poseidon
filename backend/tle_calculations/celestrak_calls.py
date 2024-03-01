@@ -5,7 +5,6 @@ from flask import Flask, request, jsonify
 
 from tle_calculations.database import *
 from tle_calculations import app
-# app = Flask(__name__)
 
 DODONA_CATNR = 51084
 TEST_SATLIST = [25544, 123, 1253, 2, 900, 51084]

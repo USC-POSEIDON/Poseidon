@@ -1,10 +1,8 @@
 Metadata-Version: 2.1
-Name: tle_calculations
+Name: tle-calculations
 Version: 0.0.0
 Requires-Dist: flask
 Requires-Dist: sgp4
 Requires-Dist: scipy
 Requires-Dist: requests
-Requires-Dist: psycopg2
 Requires-Dist: skyfield
-Requires-Dist: psycopg2-binary

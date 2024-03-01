@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from tle_calculations import app
 from tle_calculations.celestrak_calls import createTables
 

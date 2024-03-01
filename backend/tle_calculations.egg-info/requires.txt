@@ -2,6 +2,4 @@ flask
 sgp4
 scipy
 requests
-psycopg2
 skyfield
-psycopg2-binary
