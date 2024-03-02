@@ -25,7 +25,8 @@ app.on('ready', function() {
     
     // tleFlaskProcess = spawn(pythonExecutable);
 
-    const pythonCommand = process.platform === "win32" ? "py" : "python3.1";
+
+    const pythonCommand = process.platform === "win32" ? "py" : "python3"; //change your path here to env where you installed the tle package
     tleFlaskProcess = spawn(pythonCommand, ['-m', 'tle_calculations.run']);
 
     tleFlaskProcess.stdout.on('data', function(data) {

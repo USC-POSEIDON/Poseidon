@@ -31,6 +31,11 @@ cd backend # Get into the backend dir
 pip install -r requirements.txt 
 /path/to/your/desired/python3 -m pip install -e .
 
+# ---conda(SUGGESTED)--- #
+conda create --name Poseidon --file requirements.txt
+conda activate Poseidon
+pip install -e . 
+
 # or creating an virtual env #
 # ---for windows--- #
 python -m venv venv 
