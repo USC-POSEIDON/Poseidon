@@ -23,7 +23,29 @@ Ensure Node.js and npm are installed on your system. Open a terminal or command 
 ```bash
 npm install # Install dependencies
 cd backend # Get into the backend dir
-pip install -e . # Install necessary python package
+
+```
+
+```bash
+# Install all the requirements to local env
+pip install -r requirements.txt 
+/path/to/your/desired/python3 -m pip install -e .
+
+# or creating an virtual env #
+# ---for windows--- #
+python -m venv venv 
+.\venv\Scripts\activate 
+pip install -r requirements.txt
+pip install -e . 
+
+# ---for linux and mac--- #
+python3 -m venv venv 
+source venv/bin/activate
+pip install -r requirements.txt
+pip install -e . 
+```
+
+```bash
 npm start # Start the application
 ```
 

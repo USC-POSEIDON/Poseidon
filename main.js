@@ -25,7 +25,7 @@ app.on('ready', function() {
     
     // tleFlaskProcess = spawn(pythonExecutable);
 
-    const pythonCommand = process.platform === "win32" ? "py" : "python3.10";
+    const pythonCommand = process.platform === "win32" ? "py" : "python3.1";
     tleFlaskProcess = spawn(pythonCommand, ['-m', 'tle_calculations.run']);
 
     tleFlaskProcess.stdout.on('data', function(data) {
