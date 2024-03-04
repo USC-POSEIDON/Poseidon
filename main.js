@@ -45,6 +45,7 @@ app.on('ready', function() {
                 const response = await axios.get('http://127.0.0.1:5000/health');
                 if (response.status === 200) {
                     console.log('Server is up and running');
+                    attempts = i;
                     mainWindow.loadURL(url.format({
                         pathname: path.join(__dirname, 'mainWindow.html'),
                         protocol: 'file:',

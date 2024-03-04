@@ -10,15 +10,6 @@ function updateTelemetryTLE(line1, line2){
 function updateTelemetryData() {
     
     // TODO: get TLE data depending on which satellite is selected
-
-    fetch(`http://127.0.0.1:5000/health`).then(function (response) {
-        if (!response.ok) {
-            throw new Error("HTTP error, status = " + response.status);
-        }
-        return response.json();
-
-    })
-
     fetch(`http://127.0.0.1:5000/calculations/telemetry?`+ new URLSearchParams({
         s: defaultTleLine1,
         t: defaultTleLine2,
