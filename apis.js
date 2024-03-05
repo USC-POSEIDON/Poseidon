@@ -136,8 +136,6 @@ function updatePresetListDisplay(){
 
 function handleCheckboxChange() {
     // Get all checkboxes within the div
-    console.log("Checkboxchanged");
-
     var checkboxes = document.querySelectorAll('#presetList input[type="checkbox"]');
     
     // Count the number of checked checkboxes
