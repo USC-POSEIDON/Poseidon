@@ -7,9 +7,30 @@ function populatePresetDropdowns() {
 
     populateDynamicOptions(deleteDropdown);
     populateDynamicOptions(renameDropdown);
+
+    const selectDropdown = document.getElementById("selectPresetDropdown");
+    const selectedValue = selectDropdown.value;
+    selectDropdown.innerHTML = '';
+
+    let selectOpt = new Option("Change Preset", "");
+    selectOpt.disabled = true;
+    selectDropdown.add(selectOpt);
+
+    populateDynamicOptions(selectDropdown, selectedValue);
+
+    const presetDropdown = document.getElementById("presetDropdown");
+    const presetValue = selectDropdown.value;
+    presetDropdown.innerHTML = '';
+    
+    let presetOpt = new Option("Select preset to add to", "");
+    presetOpt.disabled = true;
+    presetDropdown.add(presetOpt);
+
+    populateDynamicOptions(presetDropdown, presetValue);
 }
 
-function populateDynamicOptions(dropdownElement){
+function populateDynamicOptions(dropdownElement, selectedValue = ""){
+
     fetch(`http://127.0.0.1:5000//satellites/get/allpresets`)
     .then(function (response) {
         if (!response.ok) {
@@ -24,8 +45,11 @@ function populateDynamicOptions(dropdownElement){
 
         const presets = data.names;
         presets.forEach(preset => {
-            let opt = new Option(preset, preset);
-            dropdownElement.add(opt);
+            const optionElement = new Option(preset, preset);
+            dropdownElement.appendChild(optionElement);
+            if (preset === selectedValue) {
+                optionElement.setAttribute('selected', 'selected');
+            }
         });
     })
     .catch(function (error) {
@@ -34,28 +58,9 @@ function populateDynamicOptions(dropdownElement){
     });
 }
 
-
-
-document.getElementById("selectPresetDropdown").onclick = function() {
-    const selectDropdown = document.getElementById("selectPresetDropdown");
-    selectDropdown.innerHTML = '';
-
-    let opt = new Option("Change Preset", "");
-    opt.disabled = true;
-    selectDropdown.add(opt);
-
-    populateDynamicOptions(selectDropdown);
-}
-
-document.getElementById("presetDropdown").onclick = function() {
-    const presetDropdown = document.getElementById("presetDropdown");
-    presetDropdown.innerHTML = '';
-    
-    let opt = new Option("Select preset to add to", "");
-    opt.disabled = true;
-    presetDropdown.add(opt);
-
-    populateDynamicOptions(presetDropdown);
+function handleOptionClick(event){
+    console.log("otpion click handler");
+    event.stopPropagation();
 }
 
 document.getElementById("managePresets").onclick = function() {
@@ -114,3 +119,7 @@ document.getElementById("renamePresetBtn").onclick = function() {
     const newName = document.getElementById("renamePresetInput").value;
     // TODO
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+    populatePresetDropdowns();
+});

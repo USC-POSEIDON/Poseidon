@@ -34,7 +34,7 @@ function updateTelemetryData() {
     })
     .then(function (responseData) {
         // Handle the response data here
-        console.log(responseData);
+        // console.log(responseData);
         const data = JSON.parse(JSON.stringify(responseData));
         var footprint = calculateFootprint(data["alt"]);
 

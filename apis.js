@@ -14,6 +14,8 @@ function getNameSearchResults(){
     var formData = new FormData();
     formData.append('listname', type);
 
+    console.log(`Adding sat ${name} to list ${type}`);
+
     fetch(`http://127.0.0.1:5000//satellites/post/catnr/${name}`, {
         method: "POST",
         body: formData
@@ -83,7 +85,7 @@ function showPresetSelectOptions(){
 }
 
 function updatePresetListDisplay(){
-    var listname = document.getElementById("presetSelectionToShowing").value
+    var listname = document.getElementById("selectPresetDropdown").value
     document.getElementById("presetListTitle").textContent = listname;
 
     fetch(`http://127.0.0.1:5000//satellites/get/preset/${listname}`)
@@ -109,7 +111,6 @@ function updatePresetListDisplay(){
 
         // Populate list with satellite names
         options.forEach(function(satellite) {
-            console.log(typeof satellite);
             var catnr = satellite[0];
             var name = satellite[1];
             var line1 = satellite[2];
