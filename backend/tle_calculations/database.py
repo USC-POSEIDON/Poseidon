@@ -1,9 +1,16 @@
 from datetime import datetime, timedelta
 from configparser import ConfigParser
+import os
 import sqlite3
+import sys
 
 params: dict
-db_path = "backend/poseidon.db"
+if getattr(sys, 'frozen', False):
+        # If so, the database is located in the same directory as the executable
+    db_path = os.path.join(sys._MEIPASS, 'poseidon.db')
+else:
+        # If not, use a development path or a relative path
+    db_path = "backend/poseidon.db"
 
 def createTables():
     conn = sqlite3.connect(db_path)
@@ -55,6 +62,15 @@ def createTables():
             azm REAL,
             elv REAL,
             range REAL
+        );
+    """)
+
+    conn.commit()
+
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS Preset_Names (
+            preset_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT UNIQUE
         );
     """)
 
@@ -119,6 +135,25 @@ def insertPass(satellite_id, time, azm, elv, range):
     """
 
     cur.execute(sql, (satellite_id, time, azm, elv, range))
+    conn.commit()
+
+    # Close the connection
+    cur.close()
+    conn.close()
+
+def insertPreset(name):
+    conn = sqlite3.connect(db_path)
+
+    # Open a cursor to perform database operations
+    cur = conn.cursor()
+
+    # Insert parsed data into the database
+    sql = """
+    INSERT INTO Preset_Names (name)
+    VALUES (?)
+    """
+
+    cur.execute(sql, (name,))
     conn.commit()
 
     # Close the connection
@@ -229,7 +264,7 @@ def getAllPresetNames():
     cur = conn.cursor()
 
     # Execute a SELECT statement (unchanged)
-    cur.execute("SELECT DISTINCT type FROM Satellites ORDER BY type ASC")
+    cur.execute("SELECT name FROM Preset_Names ORDER BY name ASC")
 
     # Retrieve the results
     rows = cur.fetchall()
@@ -295,6 +330,9 @@ def deletePresetList(type):
     # Open a cursor to perform database operations
     cur = conn.cursor()
 
+    # Delete from Preset Names
+    cur.execute("DELETE FROM Preset_Names WHERE name = ?", (type,))
+
     # Delete rows from Satellites in 'type' preset.
     delete = '''
     DELETE FROM Satellites
@@ -307,18 +345,19 @@ def deletePresetList(type):
     # Fetch the deleted rows
     deleted_rows = [row[0] for row in cur.fetchall()]
 
-    # Delete from TLE if no remaining references
-    delete_unref = """
-        DELETE FROM TLE_Data
-        WHERE tle_id IN ({})
-        AND NOT EXISTS (
-            SELECT 1 FROM Satellites
-            WHERE Satellites.tle_id = TLE_Data.tle_id
-        )
-    """.format(','.join('?' * len(deleted_rows)))
+    if deleted_rows != []:
+        # Delete from TLE if no remaining references
+        delete_unref = """
+            DELETE FROM TLE_Data
+            WHERE tle_id IN ({})
+            AND NOT EXISTS (
+                SELECT 1 FROM Satellites
+                WHERE Satellites.tle_id = TLE_Data.tle_id
+            )
+        """.format(','.join('?' * len(deleted_rows)))
 
-    cur.execute(delete_unref, (deleted_rows,))
-    conn.commit()
+        cur.execute(delete_unref, (deleted_rows,))
+        conn.commit()
 
     # Close the cursor and the connection
     cur.close()

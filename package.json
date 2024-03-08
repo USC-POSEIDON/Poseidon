@@ -1,7 +1,7 @@
 {
   "name": "front_end",
-  "version": "1.0.0",
-  "description": "front end for 401 desktop app ",
+  "version": "0.2.5",
+  "description": "Poseidon",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -10,7 +10,16 @@
   },
   "build": {
     "appId": "com.p.id",
-    "productName": "Poseidon", 
+    "productName": "Poseidon",
+    "extraFiles": [
+      {
+        "from": "./backend/dist/",
+        "to": "backend/dist/",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
     "mac": {
       "target": "dmg"
     },
@@ -32,8 +41,10 @@
   },
   "homepage": "https://github.com/CSCI401TEAM/XXXFront-end#readme",
   "dependencies": {
+    "axios": "^1.6.7",
     "cesium": "^1.113.0",
     "golden-layout": "^1.5.9",
+    "pyinstaller": "^0.0.1",
     "satellite.js": "^5.0.0"
   },
   "devDependencies": {
