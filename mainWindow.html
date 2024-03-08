@@ -90,22 +90,18 @@
                     </li>
                 </ul>
                 <div id="presetSelectionToShow">
-                    <select id="presetSelectionToShowing" onclick="showPresetSelectOptions()" onchange="updatePresetListDisplay()">
+                    <select id="selectPresetDropdown" onchange="updatePresetListDisplay()">
                         <option value="" disabled selected>Change Preset</option>
                     </select>
                 </div>
                 <button id="managePresets">Manage presets</button>
+                <button id="predictPassesBtn" onclick="predictPasses()">Predict Passes</button>
               </div>
               
               <div id="addSatelliteContainer">
                 <div id="presetSelection">
                     <select id="presetDropdown">
                         <option value="" disabled selected>Select preset to add to</option>
-                        <!-- Mock preset options -->
-                        <option value="Preset 1">Preset 1</option>
-                        <option value="Preset 2">Preset 2</option>
-                        <option value="Preset 3">Preset 3</option>
-                        <!-- More options can be added here -->
                     </select>
                 </div>
                 <div id="searchBox">
@@ -137,6 +133,7 @@
                 <thead>
                     <tr>
                         <th>Date</th>
+                        <th>Name</th>
                         <th>Az</th>
                         <th>El</th>
                         <th>Range</th>

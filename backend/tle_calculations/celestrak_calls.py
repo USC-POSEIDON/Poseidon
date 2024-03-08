@@ -117,15 +117,21 @@ def addNewTLEByCATNR(catnr):
     
     return 'Error: Invalid catnr'
 
-# @app.route('/satellites/post/tle', methods=['POST'])
-# def addNewTLE(line1, line2, ):
-#     pass
+@app.route('/satellites/post/preset/<listname>', methods=['POST'])
+def addPreset(listname):
+    insertPreset(listname)
+    return jsonify({"message": "POST request successful"}), 200
 
+@app.route('/satellites/rename/preset/<listname>/<newname>', methods=['POST'])
+def renamePreset(listname, newname):
+    # TODO:
+    deletePresetList(listname)
+    return jsonify({"message": "POST request successful"}), 200
 
 @app.route('/satellites/delete/preset/<listname>', methods=['DELETE'])
 def deletePreset(listname):
     deletePresetList(listname)
-    return "Success"
+    return jsonify({"message": "DELETE request successful"}), 200
 
 @app.route('/satellites/delete/satellite/<catnr>/<listname>', methods=['DELETE'])
 def deleteSatellite(catnr, listname):

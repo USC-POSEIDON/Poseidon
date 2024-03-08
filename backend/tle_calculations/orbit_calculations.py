@@ -31,7 +31,8 @@ class PassLine:
         self.range = range
 
 class Pass:
-    def __init__(self, catnr, rise: PassLine, culminate: PassLine, set: PassLine):
+    def __init__(self, name, catnr, rise: PassLine, culminate: PassLine, set: PassLine):
+        self.name = name
         self.catnr = catnr
         self.rise = rise
         self.culminate = culminate
@@ -75,6 +76,7 @@ def getPassTimeInfo():
     s = request.args.get('s')
     t = request.args.get('t')
     catnr = request.args.get('catnr')
+    satname = request.args.get('name')
 
     # TODO: decide error behavior
     if not s:
@@ -83,16 +85,17 @@ def getPassTimeInfo():
         return "No TLE line 2", 400
     if not catnr: 
         return "No CatNr", 400
+    if not satname: 
+        return "No sat name", 400
 
     try:
-        name = request.args.get('name') if request.args.get('name') else '???'
         days = int(request.args.get('days')) if request.args.get('days') else 7
         min_deg = float(request.args.get('min_deg')) if request.args.get('min_deg') else 5.0
     except:
         return "Incorrect type for days or min_deg.", 400
 
     # Create Skyfield satellite and observer (groundstation) objects
-    satellite = EarthSatellite(s, t, name, ts)
+    satellite = EarthSatellite(s, t, satname, ts)
     difference = satellite - observer
 
     # Set start and end time (UTC)
@@ -123,14 +126,9 @@ def getPassTimeInfo():
             set = PassLine(date, az.degrees, alt.degrees, range.km)
             # if rise == None:
             #     raise RuntimeError
-            passes.append(Pass(catnr, rise, culminate, set))
+            passes.append(Pass(satname, catnr, rise, culminate, set))
 
-    print("GETTING PASSES!!!!!!!!!!!!!!")
     json_string = json.dumps(passes, default=vars, indent=4)
-    print(json_string)
-    # jsonobj = jsonify(passes)
-    # print(jsonobj)
-    sys.stdout.flush()
     return json_string, 200
 
 def getPassDict(satellites):
