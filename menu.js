@@ -12,6 +12,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    document.getElementById('commandWindowLink').addEventListener('click', function(event) {
+        event.preventDefault();
+        document.getElementById('commandWindow').style.display = 'block';
+    });
+
     document.getElementById('groundStationLink').addEventListener('click', function(event) {
       event.preventDefault();
       document.getElementById('groundStationModal').style.display = 'block';

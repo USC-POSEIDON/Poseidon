@@ -52,6 +52,12 @@ let goldenLayout = new GoldenLayout({
               },
               {
                 type: 'component',
+                id: 'Command_Generation_component',
+                componentName: 'Command_Generation_component',
+                title: 'CommandGeneration' 
+              },
+              {
+                type: 'component',
                 id: 'Telemetry_component',
                 componentName: 'Telemetry_component',
                 title: 'TelemetryData' 
@@ -163,6 +169,20 @@ goldenLayout.registerComponent('Motor_component', function(container, state) {
   });
 });
 
+goldenLayout.registerComponent('Command_Generation_component', function (container, state) {
+  let commandGenerationWindow = $('#commandGeneration');
+  if (commandGenerationWindow.length === 0) {
+      commandGenerationWindow = closedComponents['Command_Generation_component'];
+  }
+
+  container.getElement().append(commandGenerationWindow);
+
+  container.on('destroy', function () {
+      closedComponents['Command_Generation_component'] = commandGenerationWindow.detach();
+      trackComponentState('Command_Generation_component', false);
+      updateWindowsDropdown();
+  });
+});
 
 goldenLayout.registerComponent('Telemetry_component', function(container, state) {
   let telemetryContainer = $('#TelemetryContainer');
@@ -197,6 +217,7 @@ function updateWindowsDropdown() {
         { id: 'calendar_component', title: 'Calendar' },
         { id: 'PassTime_component', title: 'PassTime' },
         { id: 'Motor_component', title: 'Motor' },
+        { id: 'Command_Generation_component', title: 'CommandGeneration' },
         { id: 'Telemetry_component', title: 'TelemetryData' },
         { id: 'Control_component', title: 'Control' },
     ];
@@ -295,6 +316,13 @@ function getComponentConfig(id) {
           id: 'Motor_component',
           componentState: {} 
       },
+      'Command_Generation_component': {
+          type: 'component',
+          componentName: 'Command_Generation_component',
+          title: 'CommandGeneration',
+          id: 'Command_Generation_component',
+          componentState: {} 
+      },
       'Telemetry_component': {
           type: 'component',
           componentName: 'Telemetry_component',
@@ -335,7 +363,7 @@ goldenLayout.on('itemDestroyed', function(component) {
 });
 
 goldenLayout.on('initialised', function() {
-    ['cesium_component', 'chat_component', 'calendar_component', 'PassTime_component', 'Motor_component', 'Telemetry_component', 'Control_component'].forEach(id => {
+    ['cesium_component', 'chat_component', 'calendar_component', 'PassTime_component', 'Motor_component', 'Command_Generation_component', 'Telemetry_component', 'Control_component'].forEach(id => {
         trackComponentState(id, true);
     });
     updateWindowsDropdown();
