@@ -3,7 +3,6 @@
           height: 100%; margin: 0; padding: 0; overflow: hidden;
       }
 
-
 iframe {
     width: 100%; 
     height: 100%; 
@@ -14,7 +13,6 @@ iframe {
     position: relative;
     height: 100%;
 }
-
 
 #cesiumContainer {
     width: 100%;
@@ -97,7 +95,6 @@ table, th, td {
     padding: 0;
 }
 
-
 #topMenuBar li {
     padding-right: 10px;
     padding-top: 2px;
@@ -135,7 +132,6 @@ table, th, td {
 }
 
 
-
 #topMenuBar .dropdown-content a:hover {background-color: #f1f1f1}
 
 #presetListContainer {
@@ -150,7 +146,6 @@ table, th, td {
     z-index: 12; 
 }
 
-
 #addSatelliteContainer {
     position: absolute; 
     bottom: 10px;
@@ -163,7 +158,6 @@ table, th, td {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
     z-index: 10; 
 }
-
 #presetList {
     list-style-type: none; 
     padding: 0;
@@ -226,9 +220,28 @@ table, th, td {
     width: 30%; 
 }
 
-
 #PassTime {
     max-height: 300px; /* Adjust the height as needed */
     overflow: auto;
 }
 
+#commandGeneration {
+    background-color: #f0f0f0;
+    padding: 10px;
+}
+
+#commandDropdown {
+    width: 200px;
+    padding: 5px;
+}
+
+#parameterInputs {
+    margin-top: 10px;
+}
+
+#executeCommand {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+}

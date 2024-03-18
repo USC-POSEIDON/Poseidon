@@ -61,11 +61,17 @@ let goldenLayout = new GoldenLayout({
                 id: 'Control_component',
                 componentName: 'Control_component',
                 title: 'Control'
-              }]
+              },
+              {
+                type: 'component',
+                id: 'Command_Generation_component',
+                componentName: 'Command_Generation_component',
+                title: 'CommandGeneration' 
+              }
+            ]
           }]
     }]
 });
-
 
 goldenLayout.registerComponent('cesium_component', function(container, state) {
   // Check if the cesiumContainer is already detached and stored
@@ -83,7 +89,6 @@ goldenLayout.registerComponent('cesium_component', function(container, state) {
   });
 });
 
-
 goldenLayout.registerComponent('Control_component', function(container, state) {
   let controlPanel = $('#satelliteControlPanel');
   if (controlPanel.length === 0) {
@@ -98,7 +103,6 @@ goldenLayout.registerComponent('Control_component', function(container, state) {
     updateWindowsDropdown();
   });
 });
-
 
 goldenLayout.registerComponent('calendar_component', function(container, state) {
   let calendarModal = $('#calendarModal');
@@ -115,7 +119,6 @@ goldenLayout.registerComponent('calendar_component', function(container, state) 
   });
 });
 
-
 goldenLayout.registerComponent('chat_component', function(container, state) {
   let chatBox = $('#chatBox');
   if (chatBox.length === 0) {
@@ -130,7 +133,6 @@ goldenLayout.registerComponent('chat_component', function(container, state) {
     updateWindowsDropdown();
   });
 });
-
 
 goldenLayout.registerComponent('PassTime_component', function(container, state) {
   let passTime = $('#PassTime');
@@ -147,7 +149,6 @@ goldenLayout.registerComponent('PassTime_component', function(container, state) 
   });
 });
 
-
 goldenLayout.registerComponent('Motor_component', function(container, state) {
   let MotorContainer = $('#MotorContainer');
   if (MotorContainer.length === 0) {
@@ -162,7 +163,6 @@ goldenLayout.registerComponent('Motor_component', function(container, state) {
     updateWindowsDropdown();
   });
 });
-
 
 goldenLayout.registerComponent('Telemetry_component', function(container, state) {
   let telemetryContainer = $('#TelemetryContainer');
@@ -179,6 +179,20 @@ goldenLayout.registerComponent('Telemetry_component', function(container, state)
   });
 });
 
+goldenLayout.registerComponent('Command_Generation_component', function (container, state) {
+  let commandGenerationWindow = $('#commandGeneration');
+  if (commandGenerationWindow.length === 0) {
+      commandGenerationWindow = closedComponents['Command_Generation_component'];
+  }
+
+  container.getElement().append(commandGenerationWindow);
+
+  container.on('destroy', function () {
+      closedComponents['Command_Generation_component'] = commandGenerationWindow.detach();
+      trackComponentState('Command_Generation_component', false);
+      updateWindowsDropdown();
+  });
+});
 
 let componentStates = {};
 
@@ -199,6 +213,7 @@ function updateWindowsDropdown() {
         { id: 'Motor_component', title: 'Motor' },
         { id: 'Telemetry_component', title: 'TelemetryData' },
         { id: 'Control_component', title: 'Control' },
+        { id: 'Command_Generation_component', title: 'CommandGeneration' },
     ];
 
     allComponents.forEach(component => {
@@ -308,12 +323,18 @@ function getComponentConfig(id) {
           title: 'Control',
           id: 'Control_component',
           componentState: {} 
+      },
+      'Command_Generation_component': {
+        type: 'component',
+        componentName: 'Command_Generation_component',
+        title: 'CommandGeneration',
+        id: 'Command_Generation_component',
+        componentState: {} 
       }
   };
 
   return configMap[id] || null;
 }
-
 
 function removeComponentFromLayout(componentId) {
   const items = goldenLayout.root.getItemsById(componentId);
@@ -326,7 +347,6 @@ function removeComponentFromLayout(componentId) {
   updateWindowsDropdown();
 }
 
-
 goldenLayout.on('itemDestroyed', function(component) {
   const componentId = component.config.id;
   if (componentId) {
@@ -335,7 +355,7 @@ goldenLayout.on('itemDestroyed', function(component) {
 });
 
 goldenLayout.on('initialised', function() {
-    ['cesium_component', 'chat_component', 'calendar_component', 'PassTime_component', 'Motor_component', 'Telemetry_component', 'Control_component'].forEach(id => {
+    ['cesium_component', 'chat_component', 'calendar_component', 'PassTime_component', 'Motor_component', 'Telemetry_component', 'Control_component', 'Command_Generation_component'].forEach(id => {
         trackComponentState(id, true);
     });
     updateWindowsDropdown();

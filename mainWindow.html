@@ -38,6 +38,22 @@
         </div>
     </div>
 
+    <div id="commandGeneration">
+        <div>
+            <label for="commandDropdown">Select Command:</label>
+            <select id="commandDropdown" onchange="populateParameters()">
+                <option value="" disabled selected>Select command</option>
+                <!-- Commands will be populated dynamically -->
+            </select>
+
+            <div id="parameterInputs">
+                <!-- Parameters will be populated dynamically based on the selected command -->
+            </div>
+
+            <button id="executeCommand">Generate Command</button>
+        </div>
+    </div>
+
     <div id="managePresetModal" style="display: none;">
         <div>
             <h2>Manage Preset List</h2>
@@ -64,7 +80,6 @@
             <button id="closePresetModal">Close</button>
         </div>
     </div>
-    
     
     <div id="goldenLayoutContainer"></div> 
 
@@ -202,9 +217,8 @@
     <script src="renderer.js"></script>
     <script src="menu.js"></script>
     <script src="telemetry.js"></script>
+    <script src="command-gen.js"></script>
     <script src="apis.js"></script>
-
     <script src="presetList.js"></script>
-
 </body>
 </html>
