@@ -97,7 +97,6 @@ table, th, td {
     padding: 0;
 }
 
-
 #topMenuBar li {
     padding-right: 10px;
     padding-top: 2px;
@@ -134,8 +133,6 @@ table, th, td {
     display: block;
 }
 
-
-
 #topMenuBar .dropdown-content a:hover {background-color: #f1f1f1}
 
 #presetListContainer {
@@ -149,7 +146,6 @@ table, th, td {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
     z-index: 12; 
 }
-
 
 #addSatelliteContainer {
     position: absolute; 
@@ -204,6 +200,31 @@ table, th, td {
     color: white;
 }
 
+#commandGeneration {
+    /* Example styles */
+    background-color: #f0f0f0;
+    padding: 10px;
+}
+
+#commandDropdown {
+    /* Example styles */
+    width: 200px;
+    padding: 5px;
+}
+
+#parameterInputs {
+    /* Example styles */
+    margin-top: 10px;
+}
+
+#executeCommand {
+    /* Example styles */
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+}
+
 #groundStationModal, #managePresetModal {
     display: none; 
     position: fixed; 
@@ -225,7 +246,6 @@ table, th, td {
     border: 1px solid #888;
     width: 30%; 
 }
-
 
 #PassTime {
     max-height: 300px; /* Adjust the height as needed */

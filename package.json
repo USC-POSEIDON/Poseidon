@@ -9,6 +9,13 @@
     "dist": "electron-builder"
   },
   "build": {
+    "asar": true,
+    "extraResources": [
+      {
+        "from": "./backend/dist/run",
+        "to": "backend/dist/run"
+      }
+    ],
     "appId": "com.p.id",
     "productName": "Poseidon",
     "extraFiles": [
@@ -49,6 +56,6 @@
   },
   "devDependencies": {
     "electron": "^28.2.0",
-    "electron-builder": "^24.9.1"
+    "electron-builder": "^24.13.3"
   }
 }
