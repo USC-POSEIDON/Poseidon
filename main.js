@@ -21,23 +21,23 @@ app.on('ready', function() {
     });
 
     // ----------------- Start the TLE Flask server for deploy mode ----------------- //
-    let pythonExecutable = path.join(__dirname, 'backend/dist', process.platform === "win32" ? "run.exe" : "run");
-    if (app.isPackaged) {
-        // Path for packaged app
-        pythonExecutable = path.join(process.resourcesPath, '..', 'backend/dist', process.platform === "win32" ? "run.exe" : "run");
-    } else {
-        // Path for development
-        pythonExecutable = path.join(__dirname, 'backend/dist', process.platform === "win32" ? "run.exe" : "run");
-    }
-    console.log("Python executable: ", pythonExecutable);
-    tleFlaskProcess = spawn(pythonExecutable, { stdio: ['pipe', 'pipe', 'pipe'] });
+    // let pythonExecutable = path.join(__dirname, 'backend/dist', process.platform === "win32" ? "run.exe" : "run");
+    // if (app.isPackaged) {
+    //     // Path for packaged app
+    //     pythonExecutable = path.join(process.resourcesPath, '..', 'backend/dist', process.platform === "win32" ? "run.exe" : "run");
+    // } else {
+    //     // Path for development
+    //     pythonExecutable = path.join(__dirname, 'backend/dist', process.platform === "win32" ? "run.exe" : "run");
+    // }
+    // console.log("Python executable: ", pythonExecutable);
+    // tleFlaskProcess = spawn(pythonExecutable, { stdio: ['pipe', 'pipe', 'pipe'] });
 
     // ----------------- End of the TLE Flask server for deploy mode ----------------- //
 
     // ----------------- Start the TLE Flask server for development mode ----------------- //
 
-    // const pythonCommand = process.platform === "win32" ? "py" : "python3"; //change your path here to env where you installed the tle package
-    // tleFlaskProcess = spawn(pythonCommand, ['-m', 'tle_calculations.run']);
+    const pythonCommand = process.platform === "win32" ? "py" : "python3"; //change your path here to env where you installed the tle package
+    tleFlaskProcess = spawn(pythonCommand, ['-m', 'tle_calculations.run']);
 
     // ----------------- End of the TLE Flask server for development mode ----------------- //
 
