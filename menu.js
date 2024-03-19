@@ -17,11 +17,6 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('groundStationModal').style.display = 'block';
     });
 
-    document.getElementById('commandWindowLink').addEventListener('click', function(event) {
-        event.preventDefault();
-        document.getElementById('commandWindow').style.display = 'block';
-    });
-
     document.getElementById('debugWindow').addEventListener('click', function(event) {
         event.preventDefault();
         ipcRenderer.send('open-devtools', 'devtools');
