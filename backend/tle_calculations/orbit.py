@@ -18,7 +18,6 @@ DEFAULT_UPLINK_FREQ = 145.000
 DEFAULT_DOWNLINK_FREQ = 145.000
 
 # Global Vars 
-# TODO: decide if these need to be global
 # TODO: init latlon with stored value on startup
 observer = wgs84.latlon(GS_LATITUDE, GS_LONGITUDE)
 ts = load.timescale()
@@ -37,6 +36,13 @@ class Pass:
         self.rise = rise
         self.culminate = culminate
         self.set = set
+
+@app.route('/health', methods=['GET'])
+def health_check():
+    """ This endpoint is used for indicating that the backend is up and running. """
+    return jsonify({'status': 'up'}), 200
+
+# ====================== GET REQUESTS ======================
 
 @app.route('/calculations/passes', methods=['GET'])
 def getPassTimeInfo():
@@ -131,19 +137,6 @@ def getPassTimeInfo():
     json_string = json.dumps(passes, default=vars, indent=4)
     return json_string, 200
 
-def getPassDict(satellites):
-    """Get pass times for a list of satellites.
-
-    Args:
-        satellites: List of satellite catalog numbers.
-
-    Returns:
-        A dictionary mapping satellite catalog number to list of passes. 
-    """
-    # TODO
-    for catnr in satellites:
-        pass
-
 @app.route('/calculations/telemetry', methods=['GET'])
 def getCurrentTelemetry():
     """Get realtime Doppler-adjusted transmit/receive frequencies.
@@ -210,11 +203,7 @@ def getCurrentTelemetry():
     sys.stdout.flush()
     return json_string, 200
 
-@app.route('/health', methods=['GET'])
-def health_check():
-    # This endpoint is used for indicating that the backend is up and running
-    return jsonify({'status': 'up'}), 200
-
+# ====================== POST REQUESTS =====================
 
 @app.route('/calculations/groundstation', methods=['POST'])
 def changeGroundStation():

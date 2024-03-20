@@ -14,17 +14,7 @@ DEFAULT_FORMAT = "FORMAT=TLE"
 FILE_EXT = "txt"
 
 
-
-@app.route('/api/data', methods=['POST'])
-def handle_post_request():
-    if request.method == 'POST':
-        data = request.form
-        # Handle the received form data
-        print("Received form data:", data)
-        sys.stdout.flush()
-        # Process the data and return a response if needed
-        response_data = {'message': 'Form data received successfully'}
-        return jsonify(response_data), 200
+# ====================== HELPER FUNCTION ======================
 
 def getTLE(VALUE=DODONA_CATNR, QUERY="CATNR"):
     """Get TLE data from CelesTrak given query type and query value.
@@ -48,6 +38,8 @@ def getTLE(VALUE=DODONA_CATNR, QUERY="CATNR"):
 
     return response[0], response[1], response[2]
 
+# ====================== GET REQUESTS ======================
+
 @app.route('/satellites/get/names/<name>', methods=['GET'])
 def getNames(name):
     """Get a list of satellite names containing "name"
@@ -62,6 +54,7 @@ def getNames(name):
     Raises:
         RuntimeError: If passes not predicted as expected.
     """
+
     api_url = f"{BASE_URL}?NAME={name}&{DEFAULT_FORMAT}"
     response = requests.get(api_url).text.splitlines()
     
@@ -79,6 +72,7 @@ def getPresetList(listname):
 
 @app.route('/satellites/get/allpresets', methods=['GET'])
 def getAllPresets():
+    """ Return a json containing a list of all Preset List Names under "names." """
     return jsonify({"names": getAllPresetNames()})
 
 @app.route('/satellites/post/catnr/<catnr>', methods=['POST'])
@@ -117,8 +111,13 @@ def addNewTLEByCATNR(catnr):
     
     return 'Error: Invalid catnr'
 
+
+# ====================== POST REQUESTS =====================
+
 @app.route('/satellites/post/preset/<listname>', methods=['POST'])
 def addPreset(listname):
+    """ Create a new empty preset list. If list already exists, do nothing. """
+
     insertPreset(listname)
     return jsonify({"message": "POST request successful"}), 200
 
@@ -127,16 +126,6 @@ def renamePreset(listname, newname):
     # TODO:
     deletePresetList(listname)
     return jsonify({"message": "POST request successful"}), 200
-
-@app.route('/satellites/delete/preset/<listname>', methods=['DELETE'])
-def deletePreset(listname):
-    deletePresetList(listname)
-    return jsonify({"message": "DELETE request successful"}), 200
-
-@app.route('/satellites/delete/satellite/<catnr>/<listname>', methods=['DELETE'])
-def deleteSatellite(catnr, listname):
-    deleteSatelliteFromList(catnr, listname)
-    return "Success"
 
 @app.route('/satellites/update', methods=['POST'])
 def updateTLEs():
@@ -159,9 +148,31 @@ def updateTLEs():
         if catnr in tle_dict.keys():
             updateTLE(catnr, tle_dict[catnr][1], tle_dict[catnr][2])
 
-    # TODO: when TLEs are updated, pass times should also be
-    return "Success"
+    jsonify({"message": "POST request successful"}), 200
 
+
+# ====================== DELETE REQUESTS =====================
+
+@app.route('/satellites/delete/preset/<listname>', methods=['DELETE'])
+def deletePreset(listname):
+    """ Delete a preset list and all of its satellites. 
+    
+    Also deletes the satellite from TLE data table 
+    if the satellite is not in any other preset list.
+
+    """
+
+    deletePresetList(listname)
+    return jsonify({"message": "DELETE request successful"}), 200
+
+@app.route('/satellites/delete/satellite/<catnr>/<listname>', methods=['DELETE'])
+def deleteSatellite(catnr, listname):
+    """ Remove satellite with catnr = <catnr> from list = <listname>. 
+    
+    Also remove the satellite's TLE data if it is not in any other preset list. """
+    
+    deleteSatelliteFromList(catnr, listname)
+    return jsonify({"message": "DELETE request successful"}), 200
 
 if __name__ == "__main__":
     pass
