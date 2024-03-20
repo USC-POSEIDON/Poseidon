@@ -9,9 +9,9 @@ This desktop application is built with Electron and integrates various functiona
 ## Features
 
 - **3D Orbit Visualization**: Real-time satellite orbit visualization with Cesium.
-- **Telemetry Data Calculation And Visualization: Real-time telemetry data update for corresponding TLE/satellite input
+- **Telemetry Data Calculation And Visualization**: Real-time telemetry data update for corresponding TLE/satellite input
 - **TLE Data Input**: Input box for TLE data with validation functionality.
-- **Command Input**: Chat window for command input (backend development in progress).
+- **Command Input**: Chat window for command input.
 - **Calendar**: Calendar window for scheduling (waiting for backend integration).
 - **Motor Control**: Motor control interface (update pending).
 - **Signal Processing**: Signal window for signal-related functionalities (update pending).
