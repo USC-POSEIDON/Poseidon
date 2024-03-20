@@ -6,12 +6,29 @@ const spawn = require('child_process').spawn;
 const axios = require('axios');
 
 let mainWindow;
+let splashScreen; // Splash screen window
 let tleFlaskProcess = null;
 
 app.on('ready', function() {
+    // Splash Screen setup
+    splashScreen = new BrowserWindow({
+        width: 400,
+        height: 300,
+        transparent: true,
+        frame: false,
+        alwaysOnTop: true
+    });
+    splashScreen.loadURL(url.format({
+        pathname: path.join(__dirname, 'splash.html'), 
+        protocol: 'file:',
+        slashes: true
+    }));
+
+    // Main Window setup
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
+        show: false, 
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
@@ -35,8 +52,7 @@ app.on('ready', function() {
     // ----------------- End of the TLE Flask server for deploy mode ----------------- //
 
     // ----------------- Start the TLE Flask server for development mode ----------------- //
-
-    const pythonCommand = process.platform === "win32" ? "py" : "python3"; //change your path here to env where you installed the tle package
+    const pythonCommand = process.platform === "win32" ? "py" : "python3";
     tleFlaskProcess = spawn(pythonCommand, ['-m', 'tle_calculations.run']);
 
     // ----------------- End of the TLE Flask server for development mode ----------------- //
@@ -55,12 +71,19 @@ app.on('ready', function() {
                     // Server is up, now safe to attach listeners
                     attachProcessListeners();
 
-                    // Load the main window
+                    // Load the main window content
                     mainWindow.loadURL(url.format({
                         pathname: path.join(__dirname, 'mainWindow.html'),
                         protocol: 'file:',
                         slashes: true
                     }));
+                    
+                    // Show the main window only when it is ready to show
+                    mainWindow.once('ready-to-show', () => {
+                        splashScreen.close(); // Close the splash screen
+                        mainWindow.show(); // Show the main window
+                    });
+                    
                     return;
                 }
             } catch (error) {
