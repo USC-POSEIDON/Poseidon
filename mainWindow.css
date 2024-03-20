@@ -239,6 +239,13 @@ table, th, td {
     margin-top: 10px;
 }
 
+#addCommand {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+}
+
 #generateCommand {
     background-color: #4CAF50;
     color: white;

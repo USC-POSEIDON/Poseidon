@@ -13,11 +13,11 @@
 //       json_commands: the JSON file we will be using to convert our strings to command strings 
 // ################################################################################################
 
-
 document.addEventListener('DOMContentLoaded', function () {
     const commandDropdown = document.getElementById('commandDropdown');
     const parameterInputs = document.getElementById('parameterInputs');
     let data; // Variable to hold command data
+    const commandStringArray = []; // Array to store pre-generated command strings
 
     // Fetch commands from external JSON file
     fetch(`command_generation/CubeSatCommandLibrary.json`)
@@ -42,24 +42,35 @@ document.addEventListener('DOMContentLoaded', function () {
         // Clear existing parameter inputs
         parameterInputs.innerHTML = '';
 
-        // Populate parameter inputs
-        selectedCommandData.Parameters.forEach(param => {
-            const label = document.createElement('label');
-            label.textContent = param.Name + ':';
+        // Check if the command has parameters
+        if (selectedCommandData.Parameters && selectedCommandData.Parameters.length > 0) {
+            // Populate parameter inputs
+            selectedCommandData.Parameters.forEach(param => {
+                const label = document.createElement('label');
+                label.textContent = param.Name + ':';
 
-            const input = document.createElement('input');
-            input.type = param.Type.toLowerCase();
-            input.name = param.Name;
+                const input = document.createElement('input');
+                input.type = param.Type ? param.Type.toLowerCase() : ''; // Check if param.Type is defined before accessing toLowerCase()
 
-            parameterInputs.appendChild(label);
-            parameterInputs.appendChild(input);
-            parameterInputs.appendChild(document.createElement('br'));
-        });
+                // Ensure input name is set
+                if (param.Name) {
+                    input.name = param.Name;
+                } else {
+                    console.error('Parameter name is not defined.');
+                    return;
+                }
+
+                parameterInputs.appendChild(label);
+                parameterInputs.appendChild(input);
+                parameterInputs.appendChild(document.createElement('br'));
+            });
+        }
     };
 
     // Function to generate the array of command strings
-    function generateStringArray() {
+    function generateString() {
         const selectedCommandID = commandDropdown.value;
+        
         const selectedCommandData = data.find(command => command.ID === selectedCommandID);
 
         // Check if command data is available
@@ -68,30 +79,42 @@ document.addEventListener('DOMContentLoaded', function () {
             return [];
         }
 
-        const commandStrings = []; // Array to store command strings
-
         // Initialize with command ID
         let commandString = 'f ' + selectedCommandID;
+        
+        // Check if the command has parameters
+        if (selectedCommandData.Parameters && selectedCommandData.Parameters.length > 0) {
+            // Loop through parameter inputs and append their values to the commandString
+            selectedCommandData.Parameters.forEach(param => {
+                const inputValue = document.querySelector(`input[name="${param.Name}"]`).value.trim();
+                commandString += ` ${inputValue}`; // Concatenate parameter values to the commandString
+            });
+        }
 
-        // Loop through parameter inputs and append their values to the commandString
-        selectedCommandData.Parameters.forEach(param => {
-            const inputValue = document.querySelector(`input[name="${param.Name}"]`).value.trim();
-            commandStrings.push(`${commandString} ${inputValue}`); // Push each command string into the array
-        });
-
-        console.log(commandStrings);
-        return commandStrings;
+        return commandString;
     }
+    
+    // Event listener for the "add" button
+    const addButton = document.getElementById('addButton');
+    addButton.addEventListener('click', function () {
+        const commandString = generateString();
+        if (commandString.length > 0) {
+            commandStringArray.push(commandString);
+            console.log('Commands added:', commandString);
+        } else {
+            console.error('Error adding commands.');
+        }
+    });
 
     // Event listener for the "generate" button
     const generateButton = document.getElementById('generateCommand');
     generateButton.addEventListener('click', function () {
-        const commandString = generateStringArray();
-        if (commandString) {
-            // Call the function to execute the Python script with the generated command string
-            generateCommands(commandString, data);
+        if (commandStringArray.length > 0) {
+            console.log(commandStringArray);
+            // Call the function to execute the Python script with the generated commands
+            generateCommands(commandStringArray, data);
         } else {
-            console.error('Error generating command string.');
+            console.error('Error generating commands.');
         }
     });
 });
