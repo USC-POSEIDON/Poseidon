@@ -16,8 +16,9 @@
 document.addEventListener('DOMContentLoaded', function () {
     const commandDropdown = document.getElementById('commandDropdown');
     const parameterInputs = document.getElementById('parameterInputs');
-    let data; // Variable to hold command data
-    const commandStringArray = []; // Array to store pre-generated command strings
+    const commandList = document.getElementById('commandList');
+    const commandStringArray = [];
+    let data;
 
     // Fetch commands from external JSON file
     fetch(`command_generation/CubeSatCommandLibrary.json`)
@@ -93,14 +94,103 @@ document.addEventListener('DOMContentLoaded', function () {
 
         return commandString;
     }
+
+    // Function to add a command to the list or update existing command
+    function addCommandToList(commandString, index = -1) {
+        let listItem;
+        if (index === -1) {
+            // If index is -1, add a new command
+            listItem = document.createElement('li');
+            listItem.textContent = commandString;
+
+            // Event listener to populate parameter inputs when clicking on the command
+            listItem.addEventListener('click', function() {
+                const index = Array.from(commandList.children).indexOf(listItem);
+                selectedIndex = index; // Update the selectedIndex
+                const command = commandStringArray[index];
+                populateDropdownAndParameters(command);
+                
+                // Show the save button
+                saveButton.style.display = 'inline-block';
+            });
+
+            commandList.appendChild(listItem);
+        } else {
+            // If index is provided, update the existing command
+            listItem = commandList.children[index];
+            listItem.textContent = commandString;
+        }
+        
+        // Add delete button
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'x';
+        deleteButton.addEventListener('click', function() {
+            const index = Array.from(commandList.children).indexOf(listItem);
+            commandStringArray.splice(index, 1); // Remove the command from the array
+            commandList.removeChild(listItem); // Remove the list item from the list
+            selectedIndex = -1; // Reset selectedIndex
+        });
+        listItem.appendChild(deleteButton);
+    }
+
+    // Function to populate dropdown and parameters from a command string
+    function populateDropdownAndParameters(commandString) {
+        const commandParts = commandString.split(' ');
+        const commandID = commandParts[1]; // Extract the command ID from the command string
+
+        const selectedCommand = data.find(command => command.ID === commandID);
+
+        if (selectedCommand) {
+            // Loop through each option in the dropdown
+            for (let i = 0; i < commandDropdown.options.length; i++) {
+                // Check if the option's text matches the selected command's name
+                if (commandDropdown.options[i].textContent === selectedCommand.Name) {
+                    // Set the selectedIndex of the dropdown to this option
+                    commandDropdown.selectedIndex = i;
+                    break; // Exit the loop once the correct option is found
+                }
+            }
+
+            // Check if the command has parameters
+            if (selectedCommand.Parameters && selectedCommand.Parameters.length > 0) {
+                // Trigger the populateParameters function
+                populateParameters();
+            }
+            
+        } else {
+            console.error(`Command with ID '${commandID}' not found.`);
+        }
+    }
     
+    // Event listener for the save button
+    saveButton.addEventListener('click', function() {
+        // Update the command in the commandStringArray with the new parameters
+        const updatedCommand = generateString();
+        commandStringArray[selectedIndex] = updatedCommand;
+        console.log('Command updated:', updatedCommand);
+
+        // Update the corresponding list item with the updated command
+        addCommandToList(updatedCommand, selectedIndex);
+
+        // Clear parameter inputs and reset dropdown
+        parameterInputs.innerHTML = '';
+        commandDropdown.selectedIndex = 0;
+        console.log('Parameter inputs cleared.');
+
+        // Hide the save button
+        saveButton.style.display = 'none';
+    });
+
     // Event listener for the "add" button
     const addButton = document.getElementById('addButton');
     addButton.addEventListener('click', function () {
         const commandString = generateString();
         if (commandString.length > 0) {
             commandStringArray.push(commandString);
+            addCommandToList(commandString);
             console.log('Commands added:', commandString);
+            // Clear existing parameter inputs
+            parameterInputs.innerHTML = '';
         } else {
             console.error('Error adding commands.');
         }

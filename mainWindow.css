@@ -239,7 +239,7 @@ table, th, td {
     margin-top: 10px;
 }
 
-#addCommand {
+#addButton {
     background-color: #4CAF50;
     color: white;
     padding: 10px;
@@ -251,4 +251,42 @@ table, th, td {
     color: white;
     padding: 10px;
     cursor: pointer;
+}
+
+.commands-list {
+    flex: 1;
+}
+
+.commands-list h2 {
+    margin-bottom: 10px;
+}
+
+#parameterInputs {
+    margin-top: 10px;
+}
+
+#parameterInputs label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+#parameterInputs input {
+    margin-bottom: 5px;
+}
+
+#commandList {
+    list-style: none;
+    padding: 0;
+}
+
+#commandList li {
+    cursor: pointer;
+    padding: 5px;
+    background-color: #f2f2f2;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+#commandList li:hover {
+    background-color: #e0e0e0;
 }
