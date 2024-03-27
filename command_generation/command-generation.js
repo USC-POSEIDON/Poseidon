@@ -24,8 +24,8 @@ document.addEventListener('DOMContentLoaded', function () {
     fetch(`command_generation/CubeSatCommandLibrary.json`)
         .then(response => response.json())
         .then(dataResponse => {
-            data = dataResponse; // Store command data
-            // Populate command dropdown with every command
+            data = dataResponse;
+            
             data.forEach(command => {
                 const option = document.createElement('option');
                 option.value = command.ID;
@@ -40,20 +40,16 @@ document.addEventListener('DOMContentLoaded', function () {
         const selectedCommandID = commandDropdown.value;
         const selectedCommandData = data.find(command => command.ID === selectedCommandID);
 
-        // Clear existing parameter inputs
         parameterInputs.innerHTML = '';
 
-        // Check if the command has parameters
         if (selectedCommandData.Parameters && selectedCommandData.Parameters.length > 0) {
-            // Populate parameter inputs
             selectedCommandData.Parameters.forEach(param => {
                 const label = document.createElement('label');
                 label.textContent = param.Name + ':';
 
                 const input = document.createElement('input');
-                input.type = param.Type ? param.Type.toLowerCase() : ''; // Check if param.Type is defined before accessing toLowerCase()
+                input.type = param.Type ? param.Type.toLowerCase() : '';
 
-                // Ensure input name is set
                 if (param.Name) {
                     input.name = param.Name;
                 } else {
@@ -71,24 +67,19 @@ document.addEventListener('DOMContentLoaded', function () {
     // Function to generate the array of command strings
     function generateString() {
         const selectedCommandID = commandDropdown.value;
-        
         const selectedCommandData = data.find(command => command.ID === selectedCommandID);
 
-        // Check if command data is available
         if (!selectedCommandData) {
             console.error('No command data available.');
             return [];
         }
 
-        // Initialize with command ID
         let commandString = 'f ' + selectedCommandID;
         
-        // Check if the command has parameters
         if (selectedCommandData.Parameters && selectedCommandData.Parameters.length > 0) {
-            // Loop through parameter inputs and append their values to the commandString
             selectedCommandData.Parameters.forEach(param => {
                 const inputValue = document.querySelector(`input[name="${param.Name}"]`).value.trim();
-                commandString += ` ${inputValue}`; // Concatenate parameter values to the commandString
+                commandString += ` ${inputValue}`;
             });
         }
 
@@ -99,24 +90,24 @@ document.addEventListener('DOMContentLoaded', function () {
     function addCommandToList(commandString, index = -1) {
         let listItem;
         if (index === -1) {
-            // If index is -1, add a new command
             listItem = document.createElement('li');
             listItem.textContent = commandString;
 
-            // Event listener to populate parameter inputs when clicking on the command
             listItem.addEventListener('click', function() {
                 const index = Array.from(commandList.children).indexOf(listItem);
-                selectedIndex = index; // Update the selectedIndex
+                selectedIndex = index;
                 const command = commandStringArray[index];
-                populateDropdownAndParameters(command);
-                
-                // Show the save button
-                saveButton.style.display = 'inline-block';
+                if (command) {
+                    populateDropdownAndParameters(command);
+
+                    saveButton.style.display = 'inline-block';
+                } else {
+                    console.error('Command string is undefined.');
+                }
             });
 
             commandList.appendChild(listItem);
         } else {
-            // If index is provided, update the existing command
             listItem = commandList.children[index];
             listItem.textContent = commandString;
         }
@@ -126,9 +117,9 @@ document.addEventListener('DOMContentLoaded', function () {
         deleteButton.textContent = 'x';
         deleteButton.addEventListener('click', function() {
             const index = Array.from(commandList.children).indexOf(listItem);
-            commandStringArray.splice(index, 1); // Remove the command from the array
-            commandList.removeChild(listItem); // Remove the list item from the list
-            selectedIndex = -1; // Reset selectedIndex
+            commandStringArray.splice(index, 1);
+            commandList.removeChild(listItem);
+            selectedIndex = -1;
         });
         listItem.appendChild(deleteButton);
     }
@@ -136,24 +127,19 @@ document.addEventListener('DOMContentLoaded', function () {
     // Function to populate dropdown and parameters from a command string
     function populateDropdownAndParameters(commandString) {
         const commandParts = commandString.split(' ');
-        const commandID = commandParts[1]; // Extract the command ID from the command string
+        const commandID = commandParts[1];
 
         const selectedCommand = data.find(command => command.ID === commandID);
 
         if (selectedCommand) {
-            // Loop through each option in the dropdown
             for (let i = 0; i < commandDropdown.options.length; i++) {
-                // Check if the option's text matches the selected command's name
                 if (commandDropdown.options[i].textContent === selectedCommand.Name) {
-                    // Set the selectedIndex of the dropdown to this option
                     commandDropdown.selectedIndex = i;
-                    break; // Exit the loop once the correct option is found
+                    break;
                 }
             }
 
-            // Check if the command has parameters
             if (selectedCommand.Parameters && selectedCommand.Parameters.length > 0) {
-                // Trigger the populateParameters function
                 populateParameters();
             }
             
@@ -164,20 +150,16 @@ document.addEventListener('DOMContentLoaded', function () {
     
     // Event listener for the save button
     saveButton.addEventListener('click', function() {
-        // Update the command in the commandStringArray with the new parameters
         const updatedCommand = generateString();
         commandStringArray[selectedIndex] = updatedCommand;
         console.log('Command updated:', updatedCommand);
 
-        // Update the corresponding list item with the updated command
         addCommandToList(updatedCommand, selectedIndex);
 
-        // Clear parameter inputs and reset dropdown
         parameterInputs.innerHTML = '';
         commandDropdown.selectedIndex = 0;
         console.log('Parameter inputs cleared.');
 
-        // Hide the save button
         saveButton.style.display = 'none';
     });
 
@@ -189,7 +171,6 @@ document.addEventListener('DOMContentLoaded', function () {
             commandStringArray.push(commandString);
             addCommandToList(commandString);
             console.log('Commands added:', commandString);
-            // Clear existing parameter inputs
             parameterInputs.innerHTML = '';
         } else {
             console.error('Error adding commands.');
@@ -201,8 +182,11 @@ document.addEventListener('DOMContentLoaded', function () {
     generateButton.addEventListener('click', function () {
         if (commandStringArray.length > 0) {
             console.log(commandStringArray);
-            // Call the function to execute the Python script with the generated commands
             generateCommands(commandStringArray, data);
+
+            commandStringArray.length = 0;
+            commandDropdown.selectedIndex = 0;
+            commandList.innerHTML = '';
         } else {
             console.error('Error generating commands.');
         }
@@ -213,15 +197,11 @@ document.addEventListener('DOMContentLoaded', function () {
 function generateCommands(inputStrings, data) {
     const result = [];
 
-    // Iterate over each input string
     inputStrings.forEach(inputString => {
         const [forward, commandID, ...values] = inputString.split(' ');
-
-        // Find the corresponding command from data
         const command = data.find(command => command.ID === commandID);
 
         if (command) {
-            // If command found, generate the command string using commandInt
             const generatedCommand = `${forward} ${command.Int} ${values.join(' ')}`;
             result.push(generatedCommand);
         } else {
@@ -229,6 +209,28 @@ function generateCommands(inputStrings, data) {
         }
     });
 
-    console.log(result);
+    saveCommandsToFile(result);
+    console.log("Generated commands: ", result);
+
     return result;
+}
+
+// Function to save commands to a file in the specified folder
+function saveCommandsToFile(commands) {
+    const fs = require('fs');
+    const folderPath = 'command_generation/generated_commands';
+    const date = new Date();
+    const fileName = `${folderPath}/generated_commands_${date.getTime()}.txt`;
+
+    if (!fs.existsSync(folderPath)) {
+        fs.mkdirSync(folderPath, { recursive: true });
+    }
+
+    fs.writeFile(fileName, commands.join('\n'), (err) => {
+        if (err) {
+            console.error('Error saving commands to file:', err);
+        } else {
+            console.log('Commands saved to file:', fileName);
+        }
+    });
 }
