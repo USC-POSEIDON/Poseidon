@@ -160,6 +160,11 @@ def insertPreset(name):
     cur.close()
     conn.close()
 
+def renamePreset(oldname, newname):
+    # TODO: implement
+    # also remember to check if newname is duplicate, and return error
+    pass
+
 def getSatelliteID(catnr):
     conn = sqlite3.connect(db_path)
 

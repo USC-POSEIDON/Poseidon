@@ -129,9 +129,11 @@ out
 .yarn/install-state.gz
 .pnp.*
 
-
+.DS_Store
 __pycache__
 *.db
 *.egg-info
 venv
 backend/poseidon.db
+.DS_Store
+.DS_Store
