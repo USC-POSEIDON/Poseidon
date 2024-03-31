@@ -20,12 +20,7 @@ let goldenLayout = new GoldenLayout({
               },
               {
                 type: 'stack',
-                content: [{
-                    type: 'component',
-                    id: 'chat_component',
-                    componentName: 'chat_component',
-                    title: 'Chat'
-                  },
+                content: [
                   {
                     type: 'component',
                     id: 'calendar_component',
@@ -46,12 +41,6 @@ let goldenLayout = new GoldenLayout({
               },
               {
                 type: 'component',
-                id: 'Motor_component',
-                componentName: 'Motor_component',
-                title: 'Motor'
-              },
-              {
-                type: 'component',
                 id: 'Command_Generation_component',
                 componentName: 'Command_Generation_component',
                 title: 'CommandGeneration' 
@@ -61,12 +50,6 @@ let goldenLayout = new GoldenLayout({
                 id: 'Telemetry_component',
                 componentName: 'Telemetry_component',
                 title: 'TelemetryData' 
-              },
-              {
-                type: 'component',
-                id: 'Control_component',
-                componentName: 'Control_component',
-                title: 'Control'
               }]
           }]
     }]
@@ -90,22 +73,6 @@ goldenLayout.registerComponent('cesium_component', function(container, state) {
 });
 
 
-goldenLayout.registerComponent('Control_component', function(container, state) {
-  let controlPanel = $('#satelliteControlPanel');
-  if (controlPanel.length === 0) {
-    controlPanel = closedComponents['Control_component'];
-  }
-
-  container.getElement().append(controlPanel);
-
-  container.on('destroy', function() {
-    closedComponents['Control_component'] = controlPanel.detach();
-    trackComponentState('Control_component', false);
-    updateWindowsDropdown();
-  });
-});
-
-
 goldenLayout.registerComponent('calendar_component', function(container, state) {
   let calendarModal = $('#calendarModal');
   if (calendarModal.length === 0) {
@@ -122,22 +89,6 @@ goldenLayout.registerComponent('calendar_component', function(container, state) 
 });
 
 
-goldenLayout.registerComponent('chat_component', function(container, state) {
-  let chatBox = $('#chatBox');
-  if (chatBox.length === 0) {
-    chatBox = closedComponents['chat_component'];
-  }
-
-  container.getElement().append(chatBox);
-
-  container.on('destroy', function() {
-    closedComponents['chat_component'] = chatBox.detach();
-    trackComponentState('chat_component', false);
-    updateWindowsDropdown();
-  });
-});
-
-
 goldenLayout.registerComponent('PassTime_component', function(container, state) {
   let passTime = $('#PassTime');
   if (passTime.length === 0) {
@@ -149,22 +100,6 @@ goldenLayout.registerComponent('PassTime_component', function(container, state) 
   container.on('destroy', function() {
     closedComponents['PassTime_component'] = passTime.detach();
     trackComponentState('PassTime_component', false);
-    updateWindowsDropdown();
-  });
-});
-
-
-goldenLayout.registerComponent('Motor_component', function(container, state) {
-  let MotorContainer = $('#MotorContainer');
-  if (MotorContainer.length === 0) {
-    MotorContainer = closedComponents['Motor_component'];
-  }
-
-  container.getElement().append(MotorContainer);
-
-  container.on('destroy', function() {
-    closedComponents['Motor_component'] = MotorContainer.detach();
-    trackComponentState('Motor_component', false);
     updateWindowsDropdown();
   });
 });
@@ -213,13 +148,10 @@ function updateWindowsDropdown() {
 
     const allComponents = [
         { id: 'cesium_component', title: 'Cesium' },
-        { id: 'chat_component', title: 'Chat' },
         { id: 'calendar_component', title: 'Calendar' },
         { id: 'PassTime_component', title: 'PassTime' },
-        { id: 'Motor_component', title: 'Motor' },
         { id: 'Command_Generation_component', title: 'CommandGeneration' },
         { id: 'Telemetry_component', title: 'TelemetryData' },
-        { id: 'Control_component', title: 'Control' },
     ];
 
     allComponents.forEach(component => {
@@ -288,13 +220,6 @@ function getComponentConfig(id) {
         componentName: 'cesium_component',
         title: 'Cesium'
       },
-      'chat_component': {
-          type: 'component',
-          componentName: 'chat_component',
-          title: 'Chat',
-          id: 'chat_component',
-          componentState: {} 
-      },
       'calendar_component': {
           type: 'component',
           componentName: 'calendar_component',
@@ -309,13 +234,6 @@ function getComponentConfig(id) {
           id: 'PassTime_component',
           componentState: {} 
       },
-      'Motor_component': {
-          type: 'component',
-          componentName: 'Motor_component',
-          title: 'Motor',
-          id: 'Motor_component',
-          componentState: {} 
-      },
       'Command_Generation_component': {
           type: 'component',
           componentName: 'Command_Generation_component',
@@ -328,13 +246,6 @@ function getComponentConfig(id) {
           componentName: 'Telemetry_component',
           title: 'TelemetryData',
           id: 'Telemetry_component',
-          componentState: {} 
-      },
-      'Control_component': {
-          type: 'component',
-          componentName: 'Control_component',
-          title: 'Control',
-          id: 'Control_component',
           componentState: {} 
       }
   };
@@ -363,7 +274,7 @@ goldenLayout.on('itemDestroyed', function(component) {
 });
 
 goldenLayout.on('initialised', function() {
-    ['cesium_component', 'chat_component', 'calendar_component', 'PassTime_component', 'Motor_component', 'Command_Generation_component', 'Telemetry_component', 'Control_component'].forEach(id => {
+    ['cesium_component', 'calendar_component', 'PassTime_component', 'Command_Generation_component', 'Telemetry_component'].forEach(id => {
         trackComponentState(id, true);
     });
     updateWindowsDropdown();
