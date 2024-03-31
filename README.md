@@ -16,7 +16,10 @@ This desktop application is built with Electron and integrates various functiona
 - **Motor Control**: Motor control interface (update pending).
 - **Signal Processing**: Signal window for signal-related functionalities (update pending).
 
-## Running the Program
+## Running the Program 
+Choose the latest release from this repository and install
+
+## Running the Program (Developers)
 
 Ensure Node.js and npm are installed on your system. Open a terminal or command prompt, navigate to the app's directory, and run:
 
