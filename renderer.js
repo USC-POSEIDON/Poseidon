@@ -55,7 +55,6 @@ let goldenLayout = new GoldenLayout({
     }]
 });
 
-
 goldenLayout.registerComponent('cesium_component', function(container, state) {
   // Check if the cesiumContainer is already detached and stored
   let cesiumContainer = $('#cesiumContainer');
@@ -108,6 +107,7 @@ goldenLayout.registerComponent('Command_Generation_component', function (contain
   let commandGenerationWindow = $('#commandGeneration');
   if (commandGenerationWindow.length === 0) {
       commandGenerationWindow = closedComponents['Command_Generation_component'];
+
   }
 
   container.getElement().append(commandGenerationWindow);
@@ -134,6 +134,20 @@ goldenLayout.registerComponent('Telemetry_component', function(container, state)
   });
 });
 
+goldenLayout.registerComponent('Command_Generation_component', function (container, state) {
+  let commandGenerationWindow = $('#commandGeneration');
+  if (commandGenerationWindow.length === 0) {
+      commandGenerationWindow = closedComponents['Command_Generation_component'];
+  }
+
+  container.getElement().append(commandGenerationWindow);
+
+  container.on('destroy', function () {
+      closedComponents['Command_Generation_component'] = commandGenerationWindow.detach();
+      trackComponentState('Command_Generation_component', false);
+      updateWindowsDropdown();
+  });
+});
 
 let componentStates = {};
 
@@ -253,7 +267,6 @@ function getComponentConfig(id) {
   return configMap[id] || null;
 }
 
-
 function removeComponentFromLayout(componentId) {
   const items = goldenLayout.root.getItemsById(componentId);
   if (items.length) {
@@ -264,7 +277,6 @@ function removeComponentFromLayout(componentId) {
   trackComponentState(componentId, false);
   updateWindowsDropdown();
 }
-
 
 goldenLayout.on('itemDestroyed', function(component) {
   const componentId = component.config.id;
