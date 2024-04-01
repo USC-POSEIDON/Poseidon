@@ -122,9 +122,18 @@ def addPreset(listname):
     return jsonify({"message": "POST request successful"}), 200
 
 @app.route('/satellites/rename/preset/<listname>/<newname>', methods=['POST'])
-def renamePreset(listname, newname):
-    # TODO:
-    deletePresetList(listname)
+def renamePresetList(listname, newname):
+    """Rename a preset list to newname
+
+    Returns:
+        200 OK if success
+        400 error if not success (newname already exists)
+    """
+    result = renamePreset(listname, newname)
+    
+    if result == -1:
+        return jsonify({"message": "POST request unsuccessful: list name already exists"}), 400
+        
     return jsonify({"message": "POST request successful"}), 200
 
 @app.route('/satellites/update', methods=['POST'])

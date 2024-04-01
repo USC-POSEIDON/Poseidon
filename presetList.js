@@ -126,8 +126,26 @@ document.getElementById("deletePresetBtn").onclick = function() {
 document.getElementById("renamePresetBtn").onclick = function() {
     const selectedPreset = document.getElementById("renamePresetDropdown").value;
     const newName = document.getElementById("renamePresetInput").value;
-    // TODO
+    fetch(`http://127.0.0.1:5000/satellites/rename/preset/${selectedPreset}/${newName}`, {
+        method: "POST"
+    })
+    .then(function (response) {
+        if (!response.ok) {
+            throw new Error("HTTP error, status = " + response.status);
+        }
+        return response.json();
+    })
+    .then(function (responseData) {
+        // Handle the response data here
+        console.log(responseData);
+    })
+    .catch(function (error) {
+        // Rename unsuccessful
+        console.log(error);
+        
+    });
 }
+
 
 document.addEventListener("DOMContentLoaded", function() {
     populatePresetDropdowns(onStartup=true);

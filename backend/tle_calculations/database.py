@@ -161,9 +161,58 @@ def insertPreset(name):
     conn.close()
 
 def renamePreset(oldname, newname):
-    # TODO: implement
-    # also remember to check if newname is duplicate, and return error
-    pass
+    '''
+    Rename a preset list
+
+    Args:
+        oldname: old preset list name
+        newname: new name to rename the preset list to
+
+    Returns:
+        0 if success, -1 if newname already exists 
+    If newname not exists in Preset_Names
+        in Preset_Names, rename oldname to newname
+        in Satellites, rename all TLE of 'type' = oldname to newname
+    Else
+        return error
+    '''
+    conn = sqlite3.connect(db_path)
+
+    # Open a cursor to perform database operations
+    cur = conn.cursor()
+
+    # Insert parsed data into the database
+    sql = """
+    UPDATE Preset_Names
+    SET name = ?
+    WHERE name = ?
+    AND NOT EXISTS (SELECT 1 FROM Preset_Names WHERE name = ?)
+    """
+
+    cur.execute(sql, (newname, oldname, newname,))
+    conn.commit()
+
+    # Check the number of affected rows
+    if cur.rowcount == 0:
+        # "newname" already exists
+        print("ERROR: Newname already exists")
+        return -1
+    else:
+        # "newname" was successfully updated
+        sql = """
+        UPDATE Satellites
+        SET name = ?
+        WHERE name = ?
+        """
+
+        cur.execute(sql, (newname, oldname,))
+        conn.commit()
+
+        print("Entry updated successfully")
+
+    # Close the connection
+    cur.close()
+    conn.close()
 
 def getSatelliteID(catnr):
     conn = sqlite3.connect(db_path)
