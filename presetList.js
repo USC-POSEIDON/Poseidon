@@ -44,13 +44,20 @@ function populateDynamicOptions(dropdownElement, selectedValue = ""){
         const data = JSON.parse(JSON.stringify(responseData));
 
         const presets = data.names;
+        let hasSelected = false; 
         presets.forEach(preset => {
             const optionElement = new Option(preset, preset);
             dropdownElement.appendChild(optionElement);
             if (preset === selectedValue) {
                 optionElement.setAttribute('selected', 'selected');
+                if(selectedValue != "")
+                    hasSelected = true;
             }
         });
+        
+        if(!hasSelected){
+            // TODO: if none are selected, set text to default
+        }
     })
     .catch(function (error) {
         // Handle errors here
@@ -70,6 +77,7 @@ document.getElementById("managePresets").onclick = function() {
 
 document.getElementById("closePresetModal").onclick = function() {
     document.getElementById("managePresetModal").style.display = "none";
+    populatePresetDropdowns(); 
 }
 
 document.getElementById("addPresetBtn").onclick = function() {
@@ -122,4 +130,12 @@ document.getElementById("renamePresetBtn").onclick = function() {
 
 document.addEventListener("DOMContentLoaded", function() {
     populatePresetDropdowns();
+    const selectDropdown = document.getElementById("selectPresetDropdown");
+    const presetDropdown = document.getElementById("presetDropdown");
+
+    var selectOptionToDisable = selectDropdown.querySelector("option[value='']");
+    var presetOptionToDisable = presetDropdown.querySelector("option[value='']");
+
+    selectOptionToDisable.selected = true;
+    presetOptionToDisable.selected = true;
 });
