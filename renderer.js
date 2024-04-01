@@ -147,7 +147,6 @@ function updateWindowsDropdown() {
         { id: 'cesium_component', title: 'Cesium' },
         { id: 'calendar_component', title: 'Calendar' },
         { id: 'PassTime_component', title: 'PassTime' },
-        { id: 'Command_Generation_component', title: 'CommandGeneration' },
         { id: 'Telemetry_component', title: 'TelemetryData' },
         { id: 'Command_Generation_component', title: 'CommandGeneration' },
     ];
