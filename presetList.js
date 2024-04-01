@@ -1,36 +1,4 @@
-function populatePresetDropdowns() {
-    const deleteDropdown = document.getElementById("deletePresetDropdown");
-    const renameDropdown = document.getElementById("renamePresetDropdown");
-
-    deleteDropdown.innerHTML = '';
-    renameDropdown.innerHTML = '';
-
-    populateDynamicOptions(deleteDropdown);
-    populateDynamicOptions(renameDropdown);
-
-    const selectDropdown = document.getElementById("selectPresetDropdown");
-    const selectedValue = selectDropdown.value;
-    selectDropdown.innerHTML = '';
-
-    let selectOpt = new Option("Change Preset", "");
-    selectOpt.disabled = true;
-    selectDropdown.add(selectOpt);
-
-    populateDynamicOptions(selectDropdown, selectedValue);
-
-    const presetDropdown = document.getElementById("presetDropdown");
-    const presetValue = selectDropdown.value;
-    presetDropdown.innerHTML = '';
-    
-    let presetOpt = new Option("Select preset to add to", "");
-    presetOpt.disabled = true;
-    presetDropdown.add(presetOpt);
-
-    populateDynamicOptions(presetDropdown, presetValue);
-}
-
-function populateDynamicOptions(dropdownElement, selectedValue = ""){
-
+function populatePresetDropdowns(onStartup=false) {
     fetch(`http://127.0.0.1:5000//satellites/get/allpresets`)
     .then(function (response) {
         if (!response.ok) {
@@ -42,19 +10,59 @@ function populateDynamicOptions(dropdownElement, selectedValue = ""){
         // Handle the response data here
         console.log(responseData);
         const data = JSON.parse(JSON.stringify(responseData));
-
         const presets = data.names;
-        presets.forEach(preset => {
-            const optionElement = new Option(preset, preset);
-            dropdownElement.appendChild(optionElement);
-            if (preset === selectedValue) {
-                optionElement.setAttribute('selected', 'selected');
-            }
-        });
+
+        const deleteDropdown = document.getElementById("deletePresetDropdown");
+        const renameDropdown = document.getElementById("renamePresetDropdown");
+
+        deleteDropdown.innerHTML = '';
+        renameDropdown.innerHTML = '';
+
+        populateDynamicOptions(presets, deleteDropdown);
+        populateDynamicOptions(presets, renameDropdown);
+
+        const selectDropdown = document.getElementById("selectPresetDropdown");
+        const selectedValue = selectDropdown.value;
+        selectDropdown.innerHTML = '';
+
+        let selectOpt = new Option("Change Preset", "");
+        selectOpt.disabled = true;
+        selectDropdown.add(selectOpt);
+
+        populateDynamicOptions(presets, selectDropdown, selectedValue);
+
+        const presetDropdown = document.getElementById("presetDropdown");
+        const presetValue = selectDropdown.value;
+        presetDropdown.innerHTML = '';
+        
+        let presetOpt = new Option("Select preset to add to", "");
+        presetOpt.disabled = true;
+        presetDropdown.add(presetOpt);
+
+        populateDynamicOptions(presets, presetDropdown, presetValue);
+        
+        // Set dropdowns to default options on startup
+        if(onStartup){
+            var selectOptionToDisable = selectDropdown.querySelector("option[value='']");
+            var presetOptionToDisable = presetDropdown.querySelector("option[value='']");
+
+            selectOptionToDisable.selected = true;
+            presetOptionToDisable.selected = true;
+        }
     })
     .catch(function (error) {
         // Handle errors here
         console.log(error);
+    });
+}
+
+function populateDynamicOptions(presets, dropdownElement, selectedValue = ""){
+    presets.forEach(preset => {
+        const optionElement = new Option(preset, preset);
+        dropdownElement.appendChild(optionElement);
+        if (preset === selectedValue) {
+            optionElement.setAttribute('selected', 'selected');
+        }
     });
 }
 
@@ -122,13 +130,5 @@ document.getElementById("renamePresetBtn").onclick = function() {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-    populatePresetDropdowns();
-    const selectDropdown = document.getElementById("selectPresetDropdown");
-    const presetDropdown = document.getElementById("presetDropdown");
-
-    var selectOptionToDisable = selectDropdown.querySelector("option[value='']");
-    var presetOptionToDisable = presetDropdown.querySelector("option[value='']");
-
-    selectOptionToDisable.selected = true;
-    presetOptionToDisable.selected = true;
+    populatePresetDropdowns(onStartup=true);
 });
