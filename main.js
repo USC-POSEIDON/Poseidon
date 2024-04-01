@@ -80,10 +80,17 @@ app.on('ready', function() {
                     
                     // Show the main window only when it is ready to show
                     mainWindow.once('ready-to-show', () => {
+                        console.log("before closing splashscreen")
                         splashScreen.close(); // Close the splash screen
+                        console.log("before showing mainwindow")
                         mainWindow.show(); // Show the main window
                     });
                     
+                    // Refresh all TLEs before showing mainwindow
+                    console.log("before updatging tles")
+                    await axios.post('http://127.0.0.1:5000/satellites/update');
+                    console.log("after updating tles")
+
                     return;
                 }
             } catch (error) {

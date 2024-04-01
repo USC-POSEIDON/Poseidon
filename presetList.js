@@ -44,20 +44,13 @@ function populateDynamicOptions(dropdownElement, selectedValue = ""){
         const data = JSON.parse(JSON.stringify(responseData));
 
         const presets = data.names;
-        let hasSelected = false; 
         presets.forEach(preset => {
             const optionElement = new Option(preset, preset);
             dropdownElement.appendChild(optionElement);
             if (preset === selectedValue) {
                 optionElement.setAttribute('selected', 'selected');
-                if(selectedValue != "")
-                    hasSelected = true;
             }
         });
-        
-        if(!hasSelected){
-            // TODO: if none are selected, set text to default
-        }
     })
     .catch(function (error) {
         // Handle errors here

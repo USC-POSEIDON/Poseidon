@@ -148,7 +148,7 @@ def updateTLEs():
         if catnr in tle_dict.keys():
             updateTLE(catnr, tle_dict[catnr][1], tle_dict[catnr][2])
 
-    jsonify({"message": "POST request successful"}), 200
+    return jsonify({"message": "POST request successful"}), 200
 
 
 # ====================== DELETE REQUESTS =====================
