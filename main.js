@@ -60,6 +60,13 @@ app.on('ready', function() {
     // Function to delay execution
     const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
+    // Every 6 hour TLE refresh
+    const refreshTLE = async () => {
+        // Your action here
+        console.log("Refreshing all TLEs");
+        await axios.post('http://127.0.0.1:5000/satellites/update');
+    };
+
     // Function to check if the server is up
     const checkServerIsUp = async (attempts = 100, interval = 1000) => {
         for (let i = 0; i < attempts; i++) {
@@ -86,10 +93,16 @@ app.on('ready', function() {
                         mainWindow.show(); // Show the main window
                     });
                     
-                    // Refresh all TLEs before showing mainwindow
-                    console.log("before updatging tles")
-                    await axios.post('http://127.0.0.1:5000/satellites/update');
-                    console.log("after updating tles")
+                    // Refresh all TLEs on app startup, before showing mainwindow
+                    await refreshTLE();
+
+                    // After server check, start the 6-hour interval
+                    const interval = setInterval(refreshTLE, 6 * 60 * 60 * 1000);
+
+                    // Quit the interval when the app is about to quit 
+                    app.on('before-quit', () => {
+                        clearInterval(interval);
+                    });
 
                     return;
                 }
