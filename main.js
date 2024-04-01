@@ -62,12 +62,11 @@ app.on('ready', function() {
 
     // Every 6 hour TLE refresh
     const refreshTLE = async () => {
-        // TODO: process satellites/update error (e.g. CelesTrak 403 -- API 500)
         try {
             console.log("Refreshing all TLEs");
             const response = await axios.post('http://127.0.0.1:5000/satellites/update');
         } catch(error){
-            console.error("Celestrak error looooool")
+            console.error("Celestrak API error")
         }
     };
 
