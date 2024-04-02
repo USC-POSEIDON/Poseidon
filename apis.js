@@ -204,6 +204,32 @@ function updatePassTimeDisplay(data){
     }); 
 }
 
+function updateGroundStationBackEnd(lat, lon){
+    fetch(`http://127.0.0.1:5000/calculations/groundstation`, { 
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            lat: lat,
+            lon: lon
+        })
+    })
+    .then(function (response) {
+        if (!response.ok) {
+            throw new Error("HTTP error, status = " + response.status);
+        }
+        return response.json();
+    })
+    .then(function (data) {
+        console.log(data);  // Log the response data
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+};
+
+
 function parseDateString(dateString) {
     // Split the date string by space
     const parts = dateString.split(" ");

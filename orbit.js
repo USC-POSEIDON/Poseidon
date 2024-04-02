@@ -38,7 +38,7 @@ function initializeViewer() {
         var latitude = document.getElementById('latitude').value;
         var longitude = document.getElementById('longitude').value;
         groundStationPosition = {latitude: latitude, longitude: longitude};
-        console.log('Updated groundStationPosition:', groundStationPosition);
+        console.log('Updated groundStationPosition:', groundStationPosition, updateGroundStationBackEnd(latitude, longitude), predictPasses());
         document.getElementById('groundStationModal').style.display = "none";
       });
       
