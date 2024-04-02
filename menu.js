@@ -94,17 +94,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error("An error occurred with the fetch requests:", error);
             });
     });
-    
-
-    // TODO; FIX HERE
-    fileLinks.forEach(link => {
-        if (link.id !== 'passTimeLink') { // Skip 'PassTimeLink' as it's handled separately
-            document.getElementById(link.id).addEventListener('click', function(event) {
-                event.preventDefault();
-                ipcRenderer.send('save-file', link.type);
-            });
-        }
-    });
 
     window.onclick = function(event) {
       if (!event.target.matches('#topMenuBar > ul > li')) {
