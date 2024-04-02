@@ -196,19 +196,21 @@ def renamePreset(oldname, newname):
     if cur.rowcount == 0:
         # "newname" already exists
         print("ERROR: Newname already exists")
+        sys.stdout.flush()
         return -1
     else:
         # "newname" was successfully updated
         sql = """
         UPDATE Satellites
-        SET name = ?
-        WHERE name = ?
+        SET type = ?
+        WHERE type = ?
         """
 
         cur.execute(sql, (newname, oldname,))
         conn.commit()
 
         print("Entry updated successfully")
+        sys.stdout.flush()
 
     # Close the connection
     cur.close()

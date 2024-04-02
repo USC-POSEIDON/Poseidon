@@ -58,7 +58,6 @@ function getNameSearchResults(name){
     })
     .then(function (responseData) {
         // Handle the response data here
-        console.log("WHAT IS IN NAMESSS????")
         console.log(responseData);
         const data = JSON.parse(JSON.stringify(responseData));
         const names = data.satellites;
@@ -75,7 +74,6 @@ function getNameSearchResults(name){
 const catnrMap = {};
 
 function displayResults(results) {
-    console.log("DISPALYign RESULTS")
     // Clear previous results
     searchResults.innerHTML = '';
 

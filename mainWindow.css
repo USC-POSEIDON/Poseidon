@@ -135,7 +135,7 @@ iframe {
     background: rgba(255, 255, 255, 0.8);
     border: 1px solid #ccc; 
     padding: 10px;
-    width: 250px; 
+    width: 275px; 
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
     z-index: 10; 
 }
