@@ -3,6 +3,6 @@ from flask import Flask
 
 app = Flask(__name__)
 
-import backend.tle_calculations.orbit
-import backend.tle_calculations.tle
+import tle_calculations.orbit
+import tle_calculations.tle
 

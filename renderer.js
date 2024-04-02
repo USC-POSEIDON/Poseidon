@@ -41,20 +41,20 @@ let goldenLayout = new GoldenLayout({
               },
               {
                 type: 'component',
-                id: 'Command_Generation_component',
-                componentName: 'Command_Generation_component',
-                title: 'CommandGeneration' 
-              },
-              {
-                type: 'component',
                 id: 'Telemetry_component',
                 componentName: 'Telemetry_component',
                 title: 'TelemetryData' 
-              }]
+              },
+              {
+                type: 'component',
+                id: 'Command_Generation_component',
+                componentName: 'Command_Generation_component',
+                title: 'CommandGeneration' 
+              }
+            ]
           }]
     }]
 });
-
 
 goldenLayout.registerComponent('cesium_component', function(container, state) {
   // Check if the cesiumContainer is already detached and stored
@@ -72,7 +72,6 @@ goldenLayout.registerComponent('cesium_component', function(container, state) {
   });
 });
 
-
 goldenLayout.registerComponent('calendar_component', function(container, state) {
   let calendarModal = $('#calendarModal');
   if (calendarModal.length === 0) {
@@ -88,7 +87,6 @@ goldenLayout.registerComponent('calendar_component', function(container, state) 
   });
 });
 
-
 goldenLayout.registerComponent('PassTime_component', function(container, state) {
   let passTime = $('#PassTime');
   if (passTime.length === 0) {
@@ -100,6 +98,21 @@ goldenLayout.registerComponent('PassTime_component', function(container, state) 
   container.on('destroy', function() {
     closedComponents['PassTime_component'] = passTime.detach();
     trackComponentState('PassTime_component', false);
+    updateWindowsDropdown();
+  });
+});
+
+goldenLayout.registerComponent('Telemetry_component', function(container, state) {
+  let telemetryContainer = $('#TelemetryContainer');
+  if (telemetryContainer.length === 0) {
+    telemetryContainer = closedComponents['Telemetry_component'];
+  }
+
+  container.getElement().append(telemetryContainer);
+
+  container.on('destroy', function() {
+    closedComponents['Telemetry_component'] = telemetryContainer.detach();
+    trackComponentState('Telemetry_component', false);
     updateWindowsDropdown();
   });
 });
@@ -119,22 +132,6 @@ goldenLayout.registerComponent('Command_Generation_component', function (contain
   });
 });
 
-goldenLayout.registerComponent('Telemetry_component', function(container, state) {
-  let telemetryContainer = $('#TelemetryContainer');
-  if (telemetryContainer.length === 0) {
-    telemetryContainer = closedComponents['Telemetry_component'];
-  }
-
-  container.getElement().append(telemetryContainer);
-
-  container.on('destroy', function() {
-    closedComponents['Telemetry_component'] = telemetryContainer.detach();
-    trackComponentState('Telemetry_component', false);
-    updateWindowsDropdown();
-  });
-});
-
-
 let componentStates = {};
 
 function trackComponentState(id, isOpen = true) {
@@ -150,8 +147,8 @@ function updateWindowsDropdown() {
         { id: 'cesium_component', title: 'Cesium' },
         { id: 'calendar_component', title: 'Calendar' },
         { id: 'PassTime_component', title: 'PassTime' },
-        { id: 'Command_Generation_component', title: 'CommandGeneration' },
         { id: 'Telemetry_component', title: 'TelemetryData' },
+        { id: 'Command_Generation_component', title: 'CommandGeneration' },
     ];
 
     allComponents.forEach(component => {
@@ -171,6 +168,7 @@ function updateWindowsDropdown() {
         dropdownContent.append(menuItem);
     });
 }
+
 function toggleComponentVisibility(id, title, shouldShow) {
   const items = goldenLayout.root.getItemsById(id);
   console.log(goldenLayout.root.getItemsById(id));
@@ -180,7 +178,6 @@ function toggleComponentVisibility(id, title, shouldShow) {
       removeComponentFromLayout(id);
   }
 }
-
 
 function addComponentToLayout(id) {
   const componentConfig = getComponentConfig(id);
@@ -234,25 +231,24 @@ function getComponentConfig(id) {
           id: 'PassTime_component',
           componentState: {} 
       },
-      'Command_Generation_component': {
-          type: 'component',
-          componentName: 'Command_Generation_component',
-          title: 'CommandGeneration',
-          id: 'Command_Generation_component',
-          componentState: {} 
-      },
       'Telemetry_component': {
           type: 'component',
           componentName: 'Telemetry_component',
           title: 'TelemetryData',
           id: 'Telemetry_component',
           componentState: {} 
+      },
+      'Command_Generation_component': {
+        type: 'component',
+        componentName: 'Command_Generation_component',
+        title: 'CommandGeneration',
+        id: 'Command_Generation_component',
+        componentState: {} 
       }
   };
 
   return configMap[id] || null;
 }
-
 
 function removeComponentFromLayout(componentId) {
   const items = goldenLayout.root.getItemsById(componentId);
@@ -265,7 +261,6 @@ function removeComponentFromLayout(componentId) {
   updateWindowsDropdown();
 }
 
-
 goldenLayout.on('itemDestroyed', function(component) {
   const componentId = component.config.id;
   if (componentId) {
@@ -274,7 +269,7 @@ goldenLayout.on('itemDestroyed', function(component) {
 });
 
 goldenLayout.on('initialised', function() {
-    ['cesium_component', 'calendar_component', 'PassTime_component', 'Command_Generation_component', 'Telemetry_component'].forEach(id => {
+    ['cesium_component', 'calendar_component', 'PassTime_component', 'Telemetry_component', 'Command_Generation_component'].forEach(id => {
         trackComponentState(id, true);
     });
     updateWindowsDropdown();
