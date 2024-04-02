@@ -60,6 +60,16 @@ app.on('ready', function() {
     // Function to delay execution
     const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
+    // Every 6 hour TLE refresh
+    const refreshTLE = async () => {
+        try {
+            console.log("Refreshing all TLEs");
+            const response = await axios.post('http://127.0.0.1:5000/satellites/update');
+        } catch(error){
+            console.error("Celestrak API error")
+        }
+    };
+
     // Function to check if the server is up
     const checkServerIsUp = async (attempts = 100, interval = 1000) => {
         for (let i = 0; i < attempts; i++) {
@@ -80,10 +90,23 @@ app.on('ready', function() {
                     
                     // Show the main window only when it is ready to show
                     mainWindow.once('ready-to-show', () => {
+                        console.log("before closing splashscreen")
                         splashScreen.close(); // Close the splash screen
+                        console.log("before showing mainwindow")
                         mainWindow.show(); // Show the main window
                     });
                     
+                    // Refresh all TLEs on app startup, before showing mainwindow
+                    await refreshTLE();
+
+                    // After server check, start the 6-hour interval
+                    const interval = setInterval(refreshTLE, 6 * 60 * 60 * 1000);
+
+                    // Quit the interval when the app is about to quit 
+                    app.on('before-quit', () => {
+                        clearInterval(interval);
+                    });
+
                     return;
                 }
             } catch (error) {
