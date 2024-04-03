@@ -1,23 +1,28 @@
 [
   {
-    "ID": "CMD000", 
+    "ID": "CMD000",
     "Name": "RunOrForwardCommand",
     "Description": "Run a given command or forward to other PIC to run.",
     "Family": "Macro Commands",
     "Parameters": [
       {
-        "Name": "Run",
-        "Type": "String",
-        "Description": "Run the given command on the PIC.",
-        "Command": "r",
-        "Translation": "Run "
-      },
-      {
-        "Name": "Forward",
-        "Type": "String",
-        "Description": "Forward the given command to the other PIC to run.",
-        "Command": "f",
-        "Translation": "Forward "
+        "Name": "Action",
+        "Type": "Dropdown",
+        "Description": "Select action to perform.",
+        "Options": [
+          {
+            "Name": "Run",
+            "Description": "Run the given command on the PIC.",
+            "Command": "r",
+            "Translation": "Run"
+          },
+          {
+            "Name": "Forward",
+            "Description": "Forward the given command to the other PIC to run.",
+            "Command": "f",
+            "Translation": "Forward"
+          }
+        ]
       }
     ]
   },
