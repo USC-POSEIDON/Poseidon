@@ -125,6 +125,7 @@ function handleCheckboxChange() {
     if (checkedCount === 1) {
         console.log('Exactly one checkbox is checked!');
         updateTelemetryTLE(satellite.line1, satellite.line2);
+        updateSatelliteTLE(satellite.line1, satellite.line2);
     }
 }
 
