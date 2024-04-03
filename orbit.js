@@ -1,34 +1,51 @@
 // TODO: Mock Data Here
-var defaultTleLine1 = '1 25544U 98067A   20053.19547778  .00000739  00000-0  21903-4 0  9991';
-var defaultTleLine2 = '2 25544  51.6415 357.7365 0004954 276.8582  58.3016 15.49238122215825';
+var defaultTleLine1 = '';
+var defaultTleLine2 = '';
 
 
 // Initialize satellite record from default TLE
-var satrec = satellite.twoline2satrec(defaultTleLine1, defaultTleLine2);
+var satrec;
+if (defaultTleLine1 !== '' && defaultTleLine2 !== '') {
+    satrec = satellite.twoline2satrec(defaultTleLine1, defaultTleLine2);
+}
 
 // Satellite and Orbit Path Entities
 var satelliteEntity, orbitEntity;
 
 // Initialization function
 function initializeViewer() {
-    satelliteEntity = viewer.entities.add({
-        id: 'satellite',
-        position: new Cesium.CallbackProperty(updateSatellitePosition, false),
-        point: {
-            pixelSize: 5,
-            color: Cesium.Color.RED
-        }
-    });
+    if (satrec) {
+        satelliteEntity = viewer.entities.add({
+            id: 'satellite',
+            position: new Cesium.CallbackProperty(updateSatellitePosition, false),
+            point: {
+                pixelSize: 5,
+                color: Cesium.Color.RED
+            }
+        });
 
-    var orbitPath = computeOrbitPath(satrec);
-    orbitEntity = viewer.entities.add({
-        id: 'orbitPath',
-        polyline: {
-            positions: orbitPath,
-            width: 2,
-            material: Cesium.Color.YELLOW
-        }
-    });
+        createOrUpdateOrbitPath(satrec);
+         // Range Circle Entity
+        viewer.entities.add({
+            id: 'rangeCircle',
+            position: new Cesium.CallbackProperty(function() {
+                var position = satelliteEntity.position.getValue(viewer.clock.currentTime);
+                return Cesium.Ellipsoid.WGS84.scaleToGeodeticSurface(position);
+            }, false),
+            ellipse: {
+                semiMajorAxis: new Cesium.CallbackProperty(function() {
+                    var altitude = getSatelliteAltitude(satelliteEntity.position.getValue(viewer.clock.currentTime));
+                    return calculateFootprintRadius(altitude / 1000) * 1000;
+                }, false),
+                semiMinorAxis: new Cesium.CallbackProperty(function() {
+                    var altitude = getSatelliteAltitude(satelliteEntity.position.getValue(viewer.clock.currentTime));
+                    return calculateFootprintRadius(altitude / 1000) * 1000;
+                }, false),
+                material: Cesium.Color.BLUE.withAlpha(0.3),
+                height: 0
+            }
+        });
+    }
     
     // Ground Station Entity
     //TODO: Mock Data Here
@@ -82,44 +99,53 @@ function initializeViewer() {
             pixelOffset: new Cesium.Cartesian2(0, -9)
         }
     });
-
-    // Range Circle Entity
-    viewer.entities.add({
-        id: 'rangeCircle',
-        position: new Cesium.CallbackProperty(function() {
-            var position = satelliteEntity.position.getValue(viewer.clock.currentTime);
-            return Cesium.Ellipsoid.WGS84.scaleToGeodeticSurface(position);
-        }, false),
-        ellipse: {
-            semiMajorAxis: new Cesium.CallbackProperty(function() {
-                var altitude = getSatelliteAltitude(satelliteEntity.position.getValue(viewer.clock.currentTime));
-                return calculateFootprintRadius(altitude / 1000) * 1000;
-            }, false),
-            semiMinorAxis: new Cesium.CallbackProperty(function() {
-                var altitude = getSatelliteAltitude(satelliteEntity.position.getValue(viewer.clock.currentTime));
-                return calculateFootprintRadius(altitude / 1000) * 1000;
-            }, false),
-            material: Cesium.Color.BLUE.withAlpha(0.3),
-            height: 0
-        }
-    });
 }
 
 // Function to update satellite TLE from user input
-function updateSatelliteTLE() {
-    var tleLine1 = document.getElementById('tleLine1').value;
-    var tleLine2 = document.getElementById('tleLine2').value;
-
+function updateSatelliteTLE(tleLine1, tleLine2) {
     if (isValidTLE(tleLine1, tleLine2)) {
         satrec = satellite.twoline2satrec(tleLine1, tleLine2);
-        orbitEntity.polyline.positions = computeOrbitPath(satrec);
-        satelliteEntity.position = new Cesium.CallbackProperty(function() {
-            return updateSatellitePosition();
-        }, false);
+        createOrUpdateOrbitPath(satrec); // Use the new function here
+        if (!satelliteEntity) {
+            satelliteEntity = viewer.entities.add({
+                id: 'satellite',
+                position: new Cesium.CallbackProperty(function() {
+                    return updateSatellitePosition();
+                }, false),
+                point: {
+                    pixelSize: 5,
+                    color: Cesium.Color.RED
+                }
+            });
+        } else {
+            satelliteEntity.position = new Cesium.CallbackProperty(function() {
+                return updateSatellitePosition();
+            }, false);
+        }
     } else {
         alert("Invalid TLE data. Please check and try again.");
     }
 }
+
+
+function createOrUpdateOrbitPath(satrec) {
+    var orbitPath = computeOrbitPath(satrec);
+    if (orbitEntity) {
+        // Update existing orbit path
+        orbitEntity.polyline.positions = orbitPath;
+    } else {
+        // Create new orbit entity if it doesn't exist
+        orbitEntity = viewer.entities.add({
+            id: 'orbitPath',
+            polyline: {
+                positions: orbitPath,
+                width: 2,
+                material: Cesium.Color.YELLOW
+            }
+        });
+    }
+}
+
 
 // Function to validate TLE format
 function isValidTLE(line1, line2) {
