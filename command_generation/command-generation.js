@@ -70,6 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         const input = document.createElement('input');
                         input.type = param.Type ? param.Type.toLowerCase() : '';
                         input.name = param.Name;
+                        input.title = param.Description;
         
                         parameterInputs.appendChild(label);
                         parameterInputs.appendChild(input);
@@ -175,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
     
-    // Event listener for the save button
+    // Event listener for the "save" button
     saveButton.addEventListener('click', function() {
         const updatedCommand = generateString();
         commandStringArray[selectedIndex] = updatedCommand;
