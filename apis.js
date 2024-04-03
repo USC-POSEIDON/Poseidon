@@ -7,35 +7,6 @@ class BasicSatellite {
     }
 }
 
-function getNameSearchResults(){
-    var name = document.getElementById('satelliteSearchInput').value;
-
-    var type = document.getElementById("presetDropdown").value;
-    var formData = new FormData();
-    formData.append('listname', type);
-
-    console.log(`Adding sat ${name} to list ${type}`);
-
-    fetch(`http://127.0.0.1:5000//satellites/post/catnr/${name}`, {
-        method: "POST",
-        body: formData
-    })
-    .then(function (response) {
-    if (!response.ok) {
-        throw new Error("HTTP error, status = " + response.status);
-    }
-    return response.json();
-    })
-    .then(function (responseData) {
-    // Handle the response data here
-    console.log(responseData);
-    })
-    .catch(function (error) {
-    // Handle errors here
-    console.log(error);
-    });
-}
-
 function showPresetSelectOptions(){
 
     console.log("showing preset options");
@@ -232,6 +203,32 @@ function updatePassTimeDisplay(data){
         });
     }); 
 }
+
+function updateGroundStationBackEnd(lat, lon){
+    fetch(`http://127.0.0.1:5000/calculations/groundstation`, { 
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            lat: lat,
+            lon: lon
+        })
+    })
+    .then(function (response) {
+        if (!response.ok) {
+            throw new Error("HTTP error, status = " + response.status);
+        }
+        return response.json();
+    })
+    .then(function (data) {
+        console.log(data);  // Log the response data
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+};
+
 
 function parseDateString(dateString) {
     // Split the date string by space

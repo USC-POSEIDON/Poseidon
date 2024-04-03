@@ -207,17 +207,20 @@ def getCurrentTelemetry():
 
 @app.route('/calculations/groundstation', methods=['POST'])
 def changeGroundStation():
-    """Change the global observer object.
+    """Change the global observer object."""
+    data = request.get_json() 
 
-    Required form params:
-        lat: New latitude.
-        lon: New longitude.
-    """
-    lat = request.form['lat']
-    lon = request.form['lon']
+    if not data or 'lat' not in data or 'lon' not in data:
+        # If any required field is missing, return a 400 Bad Request response
+        return jsonify({"error": "Missing lat or lon"}), 400
+
+    lat = data['lat']
+    lon = data['lon']
 
     global observer
-    observer = wgs84.latlon(lat, lon)
+    observer = wgs84.latlon(float(lat), float(lon))  # Ensure lat and lon are floats
+
+    return jsonify({"message": "Ground station updated successfully"}), 200
 
 
 

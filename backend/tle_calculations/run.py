@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from tle_calculations import app
-from backend.tle_calculations.tle import createTables
+from tle_calculations.tle import createTables
 
 
 

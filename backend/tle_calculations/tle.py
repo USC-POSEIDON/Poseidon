@@ -1,7 +1,7 @@
 import datetime as dt
 import sys
 import requests
-from flask import Flask, request, jsonify
+from flask import Flask, abort, request, jsonify
 
 from tle_calculations.database import *
 from tle_calculations import app
@@ -48,17 +48,26 @@ def getNames(name):
         name: Search term for satellite name.
 
     Returns:
-        A list of satellite names.
-        TODO: Should we return catalog number + TLE as well?
-
-    Raises:
-        RuntimeError: If passes not predicted as expected.
+        A list of satellites.
+        Each entry has (name, catnr)
     """
 
     api_url = f"{BASE_URL}?NAME={name}&{DEFAULT_FORMAT}"
     response = requests.get(api_url).text.splitlines()
+
+    # Create list of (name, catnr)
+    satlist = []
+    while len(response) >= 3:
+        currname = response[0].rstrip()
+        catnr = int(response[1][2:7])
+        satlist.append((currname, catnr))
+        response = response[3:]
+
     
-    return [line.rstrip() for line in response[0::3]]
+    print("[BACKEND] Returning satlist with "+name+" of size "+str(len(satlist)))
+    sys.stdout.flush()
+
+    return jsonify({"satellites": satlist}), 200
 
 @app.route('/satellites/get/preset/<listname>', methods=['GET'])
 def getPresetList(listname):
@@ -68,12 +77,15 @@ def getPresetList(listname):
         list of satellites (catnr, name, TLE line 1, TLE line 2)
     '''
     list = getSatellitesInPreset(listname) # [sat[1] for sat in list]
-    return jsonify({"satellites": list})
+    return jsonify({"satellites": list}), 200
 
 @app.route('/satellites/get/allpresets', methods=['GET'])
 def getAllPresets():
     """ Return a json containing a list of all Preset List Names under "names." """
-    return jsonify({"names": getAllPresetNames()})
+    return jsonify({"names": getAllPresetNames()}), 200
+
+
+# ====================== POST REQUESTS =====================
 
 @app.route('/satellites/post/catnr/<catnr>', methods=['POST'])
 def addNewTLEByCATNR(catnr):
@@ -95,6 +107,8 @@ def addNewTLEByCATNR(catnr):
     
     listname = request.form['listname']
     # TODO: catch KeyError, or handle HTTP 400 response 
+    if listname == "":
+        abort(400, description='POST request unsuccessful: Preset list to add to has type \"\"')
 
     tleData = getTLE(catnr)
     if tleData[0] != None:
@@ -107,13 +121,10 @@ def addNewTLEByCATNR(catnr):
         id = getSatelliteID(catnr)
         insertSatellite(id, catnr, name, listname)
 
-        return 'Success'
+        return jsonify({"message": "POST request successful"}), 200
     
-    return 'Error: Invalid catnr'
-
-
-# ====================== POST REQUESTS =====================
-
+    abort(400, description='POST request unsuccessful: invalid CATNR entered')
+        
 @app.route('/satellites/post/preset/<listname>', methods=['POST'])
 def addPreset(listname):
     """ Create a new empty preset list. If list already exists, do nothing. """
@@ -122,9 +133,18 @@ def addPreset(listname):
     return jsonify({"message": "POST request successful"}), 200
 
 @app.route('/satellites/rename/preset/<listname>/<newname>', methods=['POST'])
-def renamePreset(listname, newname):
-    # TODO:
-    deletePresetList(listname)
+def renamePresetList(listname, newname):
+    """Rename a preset list to newname
+
+    Returns:
+        200 OK if success
+        400 error if not success (newname already exists)
+    """
+    result = renamePreset(listname, newname)
+    
+    if result == -1:
+        return jsonify({"message": "POST request unsuccessful: list name already exists"}), 400
+        
     return jsonify({"message": "POST request successful"}), 200
 
 @app.route('/satellites/update', methods=['POST'])
@@ -148,7 +168,7 @@ def updateTLEs():
         if catnr in tle_dict.keys():
             updateTLE(catnr, tle_dict[catnr][1], tle_dict[catnr][2])
 
-    jsonify({"message": "POST request successful"}), 200
+    return jsonify({"message": "POST request successful"}), 200
 
 
 # ====================== DELETE REQUESTS =====================
