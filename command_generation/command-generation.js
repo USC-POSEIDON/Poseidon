@@ -4,14 +4,15 @@
 
 // MAVERIC CubeSat - University of Southern California
 
-// ################################################################################################
-// this file converts inputted strings to valid command strings to send to the satellite
+// ###################################################################################################
+// this file converts inputted strings to valid command strings to send to the satellite and exports 
+// them to a text file
 
-// main function that does the generation : generate_command(string_array, json_commands)
+// main function that does the generation : generateCommands(inputString, data)
 // input:
-//       string_array: an array of strings that we receive from the frontend
-//       json_commands: the JSON file we will be using to convert our strings to command strings 
-// ################################################################################################
+//       inputStrings: an array of strings that we receive from the frontend
+//       data: the data from the JSON file we will be using to convert our strings to command strings 
+// ###################################################################################################
 
 document.addEventListener('DOMContentLoaded', function () {
     const commandDropdown = document.getElementById('commandDropdown');
@@ -39,50 +40,76 @@ document.addEventListener('DOMContentLoaded', function () {
     window.populateParameters = function () {
         const selectedCommandID = commandDropdown.value;
         const selectedCommandData = data.find(command => command.ID === selectedCommandID);
-
+    
         parameterInputs.innerHTML = '';
+    
+        if (selectedCommandData) {
+            if (selectedCommandData.Parameters && selectedCommandData.Parameters.length > 0) {
+                selectedCommandData.Parameters.forEach(param => {
+                    if (param.Type === "Dropdown" && param.Options && param.Options.length > 0) {
+                        const descriptionLabel = document.createElement('label');
+                        descriptionLabel.textContent = param.Description;
+                        parameterInputs.appendChild(descriptionLabel);
 
-        if (selectedCommandData.Parameters && selectedCommandData.Parameters.length > 0) {
-            selectedCommandData.Parameters.forEach(param => {
-                const label = document.createElement('label');
-                label.textContent = param.Name + ':';
-
-                const input = document.createElement('input');
-                input.type = param.Type ? param.Type.toLowerCase() : '';
-
-                if (param.Name) {
-                    input.name = param.Name;
-                } else {
-                    console.error('Parameter name is not defined.');
-                    return;
-                }
-
-                parameterInputs.appendChild(label);
-                parameterInputs.appendChild(input);
-                parameterInputs.appendChild(document.createElement('br'));
-            });
+                        const select = document.createElement('select');
+                        select.name = param.Name;
+                        
+                        param.Options.forEach(option => {
+                            const optionElement = document.createElement('option');
+                            optionElement.value = option.Command;
+                            optionElement.textContent = option.Name;
+                            optionElement.title = option.Description;
+                            select.appendChild(optionElement);
+                        });
+    
+                        parameterInputs.appendChild(select);
+                    } else {
+                        const label = document.createElement('label');
+                        label.textContent = param.Name + ':';
+        
+                        const input = document.createElement('input');
+                        input.type = param.Type ? param.Type.toLowerCase() : '';
+                        input.name = param.Name;
+        
+                        parameterInputs.appendChild(label);
+                        parameterInputs.appendChild(input);
+                    }
+    
+                    parameterInputs.appendChild(document.createElement('br'));
+                });
+            }
+        } else {
+            console.error('Selected command data not found.');
         }
     };
 
-    // Function to generate the array of command strings
+    // Function to generate the command string
     function generateString() {
         const selectedCommandID = commandDropdown.value;
         const selectedCommandData = data.find(command => command.ID === selectedCommandID);
-
+        
         if (!selectedCommandData) {
             console.error('No command data available.');
-            return [];
+            return '';
         }
-
-        let commandString = 'f ' + selectedCommandID;
+        
+        let commandString = selectedCommandID;
         
         if (selectedCommandData.Parameters && selectedCommandData.Parameters.length > 0) {
             selectedCommandData.Parameters.forEach(param => {
-                const inputValue = document.querySelector(`input[name="${param.Name}"]`).value.trim();
-                commandString += ` ${inputValue}`;
+                if (param.Type === "Dropdown") {
+                    const selectElement = document.querySelector(`select[name="${param.Name}"]`);
+                    const selectedOption = selectElement ? selectElement.value : '';
+                    commandString += ` ${selectedOption}`;
+                } else {
+                    const inputValue = document.querySelector(`input[name="${param.Name}"]`).value.trim();
+                    const enclosure = param.Enclosure ? param.Enclosure : '';
+                    const modifiedInputValue = enclosure ? `${enclosure}${inputValue}${enclosure}` : inputValue;
+                    commandString += ` ${modifiedInputValue}`;
+                }
             });
         }
-
+        
         return commandString;
     }
 
@@ -127,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Function to populate dropdown and parameters from a command string
     function populateDropdownAndParameters(commandString) {
         const commandParts = commandString.split(' ');
-        const commandID = commandParts[1];
+        const commandID = commandParts[0];
 
         const selectedCommand = data.find(command => command.ID === commandID);
 
@@ -196,21 +223,41 @@ document.addEventListener('DOMContentLoaded', function () {
 // Function to generate commands from input strings
 function generateCommands(inputStrings, data) {
     const result = [];
+    let longString = '';
 
-    inputStrings.forEach(inputString => {
-        const [forward, commandID, ...values] = inputString.split(' ');
+    inputStrings.forEach((inputString, index) => {
+        const [commandID, ...values] = inputString.split(' ');
         const command = data.find(command => command.ID === commandID);
 
         if (command) {
-            const generatedCommand = `${forward} ${command.Int} ${values.join(' ')}`;
-            result.push(generatedCommand);
+            if (longString !== '' && !commandID.startsWith('CMD000')) {
+                longString += ' ';
+            }
+
+            if (commandID.startsWith('CMD000')) {
+                if (longString !== '') {
+                    result.push(longString);
+                    longString = '';
+                }
+                longString += `${values.join(' ')}`;
+            } else {
+                const generatedCommand = `${command.Int} ${values.join(' ')}`;
+                longString += generatedCommand;
+            }
         } else {
             console.error(`Command '${commandID}' not found in data.`);
         }
+
+        // Check if it's the last iteration
+        if (index === inputStrings.length - 1 && longString !== '') {
+            result.push(longString); // Push any remaining long string
+        }
     });
 
-    saveCommandsToFile(result);
-    console.log("Generated commands: ", result);
+    const trimmedResult = result.map(command => command.trim());
+
+    saveCommandsToFile(trimmedResult);
+    console.log("Generated commands: ", trimmedResult);
 
     return result;
 }
