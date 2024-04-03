@@ -74,12 +74,14 @@ document.addEventListener('DOMContentLoaded', function () {
             return [];
         }
 
-        let commandString = 'f ' + selectedCommandID;
-        
+        let commandString = selectedCommandID;
+               
         if (selectedCommandData.Parameters && selectedCommandData.Parameters.length > 0) {
             selectedCommandData.Parameters.forEach(param => {
                 const inputValue = document.querySelector(`input[name="${param.Name}"]`).value.trim();
-                commandString += ` ${inputValue}`;
+                const enclosure = param.Enclosure ? param.Enclosure : '';
+                const modifiedInputValue = enclosure ? `${enclosure}${inputValue}${enclosure}` : inputValue;
+                commandString += ` ${modifiedInputValue}`;
             });
         }
 
@@ -198,11 +200,11 @@ function generateCommands(inputStrings, data) {
     const result = [];
 
     inputStrings.forEach(inputString => {
-        const [forward, commandID, ...values] = inputString.split(' ');
+        const [commandID, ...values] = inputString.split(' ');
         const command = data.find(command => command.ID === commandID);
 
         if (command) {
-            const generatedCommand = `${forward} ${command.Int} ${values.join(' ')}`;
+            const generatedCommand = `${command.Int} ${values.join(' ')}`;
             result.push(generatedCommand);
         } else {
             console.error(`Command '${commandID}' not found in data.`);

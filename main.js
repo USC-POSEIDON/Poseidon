@@ -12,8 +12,8 @@ let tleFlaskProcess = null;
 app.on('ready', function() {
     // Splash Screen setup
     splashScreen = new BrowserWindow({
-        width: 400,
-        height: 300,
+        width: 1203,
+        height: 835,
         transparent: true,
         frame: false,
         alwaysOnTop: true
