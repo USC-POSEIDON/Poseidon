@@ -2,7 +2,7 @@
 
 This desktop application is built with Electron and integrates various functionalities to track and visualize satellite orbits using Cesium, a powerful library for 3D globes and maps. The app provides a real-time 3D visualization of satellite orbits with the ability to input Two-Line Element set (TLE) data for accurate tracking. It includes a chat window for command input, a calendar for scheduling, and additional modules for motor control and signal processing that are under development. (See the lastest commit for the most up to date source code)
 
-![Current Software](https://github.com/CSCI401TEAM/Poseidon/blob/main/example.png?raw=true)
+![Current Software](https://i.ibb.co/fH0bQcX/Screenshot-2024-04-02-at-1-28-58-PM.png)
 
 
 
