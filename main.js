@@ -29,6 +29,7 @@ app.on('ready', function() {
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
+        icon: path.join(__dirname, 'icon.png'),
         show: false, 
         webPreferences: {
             nodeIntegration: true,
@@ -139,6 +140,32 @@ app.on('ready', function() {
         if (window) {
             window.webContents.openDevTools();
         }
+    });
+
+    ipcMain.on('save-commands', (event, commands) => {
+        dialog.showSaveDialog({
+            title: 'Save Commands',
+            defaultPath: 'generated_commands.txt',
+            filters: [{ name: 'Text Files', extensions: ['txt'] }]
+        }).then(result => {
+            if (!result.canceled && result.filePath) {
+                fs.writeFile(result.filePath, commands.join('\n'), (err) => {
+                    if (err) {
+                        console.error('Error saving commands to file:', err);
+                        event.reply('save-commands-response', { success: false, error: err });
+                    } else {
+                        console.log('Commands saved to file:', result.filePath);
+                        event.reply('save-commands-response', { success: true, filePath: result.filePath });
+                    }
+                });
+            } else {
+                console.log('Save dialog canceled or no file path selected.');
+                event.reply('save-commands-response', { success: false, error: 'Save dialog canceled or no file path selected.' });
+            }
+        }).catch(err => {
+            console.error('Error showing save dialog:', err);
+            event.reply('save-commands-response', { success: false, error: err });
+        });
     });
 
     //save-file not being used right now TODO
