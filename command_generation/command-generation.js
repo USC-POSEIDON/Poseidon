@@ -209,13 +209,19 @@ document.addEventListener('DOMContentLoaded', function () {
     generateButton.addEventListener('click', function () {
         if (commandStringArray.length > 0) {
             console.log(commandStringArray);
-            generateCommands(commandStringArray, data);
-
-            commandStringArray.length = 0;
-            commandDropdown.selectedIndex = 0;
-            commandList.innerHTML = '';
+            const generatedCommands = generateCommands(commandStringArray, data);
+            ipcRenderer.send('save-commands', generatedCommands);
         } else {
             console.error('Error generating commands.');
+        }
+    });
+
+    // Listen for response from main process after attempting to save commands
+    ipcRenderer.on('save-commands-response', (event, response) => {
+        if (response.success) {
+            console.log('Commands saved successfully:', response.filePath);
+        } else {
+            console.error('Error saving commands:', response.error);
         }
     });
 });
@@ -248,36 +254,13 @@ function generateCommands(inputStrings, data) {
             console.error(`Command '${commandID}' not found in data.`);
         }
 
-        // Check if it's the last iteration
         if (index === inputStrings.length - 1 && longString !== '') {
-            result.push(longString); // Push any remaining long string
+            result.push(longString);
         }
     });
 
     const trimmedResult = result.map(command => command.trim());
-
-    saveCommandsToFile(trimmedResult);
     console.log("Generated commands: ", trimmedResult);
 
     return result;
-}
-
-// Function to save commands to a file in the specified folder
-function saveCommandsToFile(commands) {
-    const fs = require('fs');
-    const folderPath = 'command_generation/generated_commands';
-    const date = new Date();
-    const fileName = `${folderPath}/generated_commands_${date.getTime()}.txt`;
-
-    if (!fs.existsSync(folderPath)) {
-        fs.mkdirSync(folderPath, { recursive: true });
-    }
-
-    fs.writeFile(fileName, commands.join('\n'), (err) => {
-        if (err) {
-            console.error('Error saving commands to file:', err);
-        } else {
-            console.log('Commands saved to file:', fileName);
-        }
-    });
 }
