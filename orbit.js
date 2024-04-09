@@ -100,27 +100,6 @@ function initializeViewer() {
         }
     });
 
-    // Range Circle Entity
-    // viewer.entities.add({
-    //     id: 'rangeCircle',
-    //     position: new Cesium.CallbackProperty(function() {
-    //         var position = satelliteEntity.position.getValue(viewer.clock.currentTime);
-    //         return Cesium.Ellipsoid.WGS84.scaleToGeodeticSurface(position);
-    //     }, false),
-    //     ellipse: {
-    //         semiMajorAxis: new Cesium.CallbackProperty(function() {
-    //             var altitude = getSatelliteAltitude(satelliteEntity.position.getValue(viewer.clock.currentTime));
-    //             return calculateFootprintRadius(altitude / 1000) * 1000;
-    //         }, false),
-    //         semiMinorAxis: new Cesium.CallbackProperty(function() {
-    //             var altitude = getSatelliteAltitude(satelliteEntity.position.getValue(viewer.clock.currentTime));
-    //             return calculateFootprintRadius(altitude / 1000) * 1000;
-    //         }, false),
-    //         material: Cesium.Color.BLUE.withAlpha(0.3),
-    //         height: 0
-    //     }
-    // });
-
     function updateGroundStation(lat, lon){
         var latitude = parseFloat(lat);
         var longitude = parseFloat(lon);
