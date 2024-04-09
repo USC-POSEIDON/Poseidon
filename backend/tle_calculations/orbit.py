@@ -9,6 +9,7 @@ from skyfield.api import EarthSatellite, load, wgs84
 import scipy.constants as const
 from flask import Flask, request, jsonify
 
+from tle_calculations.database import *
 from tle_calculations import app
 
 # Constants
@@ -36,6 +37,16 @@ class Pass:
         self.rise = rise
         self.culminate = culminate
         self.set = set
+
+def initGroundStation():
+    """ Set observer to ground station coordinates from database (if exists) """
+    lat, lon = getGSCoordinates()
+    if lat is not None and lon is not None:
+        global observer
+        observer = wgs84.latlon(lat, lon)
+    else:
+        # Coordinates default to GS_LATITUDE, GS_LONGITUDE
+        pass
 
 @app.route('/health', methods=['GET'])
 def health_check():
@@ -203,11 +214,26 @@ def getCurrentTelemetry():
     sys.stdout.flush()
     return json_string, 200
 
+@app.route('/calculations/get/groundstation', methods=['GET'])
+def getGroundStation():
+    """Return the groundstation coordinates.
+    
+    Returns:
+        200 OK if exists
+        400 Error if not exists
+    """
+    lat, lon = getGSCoordinates()
+    if lat is not None and lon is not None:
+        return jsonify({"lat": lat, "lon": lon}), 200
+    else:
+        return jsonify({"lat": lat, "lon": lon}), 400
+
+
 # ====================== POST REQUESTS =====================
 
-@app.route('/calculations/groundstation', methods=['POST'])
+@app.route('/calculations/post/groundstation', methods=['POST'])
 def changeGroundStation():
-    """Change the global observer object."""
+    """Change the global observer object, and save lat, lon to database. """
     data = request.get_json() 
 
     if not data or 'lat' not in data or 'lon' not in data:
@@ -219,6 +245,8 @@ def changeGroundStation():
 
     global observer
     observer = wgs84.latlon(float(lat), float(lon))  # Ensure lat and lon are floats
+
+    updateGSCoordinates(lat, lon)
 
     return jsonify({"message": "Ground station updated successfully"}), 200
 

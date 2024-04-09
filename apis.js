@@ -205,7 +205,7 @@ function updatePassTimeDisplay(data){
 }
 
 function updateGroundStationBackEnd(lat, lon){
-    fetch(`http://127.0.0.1:5000/calculations/groundstation`, { 
+    fetch(`http://127.0.0.1:5000/calculations/post/groundstation`, { 
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

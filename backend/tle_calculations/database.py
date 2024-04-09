@@ -29,6 +29,15 @@ def createTables():
 
     # Create tables
     cur.execute("""
+        CREATE TABLE IF NOT EXISTS Ground_Station (
+            latitude REAL,
+            longitude REAL
+        );        
+    """)
+    
+    conn.commit()
+
+    cur.execute("""
         CREATE TABLE IF NOT EXISTS TLE_Data (
             tle_id INTEGER PRIMARY KEY AUTOINCREMENT,
             catnr INTEGER,
@@ -79,6 +88,45 @@ def createTables():
     # Close the connection
     cur.close()
     conn.close()
+
+def updateGSCoordinates(lat, lon):
+    # Check if latlon exists 
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+
+    cursor.execute('SELECT latitude, longitude FROM Ground_Station LIMIT 1')
+    row = cursor.fetchone()
+    
+    # If exists, update first row's lat lon
+    if row:
+        cursor.execute('UPDATE Ground_Station SET latitude = ?, longitude = ? WHERE ROWID = 1', (lat, lon))
+        conn.commit()
+    # Else, add row lat lon to table
+    else:
+        cursor.execute('INSERT INTO Ground_Station (latitude, longitude) VALUES (?, ?)', (lat, lon))
+        conn.commit()        
+    
+    # Close the connection
+    conn.close()
+
+def getGSCoordinates():
+    """ Return first row of Ground_Station """
+
+    # Connect to the SQLite database
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+
+    cursor.execute('SELECT latitude, longitude FROM Ground_Station LIMIT 1')
+    row = cursor.fetchone()
+
+    # Close the connection
+    conn.close()
+
+    if row:
+        latitude, longitude = row
+        return latitude, longitude
+    else:
+        return None, None
 
 def insertSatellite(tle_id, catnr, name, type):
     conn = sqlite3.connect(db_path)

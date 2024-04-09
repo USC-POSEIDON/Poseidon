@@ -103,6 +103,14 @@ function initializeViewer() {
             height: 0
         }
     });
+
+    function initGroundStation(){
+        // TODO
+    }
+    
+    document.addEventListener("DOMContentLoaded", function() {
+        initGroundStation();
+    });
 }
 
 // Function to update satellite TLE from user input
