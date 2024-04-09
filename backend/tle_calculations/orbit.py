@@ -226,7 +226,12 @@ def getGroundStation():
     if lat is not None and lon is not None:
         return jsonify({"lat": lat, "lon": lon}), 200
     else:
-        return jsonify({"lat": lat, "lon": lon}), 400
+        # set default coordinates
+        global observer
+        observer = wgs84.latlon(GS_LATITUDE, GS_LONGITUDE)  # Ensure lat and lon are floats
+        updateGSCoordinates(GS_LATITUDE, GS_LONGITUDE)
+
+        return jsonify({"lat": GS_LATITUDE, "lon": GS_LONGITUDE}), 200
 
 
 # ====================== POST REQUESTS =====================

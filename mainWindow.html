@@ -25,8 +25,6 @@
             </li>
             <li>Exports
                 <div class="dropdown-content">
-                    <a href="#Command_Generation" id="commandGenerationLink">Command Generation</a>
-                    <a href="#Telemetry" id="telemetryLink">Telemetry</a>
                     <a href="#Pass_Time" id="passTimeLink">Pass Time</a>
                 </div>
             </li>
@@ -59,6 +57,7 @@
 
             <button id="saveButton" style="display: none;">Save</button>
             <button id="addButton">Add Command</button>
+            <div style="height: 10px;"></div>
             
             <div class="commands-list">
                 <label>Command List</label>
@@ -68,6 +67,7 @@
             </div>
 
             <button id="generateCommand">Generate/Export</button>
+            <div style="height: 50px;"></div>
         </div>
     </div>
 
@@ -108,17 +108,7 @@
                 <ul id="presetList" style="font-size: 12px;">
                     <!-- Presets will be populated dynamically -->
                     <li>
-                            <input type="checkbox" checked> Satellite 1
-                    </li>
-                    <li>
-                        <label>
-                            <input type="checkbox"> Satellite  2
-                        </label>
-                    </li>
-                    <li>
-                        <label>
-                            <input type="checkbox"> Satellite 3
-                        </label>
+                            <p>Choose a preset to view</p>
                     </li>
                 </ul>
                 <div id="presetSelectionToShow">
@@ -160,7 +150,7 @@
         </div>
     </div>
         <div id="calendarModal">
-            <iframe src="https://calendar.google.com/calendar/embed?src=c_115d4ae4a982a5a6e7a8d404ed46f3ab67dd2fac63a7ffb242ca6a5940b47bbd%40group.calendar.google.com&ctz=Your_Timezone" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+            <iframe src="https://poseidon-scheduler.web.app/" scrolling="yes"></iframe>
         </div>
         <div id="PassTime"> 
             <table id="PassTimeTable">

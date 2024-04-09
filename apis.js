@@ -125,6 +125,7 @@ function handleCheckboxChange() {
     if (checkedCount === 1) {
         console.log('Exactly one checkbox is checked!');
         updateTelemetryTLE(satellite.line1, satellite.line2);
+        updateSatelliteTLE(satellite.line1, satellite.line2);
     }
 }
 
@@ -252,3 +253,7 @@ function parseDateString(dateString) {
     // Create and return the Date object
     return new Date(year, month, day, hour, minute, second);
 }
+
+module.exports = {
+    getGroundStationBackEnd: getGroundStationBackEnd
+};

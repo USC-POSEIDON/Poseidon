@@ -1,7 +1,8 @@
 const electron = require('electron');
 const url = require('url');
+const fs = require('fs').promises;
 const path = require('path');
-const { app, BrowserWindow, ipcMain } = electron;
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const spawn = require('child_process').spawn;
 const axios = require('axios');
 
@@ -12,8 +13,8 @@ let tleFlaskProcess = null;
 app.on('ready', function() {
     // Splash Screen setup
     splashScreen = new BrowserWindow({
-        width: 400,
-        height: 300,
+        width: 1203,
+        height: 835,
         transparent: true,
         frame: false,
         alwaysOnTop: true
@@ -28,6 +29,7 @@ app.on('ready', function() {
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
+        icon: path.join(__dirname, 'icon.png'),
         show: false, 
         webPreferences: {
             nodeIntegration: true,
@@ -140,6 +142,83 @@ app.on('ready', function() {
         }
     });
 
+    ipcMain.on('save-commands', (event, commands) => {
+        dialog.showSaveDialog({
+            title: 'Save Commands',
+            defaultPath: 'generated_commands.txt',
+            filters: [{ name: 'Text Files', extensions: ['txt'] }]
+        }).then(result => {
+            if (!result.canceled && result.filePath) {
+                fs.writeFile(result.filePath, commands.join('\n'), (err) => {
+                    if (err) {
+                        console.error('Error saving commands to file:', err);
+                        event.reply('save-commands-response', { success: false, error: err });
+                    } else {
+                        console.log('Commands saved to file:', result.filePath);
+                        event.reply('save-commands-response', { success: true, filePath: result.filePath });
+                    }
+                });
+            } else {
+                console.log('Save dialog canceled or no file path selected.');
+                event.reply('save-commands-response', { success: false, error: 'Save dialog canceled or no file path selected.' });
+            }
+        }).catch(err => {
+            console.error('Error showing save dialog:', err);
+            event.reply('save-commands-response', { success: false, error: err });
+        });
+    });
+
+    //save-file not being used right now TODO
+    ipcMain.on('save-file', async (event, fileType, fileData) => {
+        const mainWindow = BrowserWindow.getFocusedWindow(); // Ensure you get the currently focused window
+    
+        const { filePath } = await dialog.showSaveDialog(mainWindow, {
+            title: `Save ${fileType}`,
+            // Add filters here if you want to restrict the file type, for example:
+            filters: [
+                { name: 'Text Files', extensions: ['txt', 'csv'] },
+                { name: 'All Files', extensions: ['*'] }
+            ]
+        });
+    
+        if (filePath) {
+            try {
+                // Write the fileData to the specified filePath
+                await fs.writeFile(filePath, fileData);
+                console.log(`Successfully saved file to ${filePath}`);
+                // Optionally, you can send a response back to the renderer process if needed
+                event.reply('save-file-success', `File successfully saved to ${filePath}`);
+            } catch (error) {
+                console.error(`Failed to save the file: ${error}`);
+                // Handle errors, such as sending an error message back to the renderer process
+                event.reply('save-file-error', `Failed to save the file: ${error.message}`);
+            }
+        }
+    });
+
+    ipcMain.handle('save-file-dialog', async (event, fileName, fileData) => {
+        const mainWindow = BrowserWindow.getFocusedWindow();
+        const csvData = fileData;
+    
+        const { filePath } = await dialog.showSaveDialog(mainWindow, {
+            title: 'Save File',
+            defaultPath: fileName,
+            filters: [
+                { name: 'CSV Files', extensions: ['csv'] },
+                { name: 'All Files', extensions: ['*'] }
+            ]
+        });
+    
+        if (filePath) {
+            // Directly write the CSV data to the selected file path
+            await fs.writeFile(filePath, csvData, 'utf8');
+            return filePath; // Return the saved file path to the renderer
+        } else {
+            // User cancelled the save dialog
+            throw new Error('File save cancelled');
+        }
+    });
+    
     mainWindow.on('closed', function() {
         mainWindow = null;
     });
