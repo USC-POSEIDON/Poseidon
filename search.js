@@ -8,8 +8,10 @@ document.getElementById('searchOptions').addEventListener('change', function(eve
         
         if (selectedSearchType === 'name') {
             searchButton.textContent = "Search";
+            satelliteSearchInput.placeholder = "Enter your search query";
         } else if (selectedSearchType === 'catalog') {
             searchButton.textContent = "Add";
+            satelliteSearchInput.placeholder = "Enter a catalog number";
         }
     }
 });
@@ -133,5 +135,23 @@ function addTLEByCatnr(catnr){
     .catch(function (error) {
         // Handle errors here
         console.log(error);
+        showPopup();
     });
+}
+
+function showPopup() {
+    console.log("Popping up");
+
+    // Show the popup
+    var popup = document.getElementById("searchPopup");
+    popup.classList.add("show");
+  
+    // Fade out after 3 seconds
+    setTimeout(function() {
+        popup.style.opacity = "0"; // Change opacity
+        setTimeout(function() {
+            popup.classList.remove("show");
+            popup.style.opacity = ""; // Reset opacity after transition
+        }, 500); // Wait for the transition to complete (0.5s)
+    }, 1000);
 }

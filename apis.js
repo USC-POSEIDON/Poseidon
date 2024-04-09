@@ -80,6 +80,9 @@ function updatePresetListDisplay(){
         // Define the options
         var options = data.satellites;
 
+        // Sort by name alphabetically
+        options.sort((a, b) => a[1].localeCompare(b[1]));
+
         // Populate list with satellite names
         options.forEach(function(satellite) {
             var catnr = satellite[0];
@@ -88,14 +91,23 @@ function updatePresetListDisplay(){
             var line2 = satellite[3];
 
             var li = document.createElement("li");
+            li.classList.add("list-item");
             var label = document.createElement("label");
+
             var checkbox = document.createElement("input");
             checkbox.type = "checkbox";
             checkbox.addEventListener('change', handleCheckboxChange);
             checkbox.BasicSatellite = new BasicSatellite(name, catnr, line1, line2);
+
             label.appendChild(checkbox);
             label.appendChild(document.createTextNode(" " + name)); // Add space before name
+
+            // Associate catnr + listname with li
+            li.dataset.catnr = catnr;
+            li.dataset.listname = listname;
+
             li.appendChild(label);
+            addXButton(li);
             ul.appendChild(li);
         }); 
     })
@@ -104,6 +116,37 @@ function updatePresetListDisplay(){
         console.log(error);
     });
 
+}
+
+function addXButton(li) {
+    var closeButton = document.createElement("button");
+    closeButton.classList.add("x-button");
+    closeButton.innerText = "x";
+    closeButton.addEventListener("click", function(event) {
+        // Remove satellite
+        li.remove();
+        removeSatelliteFromPreset(li.dataset.catnr, li.dataset.listname);
+    });
+
+    li.appendChild(closeButton);
+}
+
+function removeSatelliteFromPreset(catnr, listname){
+    fetch(`http://127.0.0.1:5000/satellites/delete/satellite/${catnr}/${listname}`, { 
+        method: 'DELETE'
+    })
+    .then(function (response) {
+        if (!response.ok) {
+            throw new Error("HTTP error, status = " + response.status);
+        }
+        return response.json();
+    })
+    .then(function (data) {
+        console.log(data);
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
 }
 
 function handleCheckboxChange() {
