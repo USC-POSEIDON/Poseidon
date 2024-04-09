@@ -83,7 +83,8 @@ function displayResults(results) {
         const name = result[0];
         const catnr = result[1];
         const listItem = document.createElement('li');
-        listItem.textContent = name + " (" + catnr + ")";
+        let formattedCatnr = String(catnr).padStart(5, '0');
+        listItem.textContent = name + " (" + formattedCatnr + ")";
         listItem.catnr = catnr;
         listItem.addEventListener('click', function() {
             satelliteSearchInput.value = ""; // Set the input value to the clicked result
@@ -125,8 +126,9 @@ function addTLEByCatnr(catnr){
         return response.json();
     })
     .then(function (responseData) {
-        // Handle the response data here
+        // Satellite successfully added to list
         console.log(responseData);
+        updatePresetListDisplay();
     })
     .catch(function (error) {
         // Handle errors here

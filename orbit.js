@@ -118,8 +118,6 @@ function initializeViewer() {
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        // const [lat, lon] = getGroundStationBackEnd();
-
         fetch(`http://127.0.0.1:5000/calculations/get/groundstation`)
         .then(function (response) {
             if (!response.ok) {
