@@ -21,30 +21,30 @@ function populatePresetDropdowns(onStartup=false) {
         populateDynamicOptions(presets, deleteDropdown);
         populateDynamicOptions(presets, renameDropdown);
 
-        const selectDropdown = document.getElementById("selectPresetDropdown");
-        const selectedValue = selectDropdown.value;
-        selectDropdown.innerHTML = '';
+        const presetDisplayDropdown = document.getElementById("selectPresetDropdown");
+        const presetDisplayValue = presetDisplayDropdown.value;
+        presetDisplayDropdown.innerHTML = '';
 
         let selectOpt = new Option("Change Preset", "");
         selectOpt.disabled = true;
-        selectDropdown.add(selectOpt);
+        presetDisplayDropdown.add(selectOpt);
 
-        populateDynamicOptions(presets, selectDropdown, selectedValue);
+        populateDynamicOptions(presets, presetDisplayDropdown, presetDisplayValue);
 
-        const presetDropdown = document.getElementById("presetDropdown");
-        const presetValue = selectDropdown.value;
-        presetDropdown.innerHTML = '';
+        const presetSearchDropdown = document.getElementById("presetDropdown");
+        const presetSearchValue = presetSearchDropdown.value;
+        presetSearchDropdown.innerHTML = '';
         
         let presetOpt = new Option("Select preset to add to", "");
         presetOpt.disabled = true;
-        presetDropdown.add(presetOpt);
+        presetSearchDropdown.add(presetOpt);
 
-        populateDynamicOptions(presets, presetDropdown, presetValue);
+        populateDynamicOptions(presets, presetSearchDropdown, presetSearchValue);
         
         // Set dropdowns to default options on startup
         if(onStartup){
-            var selectOptionToDisable = selectDropdown.querySelector("option[value='']");
-            var presetOptionToDisable = presetDropdown.querySelector("option[value='']");
+            var selectOptionToDisable = presetDisplayDropdown.querySelector("option[value='']");
+            var presetOptionToDisable = presetSearchDropdown.querySelector("option[value='']");
 
             selectOptionToDisable.selected = true;
             presetOptionToDisable.selected = true;
@@ -57,13 +57,25 @@ function populatePresetDropdowns(onStartup=false) {
 }
 
 function populateDynamicOptions(presets, dropdownElement, selectedValue = ""){
+    console.log("seelctev alue is " + selectedValue + " from " + dropdownElement.tagName);
+    let matchFound = false;
     presets.forEach(preset => {
         const optionElement = new Option(preset, preset);
         dropdownElement.appendChild(optionElement);
-        if (preset === selectedValue) {
+        if (preset == selectedValue) {
+            console.log("match at " + preset + selectedValue);
+            matchFound = true;
             optionElement.setAttribute('selected', 'selected');
         }
     });
+
+    if(!matchFound){
+        var selectOptionToDisable = dropdownElement.querySelector("option[value='']");
+        if(selectOptionToDisable !== null){
+            selectOptionToDisable.selected = true;
+        }
+    }
+    console.log("selecgted value is " + dropdownElement.value);
 }
 
 function handleOptionClick(event){
