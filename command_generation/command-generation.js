@@ -21,18 +21,36 @@ document.addEventListener('DOMContentLoaded', function () {
     const commandStringArray = [];
     let data;
 
-    // Fetch commands from external JSON file
+    // Function to populate the command dropdown with alphabetized families and commands
     fetch(`command_generation/CubeSatCommandLibrary.json`)
         .then(response => response.json())
         .then(dataResponse => {
             data = dataResponse;
-            
+            data.sort((a, b) => a.Family.localeCompare(b.Family));
+            const groupedCommands = {};
+
             data.forEach(command => {
-                const option = document.createElement('option');
-                option.value = command.ID;
-                option.textContent = command.Name;
-                commandDropdown.appendChild(option);
+                if (!groupedCommands[command.Family]) {
+                    groupedCommands[command.Family] = [];
+                }
+                groupedCommands[command.Family].push(command);
             });
+
+            const dropdown = document.getElementById('commandDropdown');
+            for (const family in groupedCommands) {
+                const optgroup = document.createElement('optgroup');
+                optgroup.label = family;
+                groupedCommands[family].sort((a, b) => a.Name.localeCompare(b.Name));
+
+                groupedCommands[family].forEach(command => {
+                    const option = document.createElement('option');
+                    option.value = command.ID;
+                    option.textContent = command.Name;
+                    optgroup.appendChild(option);
+                });
+
+                dropdown.appendChild(optgroup);
+            }
         })
         .catch(error => console.error('Error fetching commands:', error));
 
