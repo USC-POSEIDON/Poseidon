@@ -62,13 +62,17 @@ document.addEventListener('DOMContentLoaded', function () {
         parameterInputs.innerHTML = '';
     
         if (selectedCommandData) {
+            if (selectedCommandData.Example) {
+                const exampleLabel = document.createElement('label');
+                exampleLabel.textContent = 'Example: ' + selectedCommandData.Example;
+                parameterInputs.appendChild(exampleLabel);
+            }
+
             if (selectedCommandData.Parameters && selectedCommandData.Parameters.length > 0) {
                 selectedCommandData.Parameters.forEach(param => {
                     if (param.Type === "Dropdown" && param.Options && param.Options.length > 0) {
                         const descriptionLabel = document.createElement('label');
                         descriptionLabel.textContent = param.Description;
-                        parameterInputs.appendChild(descriptionLabel);
-
                         const select = document.createElement('select');
                         select.name = param.Name;
                         
