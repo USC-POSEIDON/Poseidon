@@ -260,11 +260,34 @@ iframe {
     cursor: pointer;
 }
 
-#generateCommand {
+#generateButton, #clearButton {
     background-color: #4CAF50;
     color: white;
+    padding: 10px 20px;
+    cursor: pointer;
+    display: inline-block;
+    margin-right: 10px;
+    bottom: 60px;
+}
+
+#addButton:hover, #generateButton:hover, #clearButton:hover, #exportButton:hover {
+    background-color: #45a049;
+}
+
+#generatedCommandsText {
+    width: 100%;
+    height: auto;
+    resize: vertical;
+    margin-top: 10px;
+}
+
+#exportButton {
+    background-color: #4CAF50;
+    color: white;
+    display: block;
     padding: 10px;
     cursor: pointer;
+    margin-top: 10px;
     bottom: 60px;
 }
 

@@ -228,24 +228,36 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Event listener for the "generate" button
-    const generateButton = document.getElementById('generateCommand');
+    const generateButton = document.getElementById('generateButton');
     generateButton.addEventListener('click', function () {
         if (commandStringArray.length > 0) {
             console.log(commandStringArray);
-            const generatedCommands = generateCommands(commandStringArray, data);
-            ipcRenderer.send('save-commands', generatedCommands);
+            generateCommands(commandStringArray, data);
         } else {
             console.error('Error generating commands.');
         }
     });
 
-    // Listen for response from main process after attempting to save commands
-    ipcRenderer.on('save-commands-response', (event, response) => {
-        if (response.success) {
-            console.log('Commands saved successfully:', response.filePath);
-        } else {
-            console.error('Error saving commands:', response.error);
-        }
+    // Event listener for the "clear" button
+    const clearButton = document.getElementById('clearButton');
+    clearButton.addEventListener('click', function () {
+        commandList.innerHTML = '';
+        commandStringArray.length = 0;
+    });
+
+    // Event listener for the "export" button
+    const exportButton = document.getElementById('exportButton');
+    exportButton.addEventListener('click', function() {
+        exportCommands();
+
+        // Listen for response from main process after attempting to save commands
+        ipcRenderer.on('save-commands-response', (event, response) => {
+            if (response.success) {
+                console.log('Commands saved successfully:', response.filePath);
+            } else {
+                console.error('Error saving commands:', response.error);
+            }
+        });
     });
 });
 
@@ -253,6 +265,9 @@ document.addEventListener('DOMContentLoaded', function () {
 function generateCommands(inputStrings, data) {
     const result = [];
     let longString = '';
+
+    const generatedCommandsText = document.getElementById('generatedCommandsText');
+    generatedCommandsText.value = '';
 
     inputStrings.forEach((inputString, index) => {
         const [commandID, ...values] = inputString.split(' ');
@@ -285,5 +300,25 @@ function generateCommands(inputStrings, data) {
     const trimmedResult = result.map(command => command.trim());
     console.log("Generated commands: ", trimmedResult);
 
-    return result;
+    generatedCommandsText.value = trimmedResult;
+    generatedCommandsText.style.display = 'block';
+}
+
+// Function to export commands
+function exportCommands() {
+    const generatedCommandsText= document.getElementById('generatedCommandsText');
+
+    if (generatedCommandsText.style.display === 'none') {
+        console.error('No commands to export.');
+        return;
+    }
+
+    const commandsToExport = generatedCommandsText.value.split('\n').filter(command => command.trim() !== '');
+
+    if (commandsToExport.length > 0) {
+        console.log(commandsToExport);
+        ipcRenderer.send('save-commands', commandsToExport);
+    } else {
+        console.error('No commands to export.');
+    }
 }
