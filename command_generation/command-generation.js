@@ -91,6 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             const selectedOption = param.Options.find(option => option.Command === selectedOptionValue);
                             
                             if (selectedOption && selectedOption.Parameters && selectedOption.Parameters.length > 0) {
+                                // Clear previously populated nested dropdown
                                 clearNestedParameters(parameterInputs);
 
                                 selectedOption.Parameters.forEach(nestedParam => {
@@ -101,16 +102,18 @@ document.addEventListener('DOMContentLoaded', function () {
                                     let nestedInput;
 
                                     if (nestedParam.Type === 'Dropdown') {
-                                        nestedInput = document.createElement('select');
-                                        nestedInput.name = nestedParam.Name;
-                                        nestedInput.title = nestedParam.Description;
+                                        // Create a new select element for nested dropdowns
+                                        const nestedSelect = document.createElement('select');
+                                        nestedSelect.name = `${param.Name}_nested`;
 
                                         nestedParam.Options.forEach(option => {
                                             const nestedOption = document.createElement('option');
                                             nestedOption.value = option.Command;
                                             nestedOption.textContent = option.Name;
-                                            nestedInput.appendChild(nestedOption);
+                                            nestedSelect.appendChild(nestedOption);
                                         });
+
+                                        nestedInput = nestedSelect;
                                     } else {
                                         nestedInput = document.createElement('input');
                                         nestedInput.type = nestedParam.Type ? nestedParam.Type.toLowerCase() : '';
@@ -167,24 +170,29 @@ document.addEventListener('DOMContentLoaded', function () {
     function generateString() {
         const selectedCommandID = commandDropdown.value;
         const selectedCommandData = data.find(command => command.ID === selectedCommandID);
-
+    
         if (!selectedCommandData) {
             console.error('No command data available.');
             return '';
         }
-
+    
         let commandString = selectedCommandID;
-
-        function generateParamString(params) {
+    
+        function generateParamString(params, nestedDropdownProcessed = false) {
             let paramString = '';
             params.forEach(param => {
                 if (param.Type === "Dropdown") {
                     const selectElement = document.querySelector(`select[name="${param.Name}"]`);
                     const selectedOption = selectElement ? selectElement.value : '';
-                    paramString += ` ${selectedOption}`;
+    
+                    // Add the selected option from the outer dropdown only if it hasn't been added yet
+                    if (!nestedDropdownProcessed) {
+                        paramString += ` ${selectedOption}`;
+                    }
+    
                     const nestedOption = param.Options.find(option => option.Command === selectedOption);
-                    if (nestedOption && nestedOption.Parameters) {
-                        paramString += generateParamString(nestedOption.Parameters);
+                    if (nestedOption && nestedOption.Parameters && !nestedDropdownProcessed) {
+                        paramString += generateParamString(nestedOption.Parameters, true);
                     }
                 } else {
                     const inputValue = document.querySelector(`input[name="${param.Name}"]`).value.trim();
@@ -192,16 +200,23 @@ document.addEventListener('DOMContentLoaded', function () {
                     const modifiedInputValue = enclosure ? `${enclosure}${inputValue}${enclosure}` : inputValue;
                     paramString += ` ${modifiedInputValue}`;
                 }
+    
+                const nestedSelectElement = document.querySelector(`select[name="${param.Name}_nested"]`);
+                if (nestedSelectElement && !nestedDropdownProcessed) {
+                    const nestedSelectedOption = nestedSelectElement.value;
+                    paramString += ` ${nestedSelectedOption}`;
+                }
             });
             return paramString;
         }
-
+    
         if (selectedCommandData.Parameters && selectedCommandData.Parameters.length > 0) {
             commandString += generateParamString(selectedCommandData.Parameters);
         }
-
+    
         return commandString;
     }
+      
 
     // Function to add a command to the list or update existing command
     function addCommandToList(commandString, index = -1) {
