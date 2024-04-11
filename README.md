@@ -1,4 +1,4 @@
-# Poseidon Satellite Mission Control Software (V. 0.2.5)
+# Poseidon Satellite Mission Control Software (V. 0.3.6)
 
 This desktop application is built with Electron and integrates various functionalities to track and visualize satellite orbits using Cesium, a powerful library for 3D globes and maps. The app provides a real-time 3D visualization of satellite orbits with the ability to input Two-Line Element set (TLE) data for accurate tracking. It includes a chat window for command input, a calendar for scheduling, and additional modules for motor control and signal processing that are under development. (See the lastest commit for the most up to date source code)
 
@@ -72,7 +72,7 @@ python3 -m venv myenv
 source myenv/bin/activate  # On Windows use `myenv\Scripts\activate`
 pip install dist/tle_calculations-<version>.tar.gz
 pip install flask sgp4 scipy requests skyfield
-pyinstaller --onefile --add-data 'tle_calculations:tle_calculations' tle_calculations/run.py
+pyinstaller --onefile --add-data "tle_calculations:tle_calculations" tle_calculations/run.py
 ```
 
 Second, install electron-builder as a dev dependency:
