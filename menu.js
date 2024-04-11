@@ -105,10 +105,14 @@ document.addEventListener('DOMContentLoaded', function() {
               }
           }
       }
-    //   if (event.target == document.getElementById('groundStationModal')) {
-    //       document.getElementById('groundStationModal').style.display = "none";
-    //   }
     };
+    
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') { 
+            document.getElementById('groundStationModal').style.display = 'none';
+            document.getElementById('managePresetModal').style.display = 'none';
+        }
+    });
 
     // Initialize or update the Windows dropdown
     updateWindowsDropdown();
