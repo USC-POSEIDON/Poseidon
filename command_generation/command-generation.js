@@ -185,7 +185,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     const selectElement = document.querySelector(`select[name="${param.Name}"]`);
                     const selectedOption = selectElement ? selectElement.value : '';
     
-                    // Add the selected option from the outer dropdown only if it hasn't been added yet
                     if (!nestedDropdownProcessed) {
                         paramString += ` ${selectedOption}`;
                     }
