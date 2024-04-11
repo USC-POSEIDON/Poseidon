@@ -57,7 +57,6 @@ function populatePresetDropdowns(onStartup=false) {
 }
 
 function populateDynamicOptions(presets, dropdownElement, selectedValue = ""){
-    console.log("seelctev alue is " + selectedValue + " from " + dropdownElement.tagName);
     let matchFound = false;
     presets.forEach(preset => {
         const optionElement = new Option(preset, preset);
@@ -75,7 +74,6 @@ function populateDynamicOptions(presets, dropdownElement, selectedValue = ""){
             selectOptionToDisable.selected = true;
         }
     }
-    console.log("selecgted value is " + dropdownElement.value);
 }
 
 function handleOptionClick(event){
