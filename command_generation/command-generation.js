@@ -58,9 +58,9 @@ document.addEventListener('DOMContentLoaded', function () {
     window.populateParameters = function () {
         const selectedCommandID = commandDropdown.value;
         const selectedCommandData = data.find(command => command.ID === selectedCommandID);
-    
+        
         parameterInputs.innerHTML = '';
-    
+
         if (selectedCommandData) {
             if (selectedCommandData.Example) {
                 const exampleLabel = document.createElement('label');
@@ -70,12 +70,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (selectedCommandData.Parameters && selectedCommandData.Parameters.length > 0) {
                 selectedCommandData.Parameters.forEach(param => {
-                    if (param.Type === "Dropdown" && param.Options && param.Options.length > 0) {
-                        const descriptionLabel = document.createElement('label');
-                        descriptionLabel.textContent = param.Description;
+                    const label = document.createElement('label');
+                    label.textContent = param.Name + ':';
+
+                    if (param.Type === 'Dropdown' && param.Options && param.Options.length > 0) {
                         const select = document.createElement('select');
                         select.name = param.Name;
-                        
+
                         param.Options.forEach(option => {
                             const optionElement = document.createElement('option');
                             optionElement.value = option.Command;
@@ -83,56 +84,122 @@ document.addEventListener('DOMContentLoaded', function () {
                             optionElement.title = option.Description;
                             select.appendChild(optionElement);
                         });
-    
+
+                        // Add change event listener to populate nested parameters
+                        select.addEventListener('change', function() {
+                            const selectedOptionValue = select.value;
+                            const selectedOption = param.Options.find(option => option.Command === selectedOptionValue);
+                            
+                            if (selectedOption && selectedOption.Parameters && selectedOption.Parameters.length > 0) {
+                                clearNestedParameters(parameterInputs);
+
+                                selectedOption.Parameters.forEach(nestedParam => {
+                                    const nestedLabel = document.createElement('label');
+                                    nestedLabel.textContent = nestedParam.Name + ':';
+                                    nestedLabel.classList.add('nested-label');
+                                            
+                                    let nestedInput;
+
+                                    if (nestedParam.Type === 'Dropdown') {
+                                        nestedInput = document.createElement('select');
+                                        nestedInput.name = nestedParam.Name;
+                                        nestedInput.title = nestedParam.Description;
+
+                                        nestedParam.Options.forEach(option => {
+                                            const nestedOption = document.createElement('option');
+                                            nestedOption.value = option.Command;
+                                            nestedOption.textContent = option.Name;
+                                            nestedInput.appendChild(nestedOption);
+                                        });
+                                    } else {
+                                        nestedInput = document.createElement('input');
+                                        nestedInput.type = nestedParam.Type ? nestedParam.Type.toLowerCase() : '';
+                                        nestedInput.name = nestedParam.Name;
+                                        nestedInput.title = nestedParam.Description;
+                                    }
+
+                                    nestedInput.classList.add('nested-parameter');
+                                    parameterInputs.appendChild(nestedLabel);
+                                    parameterInputs.appendChild(nestedInput);
+                                    parameterInputs.appendChild(document.createElement('br'));
+                                });
+                            } else {
+                                clearNestedParameters(parameterInputs);
+                            }
+                        });
+                        
+                        parameterInputs.appendChild(label);
                         parameterInputs.appendChild(select);
                     } else {
-                        const label = document.createElement('label');
-                        label.textContent = param.Name + ':';
-        
                         const input = document.createElement('input');
                         input.type = param.Type ? param.Type.toLowerCase() : '';
                         input.name = param.Name;
                         input.title = param.Description;
-        
+                        
                         parameterInputs.appendChild(label);
                         parameterInputs.appendChild(input);
                     }
-    
+                    
                     parameterInputs.appendChild(document.createElement('br'));
                 });
             }
-        } else {
-            console.error('Selected command data not found.');
         }
     };
+    
+    // Event listener for dropdown change event
+    commandDropdown.addEventListener('change', function() {
+        populateParameters();
+    });
+
+    // Function to clear existing nested parameters, labels, and <br> elements
+    function clearNestedParameters(container) {
+        const existingNestedParams = container.querySelectorAll('.nested-parameter');
+        existingNestedParams.forEach(param => param.remove());
+
+        const existingLabels = container.querySelectorAll('.nested-label');
+        existingLabels.forEach(label => label.remove());
+
+        const existingBr = container.querySelectorAll('br');
+        existingBr.forEach(br => br.remove());
+    }
 
     // Function to generate the command string
     function generateString() {
         const selectedCommandID = commandDropdown.value;
         const selectedCommandData = data.find(command => command.ID === selectedCommandID);
-        
+
         if (!selectedCommandData) {
             console.error('No command data available.');
             return '';
         }
-        
+
         let commandString = selectedCommandID;
-        
-        if (selectedCommandData.Parameters && selectedCommandData.Parameters.length > 0) {
-            selectedCommandData.Parameters.forEach(param => {
+
+        function generateParamString(params) {
+            let paramString = '';
+            params.forEach(param => {
                 if (param.Type === "Dropdown") {
                     const selectElement = document.querySelector(`select[name="${param.Name}"]`);
                     const selectedOption = selectElement ? selectElement.value : '';
-                    commandString += ` ${selectedOption}`;
+                    paramString += ` ${selectedOption}`;
+                    const nestedOption = param.Options.find(option => option.Command === selectedOption);
+                    if (nestedOption && nestedOption.Parameters) {
+                        paramString += generateParamString(nestedOption.Parameters);
+                    }
                 } else {
                     const inputValue = document.querySelector(`input[name="${param.Name}"]`).value.trim();
                     const enclosure = param.Enclosure ? param.Enclosure : '';
                     const modifiedInputValue = enclosure ? `${enclosure}${inputValue}${enclosure}` : inputValue;
-                    commandString += ` ${modifiedInputValue}`;
+                    paramString += ` ${modifiedInputValue}`;
                 }
             });
+            return paramString;
         }
-        
+
+        if (selectedCommandData.Parameters && selectedCommandData.Parameters.length > 0) {
+            commandString += generateParamString(selectedCommandData.Parameters);
+        }
+
         return commandString;
     }
 
@@ -222,6 +289,7 @@ document.addEventListener('DOMContentLoaded', function () {
             addCommandToList(commandString);
             console.log('Commands added:', commandString);
             parameterInputs.innerHTML = '';
+            commandDropdown.selectedIndex = 0;
         } else {
             console.error('Error adding commands.');
         }
