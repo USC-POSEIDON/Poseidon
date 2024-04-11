@@ -138,24 +138,26 @@
                         <option value="" disabled selected>Select preset to add to</option>
                     </select>
                 </div>
-                <!-- <div id="searchBox">
-                    <input type="text" id="satelliteSearchInput" placeholder="Search...">
-                    <button id="searchButton">Search</button>
-                </div>
-                <div id="searchResults">
-                    <ul id="resultsList"></ul>
-                </div> -->
                 <div class="search-dropdown">
                     <input type="text" id="satelliteSearchInput" placeholder="Enter your search query">
                     <button id="searchButton">Search</button>
                     <ul class="search-results" id="searchResults" style="display: none;"></ul>
-                  </div>
+                </div>
+                <div id="tleInputContainer" style="display: none;">
+                    <input type="text" id="tleLine1Input" placeholder="Enter TLE Line 1">
+                    <input type="text" id="tleLine2Input" placeholder="Enter TLE Line 2">
+                    <input type="text" id="satelliteNameInput" placeholder="Enter Satellite Name">
+                    <button id="addTleButton">Add</button>
+                </div>
                 <div id="searchOptions">
                     <label>
                         <input type="radio" name="searchType" value="name" checked> By Name
                     </label>
                     <label>
                         <input type="radio" name="searchType" value="catalog"> By Catalog #
+                    </label>
+                    <label>
+                        <input type="radio" name="searchType" value="manual"> Manual
                     </label>
                 </div>
                 <div class="popup" id="searchPopup">Error adding satellite</div>

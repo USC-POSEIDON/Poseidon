@@ -1,17 +1,36 @@
 let selectedSearchType = 'name'; // Default value
 
 document.getElementById('searchOptions').addEventListener('change', function(event) {
+    var presetSelection = document.getElementById('presetSelection');
+    var searchDropdown = document.getElementsByClassName('search-dropdown')[0];
+    var tleInputContainer = document.getElementById('tleInputContainer');
+    var searchButton = document.getElementById('searchButton');
+    var satelliteSearchInput = document.getElementById('satelliteSearchInput');
     // Check if the changed element is a radio button
     if (event.target.type === 'radio') {
-        // Access the value of the selected radio button
         selectedSearchType = event.target.value;
         
-        if (selectedSearchType === 'name') {
+        presetSelection.style.display = 'none';
+        searchDropdown.style.display = 'none';
+        tleInputContainer.style.display = 'none';
+
+        if (event.target.value === 'name') {
+            // Show elements for 'By Name' search
+            presetSelection.style.display = 'block';
+            searchDropdown.style.display = 'block';
             searchButton.textContent = "Search";
             satelliteSearchInput.placeholder = "Enter your search query";
-        } else if (selectedSearchType === 'catalog') {
+        } else if (event.target.value === 'catalog') {
+            // Show elements for 'By Catalog #' search
+            presetSelection.style.display = 'block';
+            searchDropdown.style.display = 'block';
             searchButton.textContent = "Add";
             satelliteSearchInput.placeholder = "Enter a catalog number";
+        } else if (event.target.value === 'manual') {
+            // Show elements for 'Manual' entry
+            tleInputContainer.style.display = 'block';
+            searchButton.textContent = "Add";
+            satelliteSearchInput.placeholder = "Enter Satellite Name"; 
         }
     }
 });

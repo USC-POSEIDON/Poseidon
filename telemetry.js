@@ -50,61 +50,6 @@ function updateTelemetryData() {
         console.log(error);
     });
 
-    // var now = new Date();
-
-    // var groundStationEntity = viewer.entities.getById('groundStation');
-    // var groundStationCartographic = Cesium.Cartographic.fromCartesian(groundStationEntity.position.getValue(now));
-    // var groundStationPosition = {
-    //     latitude: Cesium.Math.toDegrees(groundStationCartographic.latitude),
-    //     longitude: Cesium.Math.toDegrees(groundStationCartographic.longitude),
-    //     height: groundStationCartographic.height
-    // };
-
-    // var positionAndVelocity = satellite.propagate(satrec, now);
-    // var positionEci = positionAndVelocity.position;
-    // var velocityEci = positionAndVelocity.velocity;
-    // var gmst = satellite.gstime(now);
-
-    // if (positionEci && positionEci.x !== undefined && positionEci.y !== undefined && positionEci.z !== undefined) {
-    //     var observerGd = {
-    //         longitude: satellite.degreesToRadians(groundStationPosition.longitude),
-    //         latitude: satellite.degreesToRadians(groundStationPosition.latitude),
-    //         height: groundStationPosition.height
-    //     };
-
-    //     var positionEcf = satellite.eciToEcf(positionEci, gmst);
-    //     var lookAngles = satellite.ecfToLookAngles(observerGd, positionEcf);
-    //     var altitude = calculateAltitude(positionEci);
-    //     var footprint = calculateFootprint(altitude);
-    //     var velocity = calculateVelocity(velocityEci);
-
-    //     if (lookAngles && lookAngles.azimuth !== undefined && lookAngles.elevation !== undefined) {
-    //         var azimuth = satellite.radiansToDegrees(lookAngles.azimuth);
-    //         var elevation = satellite.radiansToDegrees(lookAngles.elevation);
-
-    //         var observerEcf = satellite.geodeticToEcf(observerGd);
-    //         var rangeRate = calculateRangeRate(observerEcf, positionEci, velocityEci, gmst);
-
-    //         //TODO: Mock Data Here
-    //         var frequency = 437.5;
-    //         var doppler = calculateDoppler(frequency, rangeRate);
-
-    //         document.getElementById('azimuth').textContent = azimuth.toFixed(2) + '°';
-    //         document.getElementById('elevation').textContent = elevation.toFixed(2) + '°';
-    //         document.getElementById('slantRange').textContent = (lookAngles.range * 0.001).toFixed(2) + ' km';
-    //         document.getElementById('rangeRate').textContent = rangeRate.toFixed(2) + ' m/s';
-    //         document.getElementById('altitude').textContent = altitude.toFixed(2) + ' km';
-    //         document.getElementById('footprint').textContent = footprint.toFixed(2) + ' km';
-    //         document.getElementById('velocity').textContent = velocity.toFixed(2) + ' km/s';
-    //         document.getElementById('doppler').textContent = doppler.toFixed(2) + ' Hz';
-    //     } else {
-    //         console.error('Look angles are undefined.');
-    //     }
-    // } else {
-    //     console.error('PositionEci is undefined.');
-    // }
-}
-
 function calculateAzEl(positionEci, observerGd, gmst) {
     var positionEcf = satellite.eciToEcf(positionEci, gmst);
     var lookAngles = satellite.ecfToLookAngles(observerGd, positionEcf);
