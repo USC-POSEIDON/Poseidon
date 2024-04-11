@@ -30,18 +30,30 @@
             </li>
         </ul>
     </div>
-
     <div id="groundStationModal">
         <div>
             <h2>Update Ground Station Position</h2>
-            <label for="latitude">Latitude:</label>
-            <input type="text" id="latitude" name="latitude"><br><br>
-            <label for="longitude">Longitude:</label>
-            <input type="text" id="longitude" name="longitude"><br><br>
+            <label for="latitude">Latitude (°):</label>
+            <input type="text" id="latitude" name="latitude" value="0.0000">
+            <select id="lat-direction">
+                <option value="N">North</option>
+                <option value="S">South</option>
+            </select>
+            <br><br>
+    
+            <label for="longitude">Longitude (°):</label>
+            <input type="text" id="longitude" name="longitude" value="0.0000">
+            <select id="long-direction">
+                <option value="E">East</option>
+                <option value="W">West</option>
+            </select>
+            <br><br>
+    
             <button id="updatePosition">Update</button>
             <button id="closeModal">Close</button>
         </div>
     </div>
+    
 
     <div id="commandGeneration">
         <div>

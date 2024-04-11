@@ -105,9 +105,9 @@ document.addEventListener('DOMContentLoaded', function() {
               }
           }
       }
-      if (event.target == document.getElementById('groundStationModal')) {
-          document.getElementById('groundStationModal').style.display = "none";
-      }
+    //   if (event.target == document.getElementById('groundStationModal')) {
+    //       document.getElementById('groundStationModal').style.display = "none";
+    //   }
     };
 
     // Initialize or update the Windows dropdown

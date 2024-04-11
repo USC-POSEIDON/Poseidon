@@ -30,34 +30,32 @@ function initializeViewer() {
     var groundStationPosition = Cesium.Cartesian3.fromDegrees(-74.0060, 40.7128);
 
     document.getElementById('updatePosition').addEventListener('click', function() {
-        var latitude = document.getElementById('latitude').value;
-        var longitude = document.getElementById('longitude').value;
+        var latitude = parseFloat(document.getElementById('latitude').value);
+        var longitude = parseFloat(document.getElementById('longitude').value);
+        var latDirection = document.getElementById('lat-direction').value;
+        var longDirection = document.getElementById('long-direction').value;
+
+        // Adjust the latitude and longitude based on the hemisphere
+        latitude *= (latDirection === 'N') ? 1 : -1;
+        longitude *= (longDirection === 'E') ? 1 : -1;
         groundStationPosition = {latitude: latitude, longitude: longitude};
+         // Convert latitude and longitude to Cesium Cartesian3 coordinates
+         var newGroundStationPosition = Cesium.Cartesian3.fromDegrees(longitude, latitude);
+    
+         // Update the entity's position
+         var groundStationEntity = viewer.entities.getById('groundStation');
+         if (groundStationEntity) {
+             groundStationEntity.position = newGroundStationPosition;
+             console.log('Ground Station position updated to:', latitude, longitude);
+         } else {
+             console.log('Ground Station entity not found.');
+         }
+     
         console.log('Updated groundStationPosition:', groundStationPosition, updateGroundStationBackEnd(latitude, longitude), predictPasses());
         document.getElementById('groundStationModal').style.display = "none";
     });
       
     document.getElementById('closeModal').addEventListener('click', function() {
-        document.getElementById('groundStationModal').style.display = "none";
-    });
-
-    document.getElementById('updatePosition').addEventListener('click', function() {
-        var latitude = parseFloat(document.getElementById('latitude').value);
-        var longitude = parseFloat(document.getElementById('longitude').value);
-    
-        // Convert latitude and longitude to Cesium Cartesian3 coordinates
-        var newGroundStationPosition = Cesium.Cartesian3.fromDegrees(longitude, latitude);
-    
-        // Update the entity's position
-        var groundStationEntity = viewer.entities.getById('groundStation');
-        if (groundStationEntity) {
-            groundStationEntity.position = newGroundStationPosition;
-            console.log('Ground Station position updated to:', latitude, longitude);
-        } else {
-            console.log('Ground Station entity not found.');
-        }
-    
-        // Close the modal
         document.getElementById('groundStationModal').style.display = "none";
     });
 
