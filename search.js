@@ -8,8 +8,10 @@ document.getElementById('searchOptions').addEventListener('change', function(eve
         
         if (selectedSearchType === 'name') {
             searchButton.textContent = "Search";
+            satelliteSearchInput.placeholder = "Enter your search query";
         } else if (selectedSearchType === 'catalog') {
             searchButton.textContent = "Add";
+            satelliteSearchInput.placeholder = "Enter a catalog number";
         }
     }
 });
@@ -83,7 +85,8 @@ function displayResults(results) {
         const name = result[0];
         const catnr = result[1];
         const listItem = document.createElement('li');
-        listItem.textContent = name + " (" + catnr + ")";
+        let formattedCatnr = String(catnr).padStart(5, '0');
+        listItem.textContent = name + " (" + formattedCatnr + ")";
         listItem.catnr = catnr;
         listItem.addEventListener('click', function() {
             satelliteSearchInput.value = ""; // Set the input value to the clicked result
@@ -125,11 +128,30 @@ function addTLEByCatnr(catnr){
         return response.json();
     })
     .then(function (responseData) {
-        // Handle the response data here
+        // Satellite successfully added to list
         console.log(responseData);
+        updatePresetListDisplay();
     })
     .catch(function (error) {
         // Handle errors here
         console.log(error);
+        showPopup();
     });
+}
+
+function showPopup() {
+    console.log("Popping up");
+
+    // Show the popup
+    var popup = document.getElementById("searchPopup");
+    popup.classList.add("show");
+  
+    // Fade out after 3 seconds
+    setTimeout(function() {
+        popup.style.opacity = "0"; // Change opacity
+        setTimeout(function() {
+            popup.classList.remove("show");
+            popup.style.opacity = ""; // Reset opacity after transition
+        }, 500); // Wait for the transition to complete (0.5s)
+    }, 1000);
 }

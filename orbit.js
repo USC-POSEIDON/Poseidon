@@ -1,12 +1,10 @@
-// TODO: Mock Data Here
-var defaultTleLine1 = '';
-var defaultTleLine2 = '';
-
+var TleLine1 = '';
+var TleLine2 = '';
 
 // Initialize satellite record from default TLE
 var satrec;
-if (defaultTleLine1 !== '' && defaultTleLine2 !== '') {
-    satrec = satellite.twoline2satrec(defaultTleLine1, defaultTleLine2);
+if (TleLine1 !== '' && TleLine2 !== '') {
+    satrec = satellite.twoline2satrec(TleLine1, TleLine2);
 }
 
 // Satellite and Orbit Path Entities
@@ -25,26 +23,6 @@ function initializeViewer() {
         });
 
         createOrUpdateOrbitPath(satrec);
-         // Range Circle Entity
-        viewer.entities.add({
-            id: 'rangeCircle',
-            position: new Cesium.CallbackProperty(function() {
-                var position = satelliteEntity.position.getValue(viewer.clock.currentTime);
-                return Cesium.Ellipsoid.WGS84.scaleToGeodeticSurface(position);
-            }, false),
-            ellipse: {
-                semiMajorAxis: new Cesium.CallbackProperty(function() {
-                    var altitude = getSatelliteAltitude(satelliteEntity.position.getValue(viewer.clock.currentTime));
-                    return calculateFootprintRadius(altitude / 1000) * 1000;
-                }, false),
-                semiMinorAxis: new Cesium.CallbackProperty(function() {
-                    var altitude = getSatelliteAltitude(satelliteEntity.position.getValue(viewer.clock.currentTime));
-                    return calculateFootprintRadius(altitude / 1000) * 1000;
-                }, false),
-                material: Cesium.Color.BLUE.withAlpha(0.3),
-                height: 0
-            }
-        });
     }
     
     // Ground Station Entity
@@ -118,8 +96,6 @@ function initializeViewer() {
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        // const [lat, lon] = getGroundStationBackEnd();
-
         fetch(`http://127.0.0.1:5000/calculations/get/groundstation`)
         .then(function (response) {
             if (!response.ok) {
@@ -184,6 +160,28 @@ function createOrUpdateOrbitPath(satrec) {
                 material: Cesium.Color.YELLOW
             }
         });
+
+        // Create new range circle entity if it doesn't exist
+        // Range Circle Entity
+        viewer.entities.add({
+            id: 'rangeCircle',
+            position: new Cesium.CallbackProperty(function() {
+                var position = satelliteEntity.position.getValue(viewer.clock.currentTime);
+                return Cesium.Ellipsoid.WGS84.scaleToGeodeticSurface(position);
+            }, false),
+            ellipse: {
+                semiMajorAxis: new Cesium.CallbackProperty(function() {
+                    var altitude = getSatelliteAltitude(satelliteEntity.position.getValue(viewer.clock.currentTime));
+                    return calculateFootprintRadius(altitude / 1000) * 1000;
+                }, false),
+                semiMinorAxis: new Cesium.CallbackProperty(function() {
+                    var altitude = getSatelliteAltitude(satelliteEntity.position.getValue(viewer.clock.currentTime));
+                    return calculateFootprintRadius(altitude / 1000) * 1000;
+                }, false),
+                material: Cesium.Color.BLUE.withAlpha(0.3),
+                height: 0
+            }
+        });
     }
 }
 
@@ -228,6 +226,7 @@ function computeOrbitPath(satrec, fractionOfOrbit = 1) {
 
 // Function to update the orbit and satellite position for each orbital period
 function startOrbitUpdatesPerOrbitalPeriod(satrec) {
+    if(!satrec) return;
     var orbitalPeriodMinutes = calculateOrbitalPeriodFromSatrec(satrec);
     var updateIntervalMilliseconds = orbitalPeriodMinutes * 60 * 1000; 
     setInterval(function() {
