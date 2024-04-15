@@ -34,6 +34,17 @@ function initializeViewer() {
         var longitude = parseFloat(document.getElementById('longitude').value);
         var latDirection = document.getElementById('lat-direction').value;
         var longDirection = document.getElementById('long-direction').value;
+        document.getElementById('latitude-error').textContent = '';
+        document.getElementById('longitude-error').textContent = '';
+        // Validate the latitude and longitude values
+        if (latitude < -90 || latitude > 90 || isNaN(latitude)) {
+            document.getElementById('latitude-error').textContent = 'Invalid latitude value';
+            return; 
+        }
+        if (longitude < -180 || longitude > 180 || isNaN(longitude)) {
+            document.getElementById('longitude-error').textContent = 'Invalid longitude value';
+            return; 
+        }
 
         // Adjust the latitude and longitude based on the hemisphere
         latitude *= (latDirection === 'N') ? 1 : -1;

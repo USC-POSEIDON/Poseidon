@@ -149,28 +149,40 @@ function addTLEByCatnr(catnr){
     .then(function (responseData) {
         // Satellite successfully added to list
         console.log(responseData);
+        showPopup(200);
         updatePresetListDisplay();
     })
     .catch(function (error) {
         // Handle errors here
         console.log(error);
-        showPopup();
+        showPopup(400);
     });
 }
 
-function showPopup() {
+function showPopup(code) {
     console.log("Popping up");
 
     // Show the popup
-    var popup = document.getElementById("searchPopup");
-    popup.classList.add("show");
-  
-    // Fade out after 3 seconds
-    setTimeout(function() {
-        popup.style.opacity = "0"; // Change opacity
+    var popFail = document.getElementById("searchPopupError");
+    var popSucc = document.getElementById("searchPopupSucc");
+    if(code == 200){
+        popSucc.classList.add("show");
         setTimeout(function() {
-            popup.classList.remove("show");
-            popup.style.opacity = ""; // Reset opacity after transition
-        }, 500); // Wait for the transition to complete (0.5s)
-    }, 1000);
+            popSucc.style.opacity = "0"; // Change opacity
+            setTimeout(function() {
+                popSucc.classList.remove("show");
+                popSucc.style.opacity = ""; // Reset opacity after transition
+            }, 500); // Wait for the transition to complete (0.5s)
+        }, 1000);
+    }
+    else{
+        popFail.classList.add("show");
+        setTimeout(function() {
+            popFail.style.opacity = "0"; // Change opacity
+            setTimeout(function() {
+                popFail.classList.remove("show");
+                popFail.style.opacity = ""; // Reset opacity after transition
+            }, 500); // Wait for the transition to complete (0.5s)
+        }, 1000);
+    }
 }
