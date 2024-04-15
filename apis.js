@@ -228,22 +228,32 @@ function updatePassTimeDisplay(data){
         var set = pass["set"];
         var culminate = pass["culminate"];
         var name = pass["name"]
-        
         var passlines = [rise, culminate, set];
+        var count = 0;
         passlines.forEach(function(passline) {
-
             var row = tableBody.insertRow();
             var dateCell = row.insertCell(0);
             var nameCell = row.insertCell(1);
             var azCell = row.insertCell(2);
             var elCell = row.insertCell(3);
             var rangeCell = row.insertCell(4);
-
-            dateCell.textContent = passline["date"];
+            //case 0: rise, case 1: culminate, case 2: set
+            switch(count){
+                case 0:
+                    dateCell.textContent = passline["date"] + ' ' + "(Rise)";
+                    break;
+                case 1:
+                    dateCell.textContent = passline["date"] + ' ' + "(Culminate)";
+                    break;
+                case 2:
+                    dateCell.textContent = passline["date"] + ' ' + "(Set)";
+                    break;
+            }
             nameCell.textContent = name;
             azCell.textContent = passline["az"].toFixed(2) + '°';
             elCell.textContent = passline["el"].toFixed(2) + '°';
             rangeCell.textContent = passline["range"].toFixed(2) + ' km';
+            count++;
         });
     }); 
 }
