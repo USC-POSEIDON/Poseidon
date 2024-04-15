@@ -123,6 +123,7 @@
                             <p>Choose a preset to view</p>
                     </li>
                 </ul>
+                <div class="popup" id="updateTimePopup">Error adding satellite</div>
                 <div id="presetSelectionToShow">
                     <select id="selectPresetDropdown" onchange="updatePresetListDisplay()">
                         <option value="" disabled selected>Change Preset</option>
@@ -230,6 +231,13 @@
             </table>
         </div>
     </div>
+    <!-- Development -->
+    <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
+    <script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script>
+
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+    
     <script src="cesium.js"></script>
     <script src="orbit.js"></script>
     <script src="renderer.js"></script>
@@ -239,5 +247,7 @@
     <script src="apis.js"></script>
     <script src="presetList.js"></script>
     <script src="search.js"></script>
+
+    
 </body>
 </html>

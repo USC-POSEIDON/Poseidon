@@ -324,8 +324,8 @@ iframe {
 
 /* Show animation */
 .popup.show {
-display: block;
-opacity: 1;
+    display: block;
+    opacity: 1;
 }
 
 .x-button {

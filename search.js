@@ -129,6 +129,7 @@ document.addEventListener('click', function(event) {
 /* ======================= Add By TLE ======================= */
 
 function addTLEByCatnr(catnr){
+    console.log(`Adding satellite with catnr ${catnr}`)
     var type = document.getElementById("presetDropdown").value;
     var formData = new FormData();
     formData.append('listname', type);
