@@ -184,7 +184,7 @@ function predictPasses(){
                 t: satellite.line2,
                 catnr: satellite.catnr,
                 name: satellite.name,
-                days: 1
+                days: 5
             }))
             .then(function (response) {
                 if (!response.ok) {
