@@ -548,7 +548,7 @@ def updateTLE(catnr, line1, line2, datetime):
 
     epoch = float(line1[18:32])
     
-    cur.execute(sql, (line1, line2, epoch, catnr, datetime))
+    cur.execute(sql, (line1, line2, epoch, datetime, catnr))
     conn.commit()
 
     # Close the connection
