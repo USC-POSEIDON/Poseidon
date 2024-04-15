@@ -84,6 +84,10 @@ function getNameSearchResults(name){
         const names = data.satellites;
 
         // Display search results
+        if (names.length > 20) {
+            showPopup("popResultOverflow");
+            return;
+        }
         displayResults(names);
     })
     .catch(function (error) {
@@ -97,9 +101,11 @@ const catnrMap = {};
 function displayResults(results) {
     // Clear previous results
     searchResults.innerHTML = '';
+    searchResults.style.overflowY = 'auto'; 
+    searchResults.style.maxHeight = '50px'; 
 
     // Display the first 5 results
-    for (let i = 0; i < Math.min(results.length, 5); i++) {
+    for (let i = 0; i < results.length; i++) {
         const result = results[i];
         const name = result[0];
         const catnr = result[1];
@@ -149,13 +155,13 @@ function addTLEByCatnr(catnr){
     .then(function (responseData) {
         // Satellite successfully added to list
         console.log(responseData);
-        showPopup(200);
+        showPopup(popSucc);
         updatePresetListDisplay();
     })
     .catch(function (error) {
         // Handle errors here
         console.log(error);
-        showPopup(400);
+        showPopup(popFail);
     });
 }
 
@@ -165,13 +171,24 @@ function showPopup(code) {
     // Show the popup
     var popFail = document.getElementById("searchPopupError");
     var popSucc = document.getElementById("searchPopupSucc");
-    if(code == 200){
+    var popResultOverflow = document.getElementById("searchPopupOverflow");
+    if(code == "popSucc"){
         popSucc.classList.add("show");
         setTimeout(function() {
             popSucc.style.opacity = "0"; // Change opacity
             setTimeout(function() {
                 popSucc.classList.remove("show");
                 popSucc.style.opacity = ""; // Reset opacity after transition
+            }, 500); // Wait for the transition to complete (0.5s)
+        }, 1000);
+    }
+    else if(code == "popResultOverflow"){
+        popResultOverflow.classList.add("show");
+        setTimeout(function() {
+            popResultOverflow.style.opacity = "0"; // Change opacity
+            setTimeout(function() {
+                popResultOverflow.classList.remove("show");
+                popResultOverflow.style.opacity = ""; // Reset opacity after transition
             }, 500); // Wait for the transition to complete (0.5s)
         }, 1000);
     }
