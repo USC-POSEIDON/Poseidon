@@ -84,6 +84,16 @@ def getAllPresets():
     """ Return a json containing a list of all Preset List Names under "names." """
     return jsonify({"names": getAllPresetNames()}), 200
 
+@app.route('/satellites/get/updatetime/<catnr>', methods=['GET'])
+def getDatetime(catnr):
+    """ Return datetime of when a TLE was last updated. """
+    update_time = getUpdateTime(catnr)
+
+    if update_time:
+        return jsonify({"time": str(update_time)}), 200
+    else:
+        return jsonify({"message": "Invalid catnr"}), 400
+
 
 # ====================== POST REQUESTS =====================
 
@@ -103,7 +113,6 @@ def addNewTLEByCATNR(catnr):
         data = request.form
         # Handle the received form data
         print("Received form data:", data)
-        sys.stdout.flush()
     
     listname = request.form['listname']
     # TODO: catch KeyError, or handle HTTP 400 response 
@@ -113,9 +122,11 @@ def addNewTLEByCATNR(catnr):
     tleData = getTLE(catnr)
     if tleData[0] != None:
         name = tleData[0].rstrip()
+        current_datetime = datetime.now()
+        current_datetime = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
         # Insert to TLE_Data
-        insertTLE(catnr, tleData[1], tleData[2])
+        insertTLE(catnr, tleData[1], tleData[2], current_datetime)
 
         # Insert to Satellites table
         id = getSatelliteID(catnr)
@@ -163,10 +174,18 @@ def updateTLEs():
     # Get list of all satellite catnrs
     catnr_list = getAllCatnrs()
 
+    # Get current datetime
+    current_datetime = datetime.now()
+    current_datetime = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+    print(current_datetime)
+    sys.stdout.flush()
+
     # Update TLEs for all satellites
     for catnr in catnr_list:
+        print("trying to update " + str(catnr))
         if catnr in tle_dict.keys():
-            updateTLE(catnr, tle_dict[catnr][1], tle_dict[catnr][2])
+            print("updating " + str(catnr))
+            updateTLE(catnr, tle_dict[catnr][1], tle_dict[catnr][2], current_datetime)
 
     return jsonify({"message": "POST request successful"}), 200
 
