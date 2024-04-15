@@ -77,8 +77,21 @@ function initializeViewer() {
     });
 
     function updateGroundStation(lat, lon){
-        var latitude = parseFloat(lat);
-        var longitude = parseFloat(lon);
+        // TODO: use one function for ground station onClick and init?
+        const latitude = parseFloat(lat);
+        const longitude = parseFloat(lon);
+
+        const latitudeElement = document.getElementById('latitude');
+        const longitudeElement = document.getElementById('longitude');
+        const latDirection = document.getElementById('lat-direction');
+        const longDirection = document.getElementById('long-direction');
+
+        // Adjust the hemisphere based on the latitude and longitude
+        latitudeElement.value = Math.abs(latitude);
+        longitudeElement.value = Math.abs(longitude); 
+        latDirection.value = (latitude >= 0) ? 'N' : 'S';
+        longDirection.value = (longitude >= 0) ? 'E' : 'W';
+        groundStationPosition = {latitude: latitude, longitude: longitude};
     
         // Convert latitude and longitude to Cesium Cartesian3 coordinates
         var newGroundStationPosition = Cesium.Cartesian3.fromDegrees(longitude, latitude);
