@@ -26,8 +26,7 @@ function initializeViewer() {
     }
     
     // Ground Station Entity
-    //TODO: Mock Data Here
-    var groundStationPosition = Cesium.Cartesian3.fromDegrees(-74.0060, 40.7128);
+    var groundStationPosition = Cesium.Cartesian3.fromDegrees(0, 0);
 
     document.getElementById('updatePosition').addEventListener('click', function() {
         var latitude = parseFloat(document.getElementById('latitude').value);
@@ -57,6 +56,7 @@ function initializeViewer() {
          var groundStationEntity = viewer.entities.getById('groundStation');
          if (groundStationEntity) {
              groundStationEntity.position = newGroundStationPosition;
+             document.getElementById('GSLocText').textContent = 'GS: ' + latitude + ', ' + longitude;
              console.log('Ground Station position updated to:', latitude, longitude);
          } else {
              console.log('Ground Station entity not found.');
@@ -98,6 +98,7 @@ function initializeViewer() {
         var groundStationEntity = viewer.entities.getById('groundStation');
         if (groundStationEntity) {
             groundStationEntity.position = newGroundStationPosition;
+            document.getElementById('GSLocText').textContent = 'GS: ' + latitude + ', ' + longitude;
             console.log('Ground Station position initialized to:', latitude, longitude);
         } else {
             console.log('Ground Station entity not found.');
