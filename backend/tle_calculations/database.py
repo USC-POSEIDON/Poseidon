@@ -435,6 +435,24 @@ def getAllTLEs():
 
     return rows
 
+def getStoredTLE(catnr):
+    conn = sqlite3.connect(db_path)
+
+    # Open a cursor to perform database operations
+    cur = conn.cursor()
+
+    # Execute a SELECT statement (unchanged)
+    cur.execute("SELECT line1, line2 FROM tle_data WHERE catnr=?", (catnr,))
+
+    # Retrieve the results
+    row = cur.fetchone()
+
+    # Close the cursor and the connection
+    cur.close()
+    conn.close()
+
+    return row
+
 def getUpdateTime(catnr):
     conn = sqlite3.connect(db_path)
 

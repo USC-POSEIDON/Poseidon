@@ -93,6 +93,17 @@ def getDatetime(catnr):
         return jsonify({"time": str(update_time)}), 200
     else:
         return jsonify({"message": "Invalid catnr"}), 400
+    
+@app.route('/satellites/get/tle/<catnr>', methods=['GET'])
+def getSingleTLE(catnr):
+    """ Return TLE given catnr. """
+    tle = getStoredTLE(catnr)
+
+    if tle:
+        return jsonify({"tle": tle}), 200
+    else:
+        return jsonify({"message": "Invalid catnr"}), 400
+
 
 
 # ====================== POST REQUESTS =====================

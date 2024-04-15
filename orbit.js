@@ -56,7 +56,7 @@ function initializeViewer() {
          var groundStationEntity = viewer.entities.getById('groundStation');
          if (groundStationEntity) {
              groundStationEntity.position = newGroundStationPosition;
-             document.getElementById('GSLocText').textContent = 'GS: ' + latitude + ', ' + longitude;
+             document.getElementById('GSLocText').textContent = 'GS: ' + latitude + '°, ' + longitude + '°';
              console.log('Ground Station position updated to:', latitude, longitude);
          } else {
              console.log('Ground Station entity not found.');
@@ -111,7 +111,7 @@ function initializeViewer() {
         var groundStationEntity = viewer.entities.getById('groundStation');
         if (groundStationEntity) {
             groundStationEntity.position = newGroundStationPosition;
-            document.getElementById('GSLocText').textContent = 'GS: ' + latitude + ', ' + longitude;
+            document.getElementById('GSLocText').textContent = 'GS: ' + latitude + '°, ' + longitude + '°';
             console.log('Ground Station position initialized to:', latitude, longitude);
         } else {
             console.log('Ground Station entity not found.');
