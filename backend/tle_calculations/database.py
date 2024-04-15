@@ -44,6 +44,7 @@ def createTables():
             line1 TEXT,
             line2 TEXT,
             epoch REAL,
+            update_time DATETIME,
             UNIQUE(catnr)
         );        
     """)
@@ -150,7 +151,7 @@ def insertSatellite(tle_id, catnr, name, type):
 
     # TODO: return something so frontend knows if repeated addition
 
-def insertTLE(catnr, line1, line2):
+def insertTLE(catnr, line1, line2, datetime):
     epoch = float(line1[18:32])
     conn = sqlite3.connect(db_path)
 
@@ -159,11 +160,11 @@ def insertTLE(catnr, line1, line2):
 
     # Insert parsed data into the database
     sql = """
-    INSERT OR IGNORE INTO TLE_Data (catnr, line1, line2, epoch)
-    VALUES (?, ?, ?, ?);
+    INSERT OR IGNORE INTO TLE_Data (catnr, line1, line2, epoch, update_time)
+    VALUES (?, ?, ?, ?, ?);
     """
 
-    cur.execute(sql, (catnr, line1, line2, epoch))
+    cur.execute(sql, (catnr, line1, line2, epoch, datetime))
     conn.commit()
 
     # Close the connection
@@ -354,11 +355,17 @@ def getAllCatnrs():
     # Retrieve the results
     rows = cur.fetchall()
 
+    # Extract catnr from tuple
+    catnrs = list(map(lambda x: x[0], rows))
+    print("whats in rows? " + str(catnrs))
+    sys.stdout.flush()
+    
+
     # Close the cursor and the connection
     cur.close()
     conn.close()
 
-    return rows
+    return catnrs
 
 def getAllPresetNames():
     '''Get a list of all preset names.'''
@@ -427,6 +434,50 @@ def getAllTLEs():
     conn.close()
 
     return rows
+
+def getStoredTLE(catnr):
+    conn = sqlite3.connect(db_path)
+
+    # Open a cursor to perform database operations
+    cur = conn.cursor()
+
+    # Execute a SELECT statement (unchanged)
+    cur.execute("SELECT line1, line2 FROM tle_data WHERE catnr=?", (catnr,))
+
+    # Retrieve the results
+    row = cur.fetchone()
+
+    # Close the cursor and the connection
+    cur.close()
+    conn.close()
+
+    return row
+
+def getUpdateTime(catnr):
+    conn = sqlite3.connect(db_path)
+
+    # Open a cursor to perform database operations
+    cur = conn.cursor()
+
+    # Execute a SELECT statement (unchanged)
+    cur.execute("SELECT update_time FROM tle_data where catnr = ?", (catnr,))
+
+    # Retrieve the results
+    result = cur.fetchone()
+
+    # Convert the retrieved string to a Python datetime object
+    update_datetime = None
+    if result:
+        update_datetime_str = result[0]
+        print(update_datetime_str)
+        sys.stdout.flush()
+        update_datetime = datetime.strptime(update_datetime_str, "%Y-%m-%d %H:%M:%S")
+
+    # Close the cursor and the connection
+    cur.close()
+    conn.close()
+
+    return update_datetime
     
 def deletePresetList(type):
     conn = sqlite3.connect(db_path)
@@ -437,17 +488,22 @@ def deletePresetList(type):
     # Delete from Preset Names
     cur.execute("DELETE FROM Preset_Names WHERE name = ?", (type,))
 
-    # Delete rows from Satellites in 'type' preset.
-    delete = '''
-    DELETE FROM Satellites
-    WHERE type = ?
-    '''
 
-    cur.execute(delete, (type,))
+    # Fetch the rows to be deleted before executing the DELETE statement
+    cur.execute("SELECT * FROM Satellites WHERE type = ?", (type,))
+    to_delete = cur.fetchall()
+
+    # Delete rows from the Satellites table
+    delete_query = "DELETE FROM Satellites WHERE type = ?"
+    cur.execute(delete_query, (type,))
     conn.commit()
 
     # Fetch the deleted rows
-    deleted_rows = [row[0] for row in cur.fetchall()]
+    deleted_rows = [row[1] for row in to_delete]
+
+    print("deleted rows:")
+    print(deleted_rows)
+    sys.stdout.flush()
 
     if deleted_rows != []:
         # Delete from TLE if no remaining references
@@ -460,7 +516,7 @@ def deletePresetList(type):
             )
         """.format(','.join('?' * len(deleted_rows)))
 
-        cur.execute(delete_unref, (deleted_rows,))
+        cur.execute(delete_unref, deleted_rows)
         conn.commit()
 
     # Close the cursor and the connection
@@ -500,7 +556,7 @@ def deleteSatelliteFromList(catnr, type):
     conn.close()
 
     
-def updateTLE(catnr, line1, line2):
+def updateTLE(catnr, line1, line2, datetime):
     conn = sqlite3.connect(db_path)
     
     # Open a cursor to perform database operations
@@ -509,12 +565,13 @@ def updateTLE(catnr, line1, line2):
     # Update TLE data
     sql = """
         UPDATE TLE_Data
-        SET line1 = ?, line2 = ?, epoch = ?
+        SET line1 = ?, line2 = ?, epoch = ?, update_time = ?
         WHERE catnr = ?    
     """
 
     epoch = float(line1[18:32])
-    cur.execute(sql, (line1, line2, epoch, catnr))
+    
+    cur.execute(sql, (line1, line2, epoch, datetime, catnr))
     conn.commit()
 
     # Close the connection

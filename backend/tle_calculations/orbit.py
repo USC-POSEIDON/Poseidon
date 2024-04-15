@@ -172,7 +172,7 @@ def getCurrentTelemetry():
             rec (MHz)
             trans (MHz)
     """
-
+    getAllCatnrs()
     s = request.args.get('s')
     t = request.args.get('t')
 

@@ -1,3 +1,6 @@
+const tippy = require('tippy.js');
+// import 'tippy.js/dist/tippy.css'; // optional for styling
+
 class BasicSatellite {
     constructor(name, catnr, line1, line2) {
         this.catnr = catnr;
@@ -94,6 +97,12 @@ function updatePresetListDisplay(){
 
             var li = document.createElement("li");
             li.classList.add("list-item");
+
+            // Set on-hover for each list item
+            li.addEventListener('mouseenter', function() {
+                handleSatelliteHover(li, catnr); 
+            });
+
             var label = document.createElement("label");
 
             var checkbox = document.createElement("input");
@@ -118,6 +127,33 @@ function updatePresetListDisplay(){
         console.log(error);
     });
 
+}
+
+function handleSatelliteHover(item, catnr){
+    fetch(`http://127.0.0.1:5000/satellites/get/updatetime/${catnr}`, { 
+        method: 'GET'
+    })
+    .then(function (response) {
+        if (!response.ok) {
+            throw new Error("HTTP error, status = " + response.status);
+        }
+        return response.json();
+    })
+    .then(function (responseData) {
+        console.log(responseData);
+        const data = JSON.parse(JSON.stringify(responseData));
+
+        var updateInfo = "Last updated: " + data.time;
+
+        tippy.default(item, {
+            delay: 500,
+            content: updateInfo,
+            placement: 'left'
+        });
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
 }
 
 function addXButton(li) {
@@ -173,6 +209,7 @@ function handleCheckboxChange() {
         updateSatelliteTLE(satellite.line1, satellite.line2);
     }
 }
+
 
 function predictPasses(){
     var checkboxes = document.querySelectorAll('#presetList input[type="checkbox"]');
@@ -308,7 +345,3 @@ function parseDateString(dateString) {
     // Create and return the Date object
     return new Date(year, month, day, hour, minute, second);
 }
-
-module.exports = {
-    getGroundStationBackEnd: getGroundStationBackEnd
-};

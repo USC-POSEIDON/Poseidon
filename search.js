@@ -135,6 +135,7 @@ document.addEventListener('click', function(event) {
 /* ======================= Add By TLE ======================= */
 
 function addTLEByCatnr(catnr){
+    console.log(`Adding satellite with catnr ${catnr}`)
     var type = document.getElementById("presetDropdown").value;
     var formData = new FormData();
     formData.append('listname', type);
@@ -155,13 +156,13 @@ function addTLEByCatnr(catnr){
     .then(function (responseData) {
         // Satellite successfully added to list
         console.log(responseData);
-        showPopup(popSucc);
+        showPopup("popSucc");
         updatePresetListDisplay();
     })
     .catch(function (error) {
         // Handle errors here
         console.log(error);
-        showPopup(popFail);
+        showPopup("popFail");
     });
 }
 

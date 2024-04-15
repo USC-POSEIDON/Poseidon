@@ -52,7 +52,8 @@
     "cesium": "^1.113.0",
     "golden-layout": "^1.5.9",
     "pyinstaller": "^0.0.1",
-    "satellite.js": "^5.0.0"
+    "satellite.js": "^5.0.0",
+    "tippy.js": "^6.3.7"
   },
   "devDependencies": {
     "electron": "^28.2.0",

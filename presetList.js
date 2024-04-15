@@ -88,7 +88,6 @@ document.getElementById("managePresets").onclick = function() {
 
 document.getElementById("closePresetModal").onclick = function() {
     document.getElementById("managePresetModal").style.display = "none";
-    populatePresetDropdowns(); 
 }
 
 document.getElementById("addPresetBtn").onclick = function() {
@@ -105,6 +104,7 @@ document.getElementById("addPresetBtn").onclick = function() {
     .then(function (responseData) {
         // Handle the response data here
         console.log(responseData);
+        populatePresetDropdowns();
     })
     .catch(function (error) {
         // Handle errors here
@@ -126,6 +126,7 @@ document.getElementById("deletePresetBtn").onclick = function() {
     .then(function (responseData) {
         // Handle the response data here
         console.log(responseData);
+        populatePresetDropdowns();
     })
     .catch(function (error) {
         // Handle errors here
@@ -148,6 +149,7 @@ document.getElementById("renamePresetBtn").onclick = function() {
     .then(function (responseData) {
         // Handle the response data here
         console.log(responseData);
+        populatePresetDropdowns();
     })
     .catch(function (error) {
         // Rename unsuccessful
