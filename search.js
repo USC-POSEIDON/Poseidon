@@ -156,13 +156,13 @@ function addTLEByCatnr(catnr){
     .then(function (responseData) {
         // Satellite successfully added to list
         console.log(responseData);
-        // showPopup(popSucc);
+        showPopup("popSucc");
         updatePresetListDisplay();
     })
     .catch(function (error) {
         // Handle errors here
         console.log(error);
-        // showPopup(popFail);
+        showPopup("popFail");
     });
 }
 
