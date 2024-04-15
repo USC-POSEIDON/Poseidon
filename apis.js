@@ -76,6 +76,8 @@ function updatePresetListDisplay(){
 
         // Clear existing content
         ul.innerHTML = '';
+        ul.style.overflowY = 'auto'; 
+        ul.style.maxHeight = '150px'; 
 
         // Define the options
         var options = data.satellites;
