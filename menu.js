@@ -111,7 +111,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (event.key === 'Escape') { 
             document.getElementById('groundStationModal').style.display = 'none';
             document.getElementById('managePresetModal').style.display = 'none';
-            populatePresetDropdowns(); // TODO: move this to a better place
         }
     });
 

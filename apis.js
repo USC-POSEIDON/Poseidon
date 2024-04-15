@@ -96,14 +96,9 @@ function updatePresetListDisplay(){
             var li = document.createElement("li");
             li.classList.add("list-item");
 
-            // Set on-hover popup for each list item
+            // Set on-hover for each list item
             li.addEventListener('mouseenter', function() {
-                handleSatelliteHover(li, catnr); // Call showPopup function passing the item object
-            });
-    
-            li.addEventListener('mouseleave', function() {
-                var popup = document.getElementById('updateTimePopup');
-                popup.classList.remove("active");
+                handleSatelliteHover(li, catnr); 
             });
 
             var label = document.createElement("label");
@@ -145,19 +140,6 @@ function handleSatelliteHover(item, catnr){
     .then(function (responseData) {
         console.log(responseData);
         const data = JSON.parse(JSON.stringify(responseData));
-
-        const popup = document.getElementById("updateTimePopup");
-        const rect = item.getBoundingClientRect();
-        const left = rect.left;
-        const top = rect.bottom;
-
-        // Position the popup below the trigger element
-        popup.style.left = left + 'px';
-        popup.style.top = top + 'px';
-        popup.textContent = data.time;
-
-        // Show the popup by adding the "active" class
-        popup.classList.add("active");
 
         var updateInfo = "Last updated: " + data.time;
 

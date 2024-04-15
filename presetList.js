@@ -88,7 +88,6 @@ document.getElementById("managePresets").onclick = function() {
 
 document.getElementById("closePresetModal").onclick = function() {
     document.getElementById("managePresetModal").style.display = "none";
-    populatePresetDropdowns(); 
 }
 
 document.getElementById("addPresetBtn").onclick = function() {

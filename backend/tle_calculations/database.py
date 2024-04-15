@@ -470,17 +470,22 @@ def deletePresetList(type):
     # Delete from Preset Names
     cur.execute("DELETE FROM Preset_Names WHERE name = ?", (type,))
 
-    # Delete rows from Satellites in 'type' preset.
-    delete = '''
-    DELETE FROM Satellites
-    WHERE type = ?
-    '''
 
-    cur.execute(delete, (type,))
+    # Fetch the rows to be deleted before executing the DELETE statement
+    cur.execute("SELECT * FROM Satellites WHERE type = ?", (type,))
+    to_delete = cur.fetchall()
+
+    # Delete rows from the Satellites table
+    delete_query = "DELETE FROM Satellites WHERE type = ?"
+    cur.execute(delete_query, (type,))
     conn.commit()
 
     # Fetch the deleted rows
-    deleted_rows = [row[0] for row in cur.fetchall()]
+    deleted_rows = [row[1] for row in to_delete]
+
+    print("deleted rows:")
+    print(deleted_rows)
+    sys.stdout.flush()
 
     if deleted_rows != []:
         # Delete from TLE if no remaining references
@@ -493,7 +498,7 @@ def deletePresetList(type):
             )
         """.format(','.join('?' * len(deleted_rows)))
 
-        cur.execute(delete_unref, (deleted_rows,))
+        cur.execute(delete_unref, deleted_rows)
         conn.commit()
 
     # Close the cursor and the connection
