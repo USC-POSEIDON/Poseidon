@@ -49,6 +49,7 @@ function updateTelemetryData() {
         // Handle errors here
         console.log(error);
     });
+}
 
 function calculateAzEl(positionEci, observerGd, gmst) {
     var positionEcf = satellite.eciToEcf(positionEci, gmst);
