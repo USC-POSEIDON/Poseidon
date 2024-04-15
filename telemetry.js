@@ -123,4 +123,4 @@ function calculateRangeRate(observerEcf, positionEci, velocityEci, gmst) {
 }
 
 
-setInterval(updateTelemetryData, 20000);
+setInterval(updateTelemetryData, 2000);
