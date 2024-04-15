@@ -34,19 +34,21 @@
         <div>
             <h2>Update Ground Station Position</h2>
             <label for="latitude">Latitude (°):</label>
-            <input type="text" id="latitude" name="latitude" value="0.0000">
+            <input type="text" id="latitude" name="latitude">
             <select id="lat-direction">
                 <option value="N">North</option>
                 <option value="S">South</option>
             </select>
+            <span id="latitude-error" style="color: red;"></span>
             <br><br>
     
             <label for="longitude">Longitude (°):</label>
-            <input type="text" id="longitude" name="longitude" value="0.0000">
+            <input type="text" id="longitude" name="longitude">
             <select id="long-direction">
                 <option value="E">East</option>
                 <option value="W">West</option>
             </select>
+            <span id="longitude-error" style="color: red;"></span>
             <br><br>
     
             <button id="updatePosition">Update</button>
@@ -78,7 +80,10 @@
                 </ul>
             </div>
 
-            <button id="generateCommand">Generate/Export</button>
+            <button id="generateButton">Generate</button>
+            <button id="clearButton">Clear Commands</button>
+            <textarea id="generatedCommandsText" style="display: none;"></textarea>
+            <button id="exportButton">Export</button>
             <div style="height: 50px;"></div>
         </div>
     </div>
@@ -109,6 +114,9 @@
             <button id="closePresetModal">Close</button>
         </div>
     </div>
+    <div class="popup" id="searchPopupError">Error adding satellite</div>
+    <div class="popup" id="searchPopupSucc">Satellite Added</div>
+    <div class="popup" id="searchPopupOverflow">Please refine your keywords</div>
     
     <div id="goldenLayoutContainer"></div> 
 
@@ -160,9 +168,8 @@
                         <input type="radio" name="searchType" value="manual"> Manual
                     </label>
                 </div>
-                <div class="popup" id="searchPopup">Error adding satellite</div>
-
             </div>
+            <div class="GSLocText" id="GSLocText">GS: loc</div>
         </div>
     </div>
         <div id="calendarModal">

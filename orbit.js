@@ -26,14 +26,24 @@ function initializeViewer() {
     }
     
     // Ground Station Entity
-    //TODO: Mock Data Here
-    var groundStationPosition = Cesium.Cartesian3.fromDegrees(-74.0060, 40.7128);
+    var groundStationPosition = Cesium.Cartesian3.fromDegrees(0, 0);
 
     document.getElementById('updatePosition').addEventListener('click', function() {
         var latitude = parseFloat(document.getElementById('latitude').value);
         var longitude = parseFloat(document.getElementById('longitude').value);
         var latDirection = document.getElementById('lat-direction').value;
         var longDirection = document.getElementById('long-direction').value;
+        document.getElementById('latitude-error').textContent = '';
+        document.getElementById('longitude-error').textContent = '';
+        // Validate the latitude and longitude values
+        if (latitude < -90 || latitude > 90 || isNaN(latitude)) {
+            document.getElementById('latitude-error').textContent = 'Invalid latitude value';
+            return; 
+        }
+        if (longitude < -180 || longitude > 180 || isNaN(longitude)) {
+            document.getElementById('longitude-error').textContent = 'Invalid longitude value';
+            return; 
+        }
 
         // Adjust the latitude and longitude based on the hemisphere
         latitude *= (latDirection === 'N') ? 1 : -1;
@@ -46,6 +56,7 @@ function initializeViewer() {
          var groundStationEntity = viewer.entities.getById('groundStation');
          if (groundStationEntity) {
              groundStationEntity.position = newGroundStationPosition;
+             document.getElementById('GSLocText').textContent = 'GS: ' + latitude + ', ' + longitude;
              console.log('Ground Station position updated to:', latitude, longitude);
          } else {
              console.log('Ground Station entity not found.');
@@ -100,6 +111,7 @@ function initializeViewer() {
         var groundStationEntity = viewer.entities.getById('groundStation');
         if (groundStationEntity) {
             groundStationEntity.position = newGroundStationPosition;
+            document.getElementById('GSLocText').textContent = 'GS: ' + latitude + ', ' + longitude;
             console.log('Ground Station position initialized to:', latitude, longitude);
         } else {
             console.log('Ground Station entity not found.');

@@ -169,44 +169,51 @@
     "Family": "Read/Write Memory Commands",
     "Parameters": [
       {
-        "Name": "Read",
-        "Description": "Reads (len)-bytes from flash to the calling port (max length set by general buffer size).",
-        "Command": "r",
-        "Example": "33 r *010000* 128",
-        "Parameters": [
+        "Name": "Action",
+        "Type": "Dropdown",
+        "Description": "Select action to perform.",
+        "Options": [
           {
-            "Name": "Address",
-            "Type": "Hexadecimal",
-            "Description": "The address of the data to be read.",
-            "Enclosure": "*"
+            "Name": "Read",
+            "Description": "Reads (len)-bytes from flash to the calling port (max length set by general buffer size).",
+            "Command": "r",
+            "Example": "33 r *010000* 128",
+            "Parameters": [
+              {
+                "Name": "Address",
+                "Type": "Hexadecimal",
+                "Description": "The address of the data to be read.",
+                "Enclosure": "*"
+              },
+              {
+                "Name": "Length",
+                "Type": "Integer",
+                "Description": "The number of bytes to be read."
+              }
+            ],
+            "Translation": "Read from Flash at "
           },
           {
-            "Name": "Length",
-            "Type": "Integer",
-            "Description": "The number of bytes to be read."
+            "Name": "Write",
+            "Description": "Writes a string to flash (max length set by maximum command length)",
+            "Command": "w",
+            "Example": "33 w *0C0000 \"Write this to flash\"",
+            "Parameters": [
+              {
+                "Name": "Address",
+                "Type": "Hexadecimal",
+                "Description": "The address of the data to be written.",
+                "Enclosure": "*"
+              },
+              {
+                "Name": "Length",
+                "Type": "Integer",
+                "Description": "The number of bytes to be written."
+              }
+            ],
+            "Translation": "Write to Flash at "
           }
-        ],
-        "Translation": "Read from Flash at "
-      },
-      {
-        "Name": "Write",
-        "Description": "Writes a string to flash (max length set by maximum command length)",
-        "Command": "w",
-        "Example": "33 w *0C0000 \"Write this to flash\"",
-        "Parameters": [
-          {
-            "Name": "Address",
-            "Type": "Hexadecimal",
-            "Description": "The address of the data to be written.",
-            "Enclosure": "*"
-          },
-          {
-            "Name": "Length",
-            "Type": "Integer",
-            "Description": "The number of bytes to be written."
-          }
-        ],
-        "Translation": "Write to Flash at "
+        ]
       }
     ]
   },
@@ -311,24 +318,25 @@
         "Description": "Load or Clear a given Macro. 1 = Load, 0 = Clear",
         "Parameters": [
           {
-            "Name": "Load",
-            "Description": "Load a given Macro.",
-            "Command": "1",
-            "Translation": " is loaded into memory"
-          },
-          {
-            "Name": "Clear",
-            "Description": "Clear a given Macro.",
-            "Command": "0",
-            "Translation": " is cleared from memory"
+            "Name": "Action",
+            "Type": "Dropdown",
+            "Description": "Select action to perform.",
+            "Options": [
+              {
+                "Name": "Load",
+                "Description": "Load a given Macro.",
+                "Command": "1",
+                "Translation": " is loaded into memory"
+              },
+              {
+                "Name": "Clear",
+                "Description": "Clear a given Macro.",
+                "Command": "0",
+                "Translation": " is cleared from memory"
+              }
+            ]
           }
         ]
-      },
-      {
-        "Name": "MacroContents",
-        "Type": "String",
-        "Description": "The contents of the macro to be loaded.",
-        "Translation": "Command: "
       }
     ]
   },
@@ -482,85 +490,92 @@
     "Family": "Guidance, Navigation, and Control Commands",
     "Parameters": [
       {
-        "Name": "EnableGeomagneticModel",
-        "Description": "Returns: \"Geomag Initialized\"",
-        "Command": "E",
-        "Example": "r 109 E",
-        "Translation": "Enable Geomagnetic Model"
-      },
-      {
-        "Name": "DisableGeomagneticModel",
-        "Description": "Returns: \"Geomag Disabled\"",
-        "Command": "D",
-        "Example": "r 109 D",
-        "Translation": "Disable Geomagnetic Model"
-      },
-      {
-        "Name": "LoadsStaticCoefficientsIntoFlash",
-        "Description": "This only needs to be done once.",
-        "Command": "C",
-        "Example": "r 109 C 0 \"-29619.4 13.3 2.0 2.0 \"",
-        "Translation": "Load the magnitude and unit vector of the magnetic field into flash: ",
-        "Parameters":
-        [ {
-          "Name": "Mag",
-          "Type": "Float",
-          "Description": "TODO: Likely Magnitude of residual dipole"
-        },
-        {
-          "Name": "Bx",
-          "Type": "Float",
-          "Description": "TODO: Likely Bx of residual dipole"
-        },
-        {
-          "Name": "By",
-          "Type": "Float",
-          "Description": "TODO: Likely By of residual dipole"
-        },
-        {
-          "Name": "Bz",
-          "Type": "Float",
-          "Description": "TODO: Likely Bz of residual dipole"
-        } ]
-      },
-      {
-        "Name": "TestCommandToPrintTestBFieldVector",
-        "Description": "Test command to print test B field vector.",
-        "Command": "T",
-        "Example": "Format: r 109 T \"(pos eci) (gha)\"",
-        "Translation": "Print the test B field vector at position and gha: ",
-        "Parameters":
-        [ {
-          "Name": "PosEci",
-          "Type": "Float",
-          "Description": "TODO: Determine what Pos ECI is here, likely a string cartesian position."
-        },
-        {
-          "Name": "gha",
-          "Type": "Float",
-          "Description": "TODO: Figure out what gha means here."
-        }]
-      },
-      {
-        "Name": "SetToReadGeoMagCoeffFromFlash",
-        "Description": "Set to read geo magnetic coefficients from flash. Returns: \"reading geomap coefs from Flash\"",
-        "Command": "F",
-        "Example": "r 109 T",
-        "Translation": "Set to read geomagnetic coefficients from flash."
-      },
-      {
-        "Name": "SetToReadGeoMagCoeffFromROM",
-        "Description": "Set to read geo magnetic coefficients from ROM",
-        "Command": "R",
-        "Example": "r 109 R",
-        "Translation": "Set to read geomagnetic coefficients from ROM."
-      },
-      {
-        "Name": "ReturnsTheGlobalNumberOfGeoMagCRCerrors",
-        "Description": "Returns the global number of Geomag CRC errors",
-        "Command": "x",
-        "Example": "r 109 x",
-        "Translation": "Returns the global number of Geomag CRC errors."
+        "Name": "Action",
+        "Type": "Dropdown",
+        "Description": "Select action to perform.",
+        "Options": [
+          {
+            "Name": "EnableGeomagneticModel",
+            "Description": "Returns: \"Geomag Initialized\"",
+            "Command": "E",
+            "Example": "r 109 E",
+            "Translation": "Enable Geomagnetic Model"
+          },
+          {
+            "Name": "DisableGeomagneticModel",
+            "Description": "Returns: \"Geomag Disabled\"",
+            "Command": "D",
+            "Example": "r 109 D",
+            "Translation": "Disable Geomagnetic Model"
+          },
+          {
+            "Name": "LoadsStaticCoefficientsIntoFlash",
+            "Description": "This only needs to be done once.",
+            "Command": "C",
+            "Example": "r 109 C 0 \"-29619.4 13.3 2.0 2.0 \"",
+            "Translation": "Load the magnitude and unit vector of the magnetic field into flash: ",
+            "Parameters":
+            [ {
+              "Name": "Mag",
+              "Type": "Float",
+              "Description": "TODO: Likely Magnitude of residual dipole"
+            },
+            {
+              "Name": "Bx",
+              "Type": "Float",
+              "Description": "TODO: Likely Bx of residual dipole"
+            },
+            {
+              "Name": "By",
+              "Type": "Float",
+              "Description": "TODO: Likely By of residual dipole"
+            },
+            {
+              "Name": "Bz",
+              "Type": "Float",
+              "Description": "TODO: Likely Bz of residual dipole"
+            } ]
+          },
+          {
+            "Name": "TestCommandToPrintTestBFieldVector",
+            "Description": "Test command to print test B field vector.",
+            "Command": "T",
+            "Example": "Format: r 109 T \"(pos eci) (gha)\"",
+            "Translation": "Print the test B field vector at position and gha: ",
+            "Parameters":
+            [ {
+              "Name": "PosEci",
+              "Type": "Float",
+              "Description": "TODO: Determine what Pos ECI is here, likely a string cartesian position."
+            },
+            {
+              "Name": "gha",
+              "Type": "Float",
+              "Description": "TODO: Figure out what gha means here."
+            }]
+          },
+          {
+            "Name": "SetToReadGeoMagCoeffFromFlash",
+            "Description": "Set to read geo magnetic coefficients from flash. Returns: \"reading geomap coefs from Flash\"",
+            "Command": "F",
+            "Example": "r 109 T",
+            "Translation": "Set to read geomagnetic coefficients from flash."
+          },
+          {
+            "Name": "SetToReadGeoMagCoeffFromROM",
+            "Description": "Set to read geo magnetic coefficients from ROM",
+            "Command": "R",
+            "Example": "r 109 R",
+            "Translation": "Set to read geomagnetic coefficients from ROM."
+          },
+          {
+            "Name": "ReturnsTheGlobalNumberOfGeoMagCRCerrors",
+            "Description": "Returns the global number of Geomag CRC errors",
+            "Command": "x",
+            "Example": "r 109 x",
+            "Translation": "Returns the global number of Geomag CRC errors."
+          }
+        ]
       }
     ]
   },
@@ -573,78 +588,85 @@
     "Family": "Guidance, Navigation, and Control Commands",
     "Parameters": [
       {
-        "Name": "EnableGNC",
-        "Type": "None",
-        "Command": "e",
-        "Description": "Enable GNC.",
-        "Example": "r 110 e",
-        "Translation": "Enable GNC"
-      },
-      {
-        "Name": "DisableGNC",
-        "Type": "None",
-        "Command": "D",
-        "Description": "Disable GNC",
-        "Example": "r 110 D",
-        "Translation": "Disable GNC"
-      },
-      {
-        "Name": "LoadGNCdefault",
-        "Type": "None",
-        "Command": "Z",
-        "Description": "Load GNC default",
-        "Example": "r 110 Z",
-        "Translation": "Load GNC default"
-      },
-      {
-        "Name": "RestoreFromFlashTheExtInConfiguration",
-        "Type": "None",
-        "Command": "r",
-        "Description": "Restore from flash the ExtIn configuration.",
-        "Example": "r 110 r",
-        "Translation": "Restore from flash the ExtIn configuration"
-      },
-      {
-        "Name": "StoreCurrentConfigurationInFlash",
-        "Type": "None",
-        "Command": "s",
-        "Description": "Store current configuration in flash.",
-        "Example": "r 110 s",
-        "Translation": "Store current configuration in flash"
-      },
-      {
-        "Name": "LoadsFloatIntoExtInArray",
-        "Command": "l",
-        "Description": "Loads a float into the global ExtIn array.",
-        "Example": "r 110 l 0 \"5.0\"",
-        "Translation": "Load into ExtIn array at index ",
-        "Parameters": [
+        "Name": "Action",
+        "Type": "Dropdown",
+        "Description": "Select action to perform.",
+        "Options": [
           {
-            "Name": "Index",
-            "Type": "Integer",
-            "Description": "The index of the ExtIn array to be set."
+            "Name": "EnableGNC",
+            "Type": "None",
+            "Command": "e",
+            "Description": "Enable GNC.",
+            "Example": "r 110 e",
+            "Translation": "Enable GNC"
           },
           {
-            "Name": "Value",
-            "Type": "Float",
-            "Description": "The value to be set.",
-            "Translation": " the value of "
+            "Name": "DisableGNC",
+            "Type": "None",
+            "Command": "D",
+            "Description": "Disable GNC",
+            "Example": "r 110 D",
+            "Translation": "Disable GNC"
+          },
+          {
+            "Name": "LoadGNCdefault",
+            "Type": "None",
+            "Command": "Z",
+            "Description": "Load GNC default",
+            "Example": "r 110 Z",
+            "Translation": "Load GNC default"
+          },
+          {
+            "Name": "RestoreFromFlashTheExtInConfiguration",
+            "Type": "None",
+            "Command": "r",
+            "Description": "Restore from flash the ExtIn configuration.",
+            "Example": "r 110 r",
+            "Translation": "Restore from flash the ExtIn configuration"
+          },
+          {
+            "Name": "StoreCurrentConfigurationInFlash",
+            "Type": "None",
+            "Command": "s",
+            "Description": "Store current configuration in flash.",
+            "Example": "r 110 s",
+            "Translation": "Store current configuration in flash"
+          },
+          {
+            "Name": "LoadsFloatIntoExtInArray",
+            "Command": "l",
+            "Description": "Loads a float into the global ExtIn array.",
+            "Example": "r 110 l 0 \"5.0\"",
+            "Translation": "Load into ExtIn array at index ",
+            "Parameters": [
+              {
+                "Name": "Index",
+                "Type": "Integer",
+                "Description": "The index of the ExtIn array to be set."
+              },
+              {
+                "Name": "Value",
+                "Type": "Float",
+                "Description": "The value to be set.",
+                "Translation": " the value of "
+              }
+            ]
+          },
+          {
+            "Name": "Reset",
+            "Command": "q",
+            "Description": "Reset",
+            "Example": "r 110 q",
+            "Translation": "Reset GNC"
+          },
+          {
+            "Name": "ToggleGNCscreen",
+            "Command": "x",
+            "Description": "Toggle whether we show/hide the GNC screen.",
+            "Example": "r 110 x",
+            "Translation": "Toggle GNC screen"
           }
         ]
-      },
-      {
-        "Name": "Reset",
-        "Command": "q",
-        "Description": "Reset",
-        "Example": "r 110 q",
-        "Translation": "Reset GNC"
-      },
-      {
-        "Name": "ToggleGNCscreen",
-        "Command": "x",
-        "Description": "Toggle whether we show/hide the GNC screen.",
-        "Example": "r 110 x",
-        "Translation": "Toggle GNC screen"
       }
     ]
   },
@@ -666,161 +688,175 @@
     "Family": "Debugging Commands",
     "Parameters": [
       {
-        "Name": "DumpRawData",
-        "Description": "Quick test to dump raw data results to display.",
-        "Command": "T",
-        "Translation": "Dump Raw Data"
-      },
-      {
-        "Name": "PowerOnGyroWithoutInitialization",
-        "Description": "Powers on the gyro without initialization",
-        "Command": "P",
-        "Translation": "Power on Gyro without Initialization"
-      },
-      {
-        "Name": "PowerOnGyroAndInitializesHardware",
-        "Description": "Powers on the gyro and initializes the hardware.",
-        "Command": "E",
-        "Translation": "Power on Gyro and Initialize Hardware"
-      },
-      {
-        "Name": "DisableGyro",
-        "Description": "Disables the gyro.",
-        "Command": "D",
-        "Translation": "Disable Gyro"
-      },
-      {
-        "Name": "SendCommandsToGyroOverSPI",
-        "Description": "Sends a certain number of bytes to the gyro over SPI.",
-        "Command": "C",
-        "Example": "r 112 C {See Parameters}",
-        "Parameters":[
+        "Name": "Action",
+        "Type": "Dropdown",
+        "Description": "Select action to perform.",
+        "Options": [
           {
-            "Name": "ReadSEN_AVGregister",
-            "Description": "Reads SEN_AVG register.",
-            "Command": "*3800*",
-            "Translation": "Read SEN_AVG register"
+            "Name": "DumpRawData",
+            "Description": "Quick test to dump raw data results to display.",
+            "Command": "T",
+            "Translation": "Dump Raw Data"
           },
           {
-            "Name": "ReadInternalSampleRate",
-            "Description": "Reads the internal sample rate.",
-            "Command": "*3600*",
-            "Translation": "Read Internal Sample Rate"
+            "Name": "PowerOnGyroWithoutInitialization",
+            "Description": "Powers on the gyro without initialization",
+            "Command": "P",
+            "Translation": "Power on Gyro without Initialization"
           },
           {
-            "Name": "ReadProductID",
-            "Description": "Reads product ID.",
-            "Command": "*5600*",
-            "Translation": "Read Product ID"
+            "Name": "PowerOnGyroAndInitializesHardware",
+            "Description": "Powers on the gyro and initializes the hardware.",
+            "Command": "E",
+            "Translation": "Power on Gyro and Initialize Hardware"
           },
           {
-            "Name": "ReadSerialNumber",
-            "Description": "Reads serial number.",
-            "Command": "*5800*",
-            "Translation": "Read Serial Number"
+            "Name": "DisableGyro",
+            "Description": "Disables the gyro.",
+            "Command": "D",
+            "Translation": "Disable Gyro"
           },
           {
-            "Name": "ReadGyroRotation",
-            "Description": "Reads the gyro out rotation.",
-            "Command": "*0400*",
-            "Translation": "Read Gyro Rotation"
+            "Name": "SendCommandsToGyroOverSPI",
+            "Description": "Sends a certain number of bytes to the gyro over SPI.",
+            "Command": "C",
+            "Example": "r 112 C {See Parameters}",
+            "Parameters":[
+              {
+                "Name": "Action",
+                "Type": "Dropdown",
+                "Description": "Select action to perform.",
+                "Options": [
+                  {
+                    "Name": "ReadSEN_AVGregister",
+                    "Description": "Reads SEN_AVG register.",
+                    "Command": "*3800*",
+                    "Translation": "Read SEN_AVG register"
+                  },
+                  {
+                    "Name": "ReadInternalSampleRate",
+                    "Description": "Reads the internal sample rate.",
+                    "Command": "*3600*",
+                    "Translation": "Read Internal Sample Rate"
+                  },
+                  {
+                    "Name": "ReadProductID",
+                    "Description": "Reads product ID.",
+                    "Command": "*5600*",
+                    "Translation": "Read Product ID"
+                  },
+                  {
+                    "Name": "ReadSerialNumber",
+                    "Description": "Reads serial number.",
+                    "Command": "*5800*",
+                    "Translation": "Read Serial Number"
+                  },
+                  {
+                    "Name": "ReadGyroRotation",
+                    "Description": "Reads the gyro out rotation.",
+                    "Command": "*0400*",
+                    "Translation": "Read Gyro Rotation"
+                  },
+                  {
+                    "Name": "ReadsTemperature",
+                    "Description": "Reads temperature.",
+                    "Command": "*0C00*",
+                    "Translation": "Read Temperature"
+                  },
+                  {
+                    "Name": "ReadFlashCount",
+                    "Description": "Reads the flash count.",
+                    "Command": "*0000*",
+                    "Translation": "Read Flash Count"
+                  },
+                  {
+                    "Name": "ReadGYRO_OFF",
+                    "Description": "Reads GYRO_OFF.",
+                    "Command": "*1400*",
+                    "Translation": "Read Gyro Off"
+                  },
+                  {
+                    "Name": "ReadGYRO_SCALE",
+                    "Description": "Reads GYRO_SCALE.",
+                    "Command": "*1600*",
+                    "Translation": "Read Gyro Scale"
+                  },
+                  {
+                    "Name": "GetResultFromPreviousRequest",
+                    "Description": "Get result from previous request.",
+                    "Command": "*FFFF*",
+                    "Translation": "Get Result from Previous Request"
+                  },
+                  {
+                    "Name": "GetsDIAG_STAT",
+                    "Description": "Gets DIAG_STAT.",
+                    "Command": "*3C00*",
+                    "Translation": "Get DIAG_STAT"
+                  },
+                  {
+                    "Name": "SetSenseRangeTo80Degrees/sec",
+                    "Description": "Sets the sense range to 80 degrees/sec.",
+                    "Command": "*B901*",
+                    "Translation": "Set Sense Range to 80 Degrees/Sec"
+                  },
+                  {
+                    "Name": "FactoryRestore",
+                    "Description": "Factory Restore.",
+                    "Command": "*BE02*",
+                    "Translation": "Factory Restore"
+                  },
+                  {
+                    "Name": "WriteSettingsToFlash",
+                    "Description": "Write settings to flash.",
+                    "Command": "*BE04*",
+                    "Translation": "Write Settings to Flash"
+                  },
+                  {
+                    "Name": "Write0x01ToGYRO_OFF0_7",
+                    "Description": "Write 0x01 to GYRO_OFF[0:7] (not saved through reset unless you write to flash).",
+                    "Command": "*94c7*",
+                    "Translation": "Write 0x01 to GYRO_OFF[0:7]"
+                  },
+                  {
+                    "Name": "Write0x01ToGYRO_OFF8_15",
+                    "Description": "Write 0x01 to GYRO_OFF[8:15] (not saved through reset unless you write to flash).",
+                    "Command": "*95ff*",
+                    "Translation": "Write 0x01 to GYRO_OFF[8:15]"
+                  },
+                  {
+                    "Name": "ReadsValuesFromFlash",
+                    "Description": "Reads values from flash.",
+                    "Command": "*BE80*",
+                    "Translation": "Read Values from Flash"
+                  },
+                  {
+                    "Name": "WriteValuesToFlash",
+                    "Description": "Write values to flash?.",
+                    "Command": "*BE08*",
+                    "Translation": "Write Values to Flash"
+                  }
+                ]
+              }
+            ]
           },
           {
-            "Name": "ReadsTemperature",
-            "Description": "Reads temperature.",
-            "Command": "*0C00*",
-            "Translation": "Read Temperature"
-          },
-          {
-            "Name": "ReadFlashCount",
-            "Description": "Reads the flash count.",
-            "Command": "*0000*",
-            "Translation": "Read Flash Count"
-          },
-          {
-            "Name": "ReadGYRO_OFF",
-            "Description": "Reads GYRO_OFF.",
-            "Command": "*1400*",
-            "Translation": "Read Gyro Off"
-          },
-          {
-            "Name": "ReadGYRO_SCALE",
-            "Description": "Reads GYRO_SCALE.",
-            "Command": "*1600*",
-            "Translation": "Read Gyro Scale"
-          },
-          {
-            "Name": "GetResultFromPreviousRequest",
-            "Description": "Get result from previous request.",
-            "Command": "*FFFF*",
-            "Translation": "Get Result from Previous Request"
-          },
-          {
-            "Name": "GetsDIAG_STAT",
-            "Description": "Gets DIAG_STAT.",
-            "Command": "*3C00*",
-            "Translation": "Get DIAG_STAT"
-          },
-          {
-            "Name": "SetSenseRangeTo80Degrees/sec",
-            "Description": "Sets the sense range to 80 degrees/sec.",
-            "Command": "*B901*",
-            "Translation": "Set Sense Range to 80 Degrees/Sec"
-          },
-          {
-            "Name": "FactoryRestore",
-            "Description": "Factory Restore.",
-            "Command": "*BE02*",
-            "Translation": "Factory Restore"
-          },
-          {
-            "Name": "WriteSettingsToFlash",
-            "Description": "Write settings to flash.",
-            "Command": "*BE04*",
-            "Translation": "Write Settings to Flash"
-          },
-          {
-            "Name": "Write0x01ToGYRO_OFF0_7",
-            "Description": "Write 0x01 to GYRO_OFF[0:7] (not saved through reset unless you write to flash).",
-            "Command": "*94c7*",
-            "Translation": "Write 0x01 to GYRO_OFF[0:7]"
-          },
-          {
-            "Name": "Write0x01ToGYRO_OFF8_15",
-            "Description": "Write 0x01 to GYRO_OFF[8:15] (not saved through reset unless you write to flash).",
-            "Command": "*95ff*",
-            "Translation": "Write 0x01 to GYRO_OFF[8:15]"
-          },
-          {
-            "Name": "ReadsValuesFromFlash",
-            "Description": "Reads values from flash.",
-            "Command": "*BE80*",
-            "Translation": "Read Values from Flash"
-          },
-          {
-            "Name": "WriteValuesToFlash",
-            "Description": "Write values to flash?.",
-            "Command": "*BE08*",
-            "Translation": "Write Values to Flash"
-          }
-        ]
-      },
-      {
-        "Name": "GyroBiasOptimizationTest",
-        "Description": "Gyro bias optimization test. \nCalibrates the gyro offset by recording 150 seconds of data at 256 samples per second. \nOffset = 0 - Only calculates offset \nOffset = 1 - Calibrates Gyro Offset, must be stationary for 160 seconds.",
-        "Command": "B",
-        "Translation": "Set Gyro Number",
-        "Parameters": [
-          {
-            "Name": "GyroNum",
-            "Description": "gyro num 0-2",
-            "Type": "Integer"
-          }, 
-          {
-            "Translation": " with offset ",
-            "Name": "FixOffset",
-            "Description": "Fix offset 0/1",
-            "Type": "Integer"
+            "Name": "GyroBiasOptimizationTest",
+            "Description": "Gyro bias optimization test. \nCalibrates the gyro offset by recording 150 seconds of data at 256 samples per second. \nOffset = 0 - Only calculates offset \nOffset = 1 - Calibrates Gyro Offset, must be stationary for 160 seconds.",
+            "Command": "B",
+            "Translation": "Set Gyro Number",
+            "Parameters": [
+              {
+                "Name": "GyroNum",
+                "Description": "gyro num 0-2",
+                "Type": "Integer"
+              }, 
+              {
+                "Translation": " with offset ",
+                "Name": "FixOffset",
+                "Description": "Fix offset 0/1",
+                "Type": "Integer"
+              }
+            ]
           }
         ]
       }
@@ -866,17 +902,24 @@
     "Family": "Guidance, Navigation, and Control Commands",
     "Parameters": [
       {
-        "Name": "Enable",
-        "Command": "E",
-        "Description": "Enable attitude sensor collection.",
-        "Transpation": "Enable Attitude Sensor Collection"
-      },
-      {
-        "Name": "Disable",
-        "Command": "D",
-        "Description": "Disable attitude sensor collection.",
-        "Translation": "Disable Attitude Sensor Collection"
-      } 
+        "Name": "Action",
+        "Type": "Dropdown",
+        "Description": "Select action to perform.",
+        "Options": [
+          {
+            "Name": "Enable",
+            "Command": "E",
+            "Description": "Enable attitude sensor collection.",
+            "Transpation": "Enable Attitude Sensor Collection"
+          },
+          {
+            "Name": "Disable",
+            "Command": "D",
+            "Description": "Disable attitude sensor collection.",
+            "Translation": "Disable Attitude Sensor Collection"
+          } 
+        ]
+      }
     ]
   },
   {
@@ -888,94 +931,101 @@
     "Family": "Guidance, Navigation, and Control Commands",
     "Parameters": [
       {
-        "Name": "EnableRealWritingToIMIfromGNC",
-        "Command": "E",
-        "Description": "Enable real writing to IMI from GNC; Advisable to explicitly command test mode first.",
-        "Translation": "Enable real writing to IMI from GNC."
-      },
-      {
-        "Name": "DisableRealWritingToIMIfromGNC",
-        "Command": "D",
-        "Description": "Disable real writing to IMI from GNC.",
-        "Translation": "Disable real writing to IMI from GNC."
-      }, 
-      {
-        "Name": "EnableTestMode",
-        "Command": "0",
-        "Description": "Enable Test Mode.",
-        "Translation": "Enable Test Mode."
-      },
-      {
-        "Name": "CommandWheelSpeeds",
-        "Command": "1",
-        "Description": "Commands Wheel speeds. Sets IMI wheel speeds in deg/sec in either x, y, or z in MAI coordinate system; Example: r 119 1 \"990.0 0.0 300.0\" Set RW rates to 990, 0, 300",
-        "Example": " r 119 1 \"990.0 0.0 300.0\"",
-        "Enclosure": "\"",
-        "Translation": "Set wheel speeds to ", 
-        "Parameters": [
+        "Name": "Action",
+        "Type": "Dropdown",
+        "Description": "Select action to perform.",
+        "Options": [
           {
-            "Name": "SpeedX",
-            "Description": "Command Wheel X. TODO: Determine Wheel Speed Range.",
-            "Type": "Float"
+            "Name": "EnableRealWritingToIMIfromGNC",
+            "Command": "E",
+            "Description": "Enable real writing to IMI from GNC; Advisable to explicitly command test mode first.",
+            "Translation": "Enable real writing to IMI from GNC."
           },
           {
-            "Name": "SpeedY",
-            "Description": "Command Wheel Y. TODO: Determine Wheel Speed Range.",
-            "Type": "Float"
+            "Name": "DisableRealWritingToIMIfromGNC",
+            "Command": "D",
+            "Description": "Disable real writing to IMI from GNC.",
+            "Translation": "Disable real writing to IMI from GNC."
+          }, 
+          {
+            "Name": "EnableTestMode",
+            "Command": "0",
+            "Description": "Enable Test Mode.",
+            "Translation": "Enable Test Mode."
           },
           {
-            "Name": "SpeedZ",
-            "Description": "Command Wheel Z. TODO: Determine Wheel Speed Range.",
-            "Type": "Float"
-          }
-        ]
-      },
-      {
-        "Name": "CommandTorqueCoils",
-        "Command": "2",
-        "Description": "Sets IMI torque coil dipole strength in Am2 in either. Example: r 119 2 \"0.01 0.0 0.0\"; sets torque coil X to 0.01 Am2",
-        "Example": " r 119 2 \"0.01 0.0 0.0\"",
-        "Enclosure": "\"",
-        "Translation": "Set torque coil dipole strength to ",
-        "Parameters": [
-          {
-            "Name": "MagX",
-            "Description": "Comands Wheel Torque Coil X. TODO: Determine torque coil range.",
-            "Type": "Float"
+            "Name": "CommandWheelSpeeds",
+            "Command": "1",
+            "Description": "Commands Wheel speeds. Sets IMI wheel speeds in deg/sec in either x, y, or z in MAI coordinate system; Example: r 119 1 \"990.0 0.0 300.0\" Set RW rates to 990, 0, 300",
+            "Example": " r 119 1 \"990.0 0.0 300.0\"",
+            "Enclosure": "\"",
+            "Translation": "Set wheel speeds to ", 
+            "Parameters": [
+              {
+                "Name": "SpeedX",
+                "Description": "Command Wheel X. TODO: Determine Wheel Speed Range.",
+                "Type": "Float"
+              },
+              {
+                "Name": "SpeedY",
+                "Description": "Command Wheel Y. TODO: Determine Wheel Speed Range.",
+                "Type": "Float"
+              },
+              {
+                "Name": "SpeedZ",
+                "Description": "Command Wheel Z. TODO: Determine Wheel Speed Range.",
+                "Type": "Float"
+              }
+            ]
           },
           {
-            "Name": "MagY",
-            "Description": "Comands Wheel Torque Coil Y. TODO: Determine torque coil range.",
-            "Type": "Float"
+            "Name": "CommandTorqueCoils",
+            "Command": "2",
+            "Description": "Sets IMI torque coil dipole strength in Am2 in either. Example: r 119 2 \"0.01 0.0 0.0\"; sets torque coil X to 0.01 Am2",
+            "Example": " r 119 2 \"0.01 0.0 0.0\"",
+            "Enclosure": "\"",
+            "Translation": "Set torque coil dipole strength to ",
+            "Parameters": [
+              {
+                "Name": "MagX",
+                "Description": "Comands Wheel Torque Coil X. TODO: Determine torque coil range.",
+                "Type": "Float"
+              },
+              {
+                "Name": "MagY",
+                "Description": "Comands Wheel Torque Coil Y. TODO: Determine torque coil range.",
+                "Type": "Float"
+              },
+              {
+                "Name": "MagZ",
+                "Description": "Comands Wheel Torque Coil Z. TODO: Determine torque coil range.",
+                "Type": "Float"
+              }
+            ]
           },
           {
-            "Name": "MagZ",
-            "Description": "Comands Wheel Torque Coil Z. TODO: Determine torque coil range.",
-            "Type": "Float"
-          }
-        ]
-      },
-      {
-        "Name": "CommandWheelTorques",
-        "Command": "3",
-        "Description": "Sets IMI Wheel Torque in mNm in either x, y, or z",
-        "Example": " r 119 3 {X Y Z}",
-        "Translation": "Set wheel torques to ",
-        "Parameters": [
-          {
-            "Name": "TorqueX",
-            "Description": "Command Wheel X Torque. TODO: Determine Wheel Torque Range.",
-            "Type": "Float"
-          },
-          {
-            "Name": "TorqueY",
-            "Description": "Command Wheel Y Torque. TODO: Determine Wheel Torque Range.",
-            "Type": "Float"
-          },
-          {
-            "Name": "TorqueZ",
-            "Description": "Command Wheel Z Torque. TODO: Determine Wheel Torque Range.",
-            "Type": "Float"
+            "Name": "CommandWheelTorques",
+            "Command": "3",
+            "Description": "Sets IMI Wheel Torque in mNm in either x, y, or z",
+            "Example": " r 119 3 {X Y Z}",
+            "Translation": "Set wheel torques to ",
+            "Parameters": [
+              {
+                "Name": "TorqueX",
+                "Description": "Command Wheel X Torque. TODO: Determine Wheel Torque Range.",
+                "Type": "Float"
+              },
+              {
+                "Name": "TorqueY",
+                "Description": "Command Wheel Y Torque. TODO: Determine Wheel Torque Range.",
+                "Type": "Float"
+              },
+              {
+                "Name": "TorqueZ",
+                "Description": "Command Wheel Z Torque. TODO: Determine Wheel Torque Range.",
+                "Type": "Float"
+              }
+            ]
           }
         ]
       }
@@ -1304,254 +1354,261 @@
     "Translation": "Flash Testing ",
     "Parameters": [
       {
-        "Name": "CheckVersionOfFlash",
-        "Description": "The X position of the satellite.",
-        "Command": "1",
-        "Translation": "Check Version of Flash"
-      },
-      {
-        "Name": "CheckStatusBytesOfFlash",
-        "Description": "Check the status bytes of the flash.",
-        "Command": "2",
-        "Translation": "Check Status Bytes of Flash"
-      },
-      {
-        "Name": "ToggleWireProtectionPin",
-        "Description": "Toggles the wire protection pin.",
-        "Command": "3",
-        "Translation": "Toggle Wire Protection Pin"
-      },
-      {
-        "Name": "EnableWritingToFlashDevice",
-        "Description": "Enables writing to flash device.",
-        "Command": "4",
-        "Translation": "Enable Writing to Flash Device"
-      },
-      {
-        "Name": "DisableWritingToFlashDevice",
-        "Description": "Disables writing to flash device.",
-        "Command": "5",
-        "Translation": "Disable Writing to Flash Device"
-      },
-      {
-        "Name": "PerformReadingTestFlash",
-        "Description": "Perform a reading test in flash. ",
-        "Command": "6",
-        "Parameters": [{
-          "Name": "Location",
-          "Description": "Location in hex.",
-          "Type": "String",
-          "Example": "r 152 *{6 Digit Hex}*",
-          "Enclosure": "*"
-        }],
-        "Translation": "Perform Reading Test Flash at location "
-      },
-      {
-        "Name": "DisablesSectorProtection",
-        "Description": "Disables sector protection on the sector containing the given address. TODO: Need to figure out how to add N-number of inputs. ",
-        "Command": "7",
-        "Example": "r 127 7 {address}",
-        "Parameters":[{
-          "Name": "Address",
-          "Description": "Address of memory in 6 Digit Hex.",
-          "Type": "String"
-        }],
-        "Translation": "Disable Sector Protection on Sector containing address "
-      },
-      {
-        "Name": "ChecksIfFlashLocationIsEmptyForSpecifiedLength",
-        "Description": "Checks if flash location is empty for a specified length",
-        "Command": "8",
-        "Example": "r 127 8 {address} {length}",
-        "Translation": "Check if flash location is empty for specified length at address ",
-        "Parameters": [
+        "Name": "Action",
+        "Type": "Dropdown",
+        "Description": "Select action to perform.",
+        "Options": [
           {
-            "Name": "Address",
-            "Description": "Address of memory in 6 Digit Hex.",
-            "Type": "String"
+            "Name": "CheckVersionOfFlash",
+            "Description": "The X position of the satellite.",
+            "Command": "1",
+            "Translation": "Check Version of Flash"
           },
           {
-            "Name": "Length",
-            "Description": "Length of memory being accessed",
-            "Type": "Integer",
-            "Translation": " for length "
-          }
-        ]
-      }, 
-      {
-        "Name": "EraseChosenBlock",
-        "Description": "Erases the chosen block",
-        "Command": "9",
-        "Example": "r 152 9 {2-byte block number}",
-        "Translation": "Erase Chosen Block at address",
-        "Parameters": [
-          {
-            "Name": "Address",
-            "Description": "Address of memory in 6 Digit Hex.",
-            "Type": "String"
-          }
-        ]
-      },
-      {
-        "Name": "CheckSectorProtectionOnSpecificSector",
-        "Description": "Checks sector protection on a specific sector",
-        "Command": "10",
-        "Example": "r 152 10 {2-byte block number}",
-        "Translation": "Check Sector Protection on Specific Sector at address ",
-        "Parameters": [
-          {
-            "Name": "Address",
-            "Description": "Address of memory in 6 Digit Hex.",
-            "Type": "String"
-          }
-        ]
-      },
-      {
-        "Name": "SingleWriteTest",
-        "Description": "Single write test",
-        "Command": "11",
-        "Example": "r 152 11 {2-byte block number}",
-        "Translation": "Single Write Test at address ",
-        "Parameters": [
-          {
-            "Name": "Address",
-            "Description": "Address of memory in 6 Digit Hex.",
-            "Type": "String"
-          }
-        ]
-      },
-      {
-        "Name": "ResetsFlashBasedRebootCounter",
-        "Description": "Resets flash-based reboot counter.",
-        "Command": "12",
-        "Translation": "Reset Flash-based Reboot Counter"
-      },
-      {
-        "Name": "ErasesTheEntireFlashMemoryChip",
-        "Description": "Erases the entire flash memory chip.",
-        "Command": "13",
-        "Translation": "Erase Entire Flash Memory Chip"
-      },
-      {
-        "Name": "DisplayMemoryMap",
-        "Description": "TODO: Figure out if this is either Display or disable memory map",
-        "Command": "14",
-        "Example": "r 152 14 0 1",
-        "Translation": "Display Memory Map ",
-        "Parameters": [
-          {
-            "Name": "DisplayHex",
-            "Description": "Displays hex version of memory map to userport",
-            "Command": "0 0",
-            "Translation": " as Hex "
+            "Name": "CheckStatusBytesOfFlash",
+            "Description": "Check the status bytes of the flash.",
+            "Command": "2",
+            "Translation": "Check Status Bytes of Flash"
           },
           {
-            "Name": "DisplayASCII",
-            "Description": "Displays ascii version of memory map to userport",
-            "Command": "0 1",
-            "Tranmslation": " as ASCII "
-          }
-        ]
-      },
-      {
-        "Name": "ManuallySetTelemetryWriteAddress",
-        "Description": "Manually set telemetry write address",
-        "Command": "15",
-        "Example": "r 152 15 {2-byte block number}",
-        "Translation": "Manually set Telemetry write address ",
-        "Parameters": [
-          {
-            "Name": "Address",
-            "Description": "Address of memory in 6 Digit Hex.",
-            "Type": "String"
-          }
-        ]
-      },
-      {
-        "Name": "ManuallySetPlymouthWriteAddress",
-        "Description": "Manually set Plymouth write address",
-        "Command": "16",
-        "Example": "r 152 16 {2-byte block number}",
-        "Translation": "Manually set Plymouth write address ",
-        "Parameters": [
-          {
-            "Name": "Address",
-            "Description": "Address of memory in 6 Digit Hex.",
-            "Type": "String"
-          }
-        ]
-      },
-      {
-        "Name": "DisplayR/WPointersToPort",
-        "Description": "Display r/w pointers (telem and PLY) to a port.",
-        "Command": "17",
-        "Example": "r 152 17 {Port number}",
-        "Translation": "Display R/W Pointers to Port ",
-        "Parameters": [
-          {
-            "Name": "Port",
-            "Description": "Port desired to inspect.",
-            "Type": "Integer"
-          }
-        ]
-      },
-      {
-        "Name": "SetNewDataFlag",
-        "Description": "Sets NewData flag to 0 or 1 for MISC, BEACON, and PLY stacks.",
-        "Command": "18",
-        "Example": "r 152 18 {Binary Flag}",
-        "Translation": "Set New Data Flag to ",
-        "Parameters": [
-          {
-            "Name": "Flag",
-            "Description": "TODO: Need to understand this more.",
-            "Type": "Binary"
-          }
-        ]
-      },
-      {
-        "Name": "UnprotectAllSectorsInFlashMemory",
-        "Description": "Unprotects all sectors in flash memory",
-        "Command": "19",
-        "Translation": "Unprotect All Sectors in Flash Memory"
-      },
-      {
-        "Name": "PrintSectorProtectionToTheGivenPort",
-        "Description": "Print the sector protection to the given port",
-        "Command": "20",
-        "Example": "r 152 20 {Port number}",
-        "Translation": "Print Sector Protection to Port",
-        "Parameters": [
-          {
-            "Name": "Port",
-            "Description": "Port desired to inspect.",
-            "Type": "Integer"
-          }
-        ]
-      },
-      {
-        "Name": "TestsTheFlashAddressToPageFunction",
-        "Description": "Tests the flash address to page function",
-        "Command": "21",
-        "Translation": "Test Flash Address to Page Function"
-      },
-      {
-        "Name": "SetTheFlashSwapBlock",
-        "Description": "Set the flash swap block.",
-        "Command": "23",
-        "Example": "r 152 23 {int MSB} {int LSB}",
-        "Translation": "Set the flash swap block with the most significant bit ",
-        "Parameters": [
-          {
-            "Name": "MostSignificantBit",
-            "Description": "Most Significant Bit in Flash Block",
-            "Type": "Integer"
+            "Name": "ToggleWireProtectionPin",
+            "Description": "Toggles the wire protection pin.",
+            "Command": "3",
+            "Translation": "Toggle Wire Protection Pin"
           },
           {
-            "Name": "LeastSignificantBit",
-            "Description": "Least Significant Bit in Flash Block",
-            "Type": "Integer",
-            "Translation": " and the least significant bit "
+            "Name": "EnableWritingToFlashDevice",
+            "Description": "Enables writing to flash device.",
+            "Command": "4",
+            "Translation": "Enable Writing to Flash Device"
+          },
+          {
+            "Name": "DisableWritingToFlashDevice",
+            "Description": "Disables writing to flash device.",
+            "Command": "5",
+            "Translation": "Disable Writing to Flash Device"
+          },
+          {
+            "Name": "PerformReadingTestFlash",
+            "Description": "Perform a reading test in flash. ",
+            "Command": "6",
+            "Parameters": [{
+              "Name": "Location",
+              "Description": "Location in hex.",
+              "Type": "String",
+              "Example": "r 152 *{6 Digit Hex}*",
+              "Enclosure": "*"
+            }],
+            "Translation": "Perform Reading Test Flash at location "
+          },
+          {
+            "Name": "DisablesSectorProtection",
+            "Description": "Disables sector protection on the sector containing the given address. TODO: Need to figure out how to add N-number of inputs. ",
+            "Command": "7",
+            "Example": "r 127 7 {address}",
+            "Parameters":[{
+              "Name": "Address",
+              "Description": "Address of memory in 6 Digit Hex.",
+              "Type": "String"
+            }],
+            "Translation": "Disable Sector Protection on Sector containing address "
+          },
+          {
+            "Name": "ChecksIfFlashLocationIsEmptyForSpecifiedLength",
+            "Description": "Checks if flash location is empty for a specified length",
+            "Command": "8",
+            "Example": "r 127 8 {address} {length}",
+            "Translation": "Check if flash location is empty for specified length at address ",
+            "Parameters": [
+              {
+                "Name": "Address",
+                "Description": "Address of memory in 6 Digit Hex.",
+                "Type": "String"
+              },
+              {
+                "Name": "Length",
+                "Description": "Length of memory being accessed",
+                "Type": "Integer",
+                "Translation": " for length "
+              }
+            ]
+          }, 
+          {
+            "Name": "EraseChosenBlock",
+            "Description": "Erases the chosen block",
+            "Command": "9",
+            "Example": "r 152 9 {2-byte block number}",
+            "Translation": "Erase Chosen Block at address",
+            "Parameters": [
+              {
+                "Name": "Address",
+                "Description": "Address of memory in 6 Digit Hex.",
+                "Type": "String"
+              }
+            ]
+          },
+          {
+            "Name": "CheckSectorProtectionOnSpecificSector",
+            "Description": "Checks sector protection on a specific sector",
+            "Command": "10",
+            "Example": "r 152 10 {2-byte block number}",
+            "Translation": "Check Sector Protection on Specific Sector at address ",
+            "Parameters": [
+              {
+                "Name": "Address",
+                "Description": "Address of memory in 6 Digit Hex.",
+                "Type": "String"
+              }
+            ]
+          },
+          {
+            "Name": "SingleWriteTest",
+            "Description": "Single write test",
+            "Command": "11",
+            "Example": "r 152 11 {2-byte block number}",
+            "Translation": "Single Write Test at address ",
+            "Parameters": [
+              {
+                "Name": "Address",
+                "Description": "Address of memory in 6 Digit Hex.",
+                "Type": "String"
+              }
+            ]
+          },
+          {
+            "Name": "ResetsFlashBasedRebootCounter",
+            "Description": "Resets flash-based reboot counter.",
+            "Command": "12",
+            "Translation": "Reset Flash-based Reboot Counter"
+          },
+          {
+            "Name": "ErasesTheEntireFlashMemoryChip",
+            "Description": "Erases the entire flash memory chip.",
+            "Command": "13",
+            "Translation": "Erase Entire Flash Memory Chip"
+          },
+          {
+            "Name": "DisplayMemoryMap",
+            "Description": "TODO: Figure out if this is either Display or disable memory map",
+            "Command": "14",
+            "Example": "r 152 14 0 1",
+            "Translation": "Display Memory Map ",
+            "Parameters": [
+              {
+                "Name": "DisplayHex",
+                "Description": "Displays hex version of memory map to userport",
+                "Command": "0 0",
+                "Translation": " as Hex "
+              },
+              {
+                "Name": "DisplayASCII",
+                "Description": "Displays ascii version of memory map to userport",
+                "Command": "0 1",
+                "Tranmslation": " as ASCII "
+              }
+            ]
+          },
+          {
+            "Name": "ManuallySetTelemetryWriteAddress",
+            "Description": "Manually set telemetry write address",
+            "Command": "15",
+            "Example": "r 152 15 {2-byte block number}",
+            "Translation": "Manually set Telemetry write address ",
+            "Parameters": [
+              {
+                "Name": "Address",
+                "Description": "Address of memory in 6 Digit Hex.",
+                "Type": "String"
+              }
+            ]
+          },
+          {
+            "Name": "ManuallySetPlymouthWriteAddress",
+            "Description": "Manually set Plymouth write address",
+            "Command": "16",
+            "Example": "r 152 16 {2-byte block number}",
+            "Translation": "Manually set Plymouth write address ",
+            "Parameters": [
+              {
+                "Name": "Address",
+                "Description": "Address of memory in 6 Digit Hex.",
+                "Type": "String"
+              }
+            ]
+          },
+          {
+            "Name": "DisplayR/WPointersToPort",
+            "Description": "Display r/w pointers (telem and PLY) to a port.",
+            "Command": "17",
+            "Example": "r 152 17 {Port number}",
+            "Translation": "Display R/W Pointers to Port ",
+            "Parameters": [
+              {
+                "Name": "Port",
+                "Description": "Port desired to inspect.",
+                "Type": "Integer"
+              }
+            ]
+          },
+          {
+            "Name": "SetNewDataFlag",
+            "Description": "Sets NewData flag to 0 or 1 for MISC, BEACON, and PLY stacks.",
+            "Command": "18",
+            "Example": "r 152 18 {Binary Flag}",
+            "Translation": "Set New Data Flag to ",
+            "Parameters": [
+              {
+                "Name": "Flag",
+                "Description": "TODO: Need to understand this more.",
+                "Type": "Binary"
+              }
+            ]
+          },
+          {
+            "Name": "UnprotectAllSectorsInFlashMemory",
+            "Description": "Unprotects all sectors in flash memory",
+            "Command": "19",
+            "Translation": "Unprotect All Sectors in Flash Memory"
+          },
+          {
+            "Name": "PrintSectorProtectionToTheGivenPort",
+            "Description": "Print the sector protection to the given port",
+            "Command": "20",
+            "Example": "r 152 20 {Port number}",
+            "Translation": "Print Sector Protection to Port",
+            "Parameters": [
+              {
+                "Name": "Port",
+                "Description": "Port desired to inspect.",
+                "Type": "Integer"
+              }
+            ]
+          },
+          {
+            "Name": "TestsTheFlashAddressToPageFunction",
+            "Description": "Tests the flash address to page function",
+            "Command": "21",
+            "Translation": "Test Flash Address to Page Function"
+          },
+          {
+            "Name": "SetTheFlashSwapBlock",
+            "Description": "Set the flash swap block.",
+            "Command": "23",
+            "Example": "r 152 23 {int MSB} {int LSB}",
+            "Translation": "Set the flash swap block with the most significant bit ",
+            "Parameters": [
+              {
+                "Name": "MostSignificantBit",
+                "Description": "Most Significant Bit in Flash Block",
+                "Type": "Integer"
+              },
+              {
+                "Name": "LeastSignificantBit",
+                "Description": "Least Significant Bit in Flash Block",
+                "Type": "Integer",
+                "Translation": " and the least significant bit "
+              }
+            ]
           }
         ]
       }
@@ -1744,39 +1801,46 @@
         "Description": "",
         "Parameters": [
           {
-            "Name": "ShowRebootCounter",
-            "Description": "Sends reboot counter to whatever port called processed the command.",
-            "Command": "1",
-            "Example": "r 165 1",
-            "Translation": " Show Reboot Counter"
-          },
-          {
-            "Name": "ShowTime",
-            "Description": "Shows the time.",
-            "Command": "2",
-            "Example": "r 165 2",
-            "Translation": " Show Time"
-          },
-          {
-            "Name": "ShowCurrentVersionOfSoftware",
-            "Description": "Show current version of software.",
-            "Command": "3",
-            "Example": "r 165 3",
-            "Translation": " Show Current Version of Software"
-          },
-          {
-            "Name": "ShowMacros",
-            "Description": "Show macros.",
-            "Command": "7",
-            "Example": "r 165 3",
-            "Translation": " Show Macros"
-          },
-          {
-            "Name": "ShowSchedule",
-            "Description": "Show schedules.",
-            "Command": "8",
-            "Example": "r 165 8",
-            "Translation": " Show Schedule"
+            "Name": "Action",
+            "Type": "Dropdown",
+            "Description": "Select action to perform.",
+            "Options": [
+              {
+                "Name": "ShowRebootCounter",
+                "Description": "Sends reboot counter to whatever port called processed the command.",
+                "Command": "1",
+                "Example": "r 165 1",
+                "Translation": " Show Reboot Counter"
+              },
+              {
+                "Name": "ShowTime",
+                "Description": "Shows the time.",
+                "Command": "2",
+                "Example": "r 165 2",
+                "Translation": " Show Time"
+              },
+              {
+                "Name": "ShowCurrentVersionOfSoftware",
+                "Description": "Show current version of software.",
+                "Command": "3",
+                "Example": "r 165 3",
+                "Translation": " Show Current Version of Software"
+              },
+              {
+                "Name": "ShowMacros",
+                "Description": "Show macros.",
+                "Command": "7",
+                "Example": "r 165 3",
+                "Translation": " Show Macros"
+              },
+              {
+                "Name": "ShowSchedule",
+                "Description": "Show schedules.",
+                "Command": "8",
+                "Example": "r 165 8",
+                "Translation": " Show Schedule"
+              }
+            ]
           }
         ]
       }
@@ -1831,15 +1895,17 @@
     "Parameters": [
       {
         "Name": "BurnWire",
-        "Type": "Integer",
+        "Type": "Dropdown",
         "Description": "The burn wire to be commanded.",
-        "Parameters": [
+        "Options": [
           {
             "Name": "BurnWire1",
+            "Description": "Command BurnWire1",
             "Command": "0"
           },
           {
             "Name": "BurnWire2",
+            "Description": "Command BurnWire2",
             "Command": "1"
           }
         ]
@@ -1857,16 +1923,18 @@
     "Parameters": [
       {
         "Name": "Option",
-        "Type": "Integer",
+        "Type": "Dropdown",
         "Description": "Clear various buffers.",
-        "Parameters":[
+        "Options": [
           {
             "Name": "ClearMacros",
+            "Description": " Clear Macros",
             "Command": "5",
             "Translation": " Clear Macros"
           },
           {
             "Name": "ClearSchedule",
+            "Description": " Clear Macros",
             "Command": "6",
             "Translation": " Clear Schedule"
           }
@@ -1912,8 +1980,9 @@
     "Parameters": [
       {
         "Name": "BatteryCommand",
-        "Type": "Integer",
-        "Paremeters":[
+        "Type": "Dropdown",
+        "Description": "Battery Commands.",
+        "Options": [
           {
             "Name": "SetBatteryState",
             "Description": "Battery counts move in reverse order to voltages.  A high count indicates low voltage, and vice versa.",
@@ -2081,65 +2150,72 @@
     "Translation": "Bootloader Command ",
     "Parameters": [
       {
-        "Name": "ActivateBootloader",
-        "Description": "Activate bootloader.Make sure you have verified tha hex file first",
-        "Command": "SUDO",
-        "Translation": " Activate Bootloader"
-      },
-      {
-        "Name": "ClearFlashFile",
-        "Description": "Clears a specified number of bytes from the Hexfile area of flash, rounding up to the next highest flash block.",
-        "Command": "C", 
-        "Translation": " Clear Flash File with number of bytes to clear ",
-        "Parameters": [
+        "Name": "BootloaderCommand",
+        "Type": "Dropdown",
+        "Description": "Bootloader Commands.",
+        "Options": [
           {
-            "Name": "NumberOfBytesToClear",
-            "Description": "",
-            "Type": "Hexadecimal"
-          }
-        ]
-      },
-      {
-        "Name": "LoadNewHexFile",
-        "Description": "Loads a new hex file into flash.  You have 30 seconds to begin the transfer, and 2 seconds after each line to continue sending.",
-        "Command": "L", 
-        "Translation": " Load New Hex File on listening port ",
-        "Parameters": [
-          {
-            "Name": "ListenPort",
-            "Description": "The Port to listen on.",
-            "Type": "Integer"
+            "Name": "ActivateBootloader",
+            "Description": "Activate bootloader.Make sure you have verified tha hex file first",
+            "Command": "SUDO",
+            "Translation": " Activate Bootloader"
           },
           {
-            "Name": "ReportPort",
-            "Description": "The Port to report on.",
-            "Type": "Integer",
-            "Translation": " with report port "
+            "Name": "ClearFlashFile",
+            "Description": "Clears a specified number of bytes from the Hexfile area of flash, rounding up to the next highest flash block.",
+            "Command": "C", 
+            "Translation": " Clear Flash File with number of bytes to clear ",
+            "Parameters": [
+              {
+                "Name": "NumberOfBytesToClear",
+                "Description": "",
+                "Type": "Hexadecimal"
+              }
+            ]
           },
           {
-            "Name": "CarriageReturn",
-            "Description": "The carriage return.",
-            "Type": "String",
-            "Translation": " with carriage return "
+            "Name": "LoadNewHexFile",
+            "Description": "Loads a new hex file into flash.  You have 30 seconds to begin the transfer, and 2 seconds after each line to continue sending.",
+            "Command": "L", 
+            "Translation": " Load New Hex File on listening port ",
+            "Parameters": [
+              {
+                "Name": "ListenPort",
+                "Description": "The Port to listen on.",
+                "Type": "Integer"
+              },
+              {
+                "Name": "ReportPort",
+                "Description": "The Port to report on.",
+                "Type": "Integer",
+                "Translation": " with report port "
+              },
+              {
+                "Name": "CarriageReturn",
+                "Description": "The carriage return.",
+                "Type": "String",
+                "Translation": " with carriage return "
+              },
+              {
+                "Name": "FileContents",
+                "Description": "The hex file to load into flash.",
+                "Type": "String",
+                "Translation": " with file contents "
+              }
+            ]
           },
           {
-            "Name": "FileContents",
-            "Description": "The hex file to load into flash.",
-            "Type": "String",
-            "Translation": " with file contents "
-          }
-        ]
-      },
-      {
-        "Name": "VerifyFile",
-        "Description": "Reads a hex file out of flash and compares the checksum to the given checksum.",
-        "Command": "V", 
-        "Translation": " Verify File with checksum ",
-        "Parameters": [
-          {
-            "Name": "CRC",
-            "Description": "",
-            "Type": "Hexadecimal"
+            "Name": "VerifyFile",
+            "Description": "Reads a hex file out of flash and compares the checksum to the given checksum.",
+            "Command": "V", 
+            "Translation": " Verify File with checksum ",
+            "Parameters": [
+              {
+                "Name": "CRC",
+                "Description": "",
+                "Type": "Hexadecimal"
+              }
+            ]
           }
         ]
       }
