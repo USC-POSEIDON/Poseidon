@@ -28,6 +28,7 @@ document.getElementById('searchOptions').addEventListener('change', function(eve
             satelliteSearchInput.placeholder = "Enter a catalog number";
         } else if (event.target.value === 'manual') {
             // Show elements for 'Manual' entry
+            presetSelection.style.display = 'block';
             tleInputContainer.style.display = 'block';
             searchButton.textContent = "Add";
             satelliteSearchInput.placeholder = "Enter Satellite Name"; 
