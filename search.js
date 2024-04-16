@@ -86,13 +86,14 @@ function getNameSearchResults(name){
 
         // Display search results
         if (names.length > 20) {
-            showPopup("popResultOverflow");
+            showPopupSearch("popResultOverflow");
             return;
         }
         displayResults(names);
     })
     .catch(function (error) {
         // Handle errors here
+        showPopupList("unexpected");
         console.log(error);
     });
 }
@@ -157,23 +158,24 @@ function addTLEByCatnr(catnr){
     .then(function (responseData) {
         // Satellite successfully added to list
         console.log(responseData);
-        showPopup("popSucc");
+        showPopupSearch("popSucc");
         updatePresetListDisplay();
     })
     .catch(function (error) {
         // Handle errors here
         console.log(error);
-        showPopup("popFail");
+        showPopupSearch("popFail");
     });
 }
 
-function showPopup(code) {
+function showPopupSearch(code) {
     console.log("Popping up");
 
     // Show the popup
     var popFail = document.getElementById("searchPopupError");
     var popSucc = document.getElementById("searchPopupSucc");
     var popResultOverflow = document.getElementById("searchPopupOverflow");
+    var unexpected = document.getElementById("unexpected");
     if(code == "popSucc"){
         popSucc.classList.add("show");
         setTimeout(function() {
@@ -194,13 +196,23 @@ function showPopup(code) {
             }, 500); // Wait for the transition to complete (0.5s)
         }, 1000);
     }
-    else{
+    else if(code == "popFail"){
         popFail.classList.add("show");
         setTimeout(function() {
             popFail.style.opacity = "0"; // Change opacity
             setTimeout(function() {
                 popFail.classList.remove("show");
                 popFail.style.opacity = ""; // Reset opacity after transition
+            }, 500); // Wait for the transition to complete (0.5s)
+        }, 1000);
+    }
+    else{
+        unexpected.classList.add("show");
+        setTimeout(function() {
+            unexpected.style.opacity = "0"; // Change opacity
+            setTimeout(function() {
+                unexpected.classList.remove("show");
+                unexpected.style.opacity = ""; // Reset opacity after transition
             }, 500); // Wait for the transition to complete (0.5s)
         }, 1000);
     }
