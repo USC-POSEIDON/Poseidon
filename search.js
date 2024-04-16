@@ -46,10 +46,24 @@ function performSearch(){
     } else if (selectedSearchType === 'catalog') {
         addTLEByCatnr(searchValue);
     } else if (selectedSearchType === 'manual') {
+        document.getElementById('tle-error').textContent = '';
         const line1 = document.getElementById('tleLine1Input').value;
         const line2 = document.getElementById('tleLine2Input').value;
         const name = document.getElementById('satelliteNameInput').value;
-        addManualTLE(line1, line2, name);
+        if(isValidTLE(line1, line2)){
+            addManualTLE(line1, line2, name);
+            document.getElementById('tleLine1Input').value = 'Enter TLE Line 1';
+            document.getElementById('tleLine2Input').value = 'Enter TLE Line 2';
+            document.getElementById('satelliteNameInput').value = 'Enter Satellite Name';
+        }
+        else if(name == "" || line1 == "" || line2 == ""){
+            document.getElementById('tle-error').textContent = "Please fill out all fields";
+        }
+        else{
+            document.getElementById('tle-error').textContent = "Invalid TLE";
+            document.getElementById('tleLine1Input').value = 'Enter TLE Line 1';
+            document.getElementById('tleLine2Input').value = 'Enter TLE Line 2';
+        }
     }
 }
 
