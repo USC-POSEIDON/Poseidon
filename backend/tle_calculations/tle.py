@@ -146,7 +146,35 @@ def addNewTLEByCATNR(catnr):
         return jsonify({"message": "POST request successful"}), 200
     
     abort(400, description='POST request unsuccessful: invalid CATNR entered')
-        
+
+@app.route('/satellites/post/manual/tle', methods=['POST'])
+def addNewTLEManually():
+    data = request.form
+    # Handle the received form data
+    print("Received form data:", data)
+    
+    line1 = data.get('s')
+    line2 = data.get('t')
+    name = data.get('name')
+    listname = data.get('listname')
+    if line1 == None or line2 == None or name == None or listname == None:
+        abort(400, description='POST request unsuccessful: Form incomplete')
+    if listname == "":
+        abort(400, description='POST request unsuccessful: Preset list to add to has type \"\"')
+
+    # Get current datetime
+    current_datetime = datetime.now()
+    current_datetime = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
+    # Insert to TLE_Data
+    catnr = insertTLE(None, line1, line2, current_datetime)
+
+    # Insert to Satellites table
+    id = getSatelliteID(catnr)
+    insertSatellite(id, catnr, name, listname)
+
+    return jsonify({"message": "POST request successful"}), 200
+      
 @app.route('/satellites/post/preset/<listname>', methods=['POST'])
 def addPreset(listname):
     """ Create a new empty preset list. If list already exists, do nothing. """

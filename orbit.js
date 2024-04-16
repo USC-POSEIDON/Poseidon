@@ -211,6 +211,22 @@ function createOrUpdateOrbitPath(satrec) {
 
 // Function to validate TLE format
 function isValidTLE(line1, line2) {
+    console.log("Is TLE valid?");
+    console.log(line1);
+    console.log(line2);
+    if(line1.length !== 69){
+        console.log("line 1 len error");
+    }
+    if(line2.length !== 69){
+        console.log("line 2 len error");
+    }
+    if(line1.charAt(0) !== '1'){
+        console.log("line 1 char error");
+    }
+    if(line2.charAt(0) !== '2'){
+        console.log("line 2 char error");
+    }
+
     return line1.length === 69 && line2.length === 69 && line1.charAt(0) === '1' && line2.charAt(0) === '2';
 }
 

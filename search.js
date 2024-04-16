@@ -45,10 +45,17 @@ function performSearch(){
         getNameSearchResults(searchValue);
     } else if (selectedSearchType === 'catalog') {
         addTLEByCatnr(searchValue);
+    } else if (selectedSearchType === 'manual') {
+        const line1 = document.getElementById('tleLine1Input').value;
+        const line2 = document.getElementById('tleLine2Input').value;
+        const name = document.getElementById('satelliteNameInput').value;
+        addManualTLE(line1, line2, name);
     }
 }
 
 document.getElementById('searchButton').addEventListener('click', performSearch);
+
+document.getElementById('addTleButton').addEventListener('click', performSearch);
 
 document.getElementById('satelliteSearchInput').addEventListener('keypress', function(event) {
     // Check if Enter key is pressed (key code 13)
@@ -151,6 +158,41 @@ function addTLEByCatnr(catnr){
         if (!response.ok) {
             throw new Error("HTTP error, status = " + response.status);
             // TODO: figure out how to get response message
+        }
+        return response.json();
+    })
+    .then(function (responseData) {
+        // Satellite successfully added to list
+        console.log(responseData);
+        showPopup("popSucc");
+        updatePresetListDisplay();
+    })
+    .catch(function (error) {
+        // Handle errors here
+        console.log(error);
+        showPopup("popFail");
+    });
+}
+
+function addManualTLE(line1, line2, name){
+    if(line1 == "" || line2 == "" || name == ""){
+        showPopup("popFail");
+    }
+
+    var type = document.getElementById("presetDropdown").value;
+    var formData = new FormData();
+    formData.append('s', line1);
+    formData.append('t', line2);
+    formData.append('name', name);
+    formData.append('listname', type);
+
+    fetch(`http://127.0.0.1:5000/satellites/post/manual/tle`, {
+        method: "POST",
+        body: formData
+    })
+    .then(function (response) {
+        if (!response.ok) {
+            throw new Error("HTTP error, status = " + response.status);
         }
         return response.json();
     })

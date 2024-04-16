@@ -64,6 +64,25 @@ def createTables():
 
     conn.commit()
 
+
+
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS Manual_Catnr (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            value INTEGER
+        );
+    """)
+
+    conn.commit()
+
+    # Insert the initial value of 100000 if the table is empty
+    cur.execute('''
+        INSERT INTO Manual_Catnr (value)
+        SELECT 100000
+        WHERE NOT EXISTS (SELECT 1 FROM Manual_Catnr)
+    ''')
+    conn.commit() 
+
     cur.execute("""
         CREATE TABLE IF NOT EXISTS Satellite_Passes (
             pass_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -152,24 +171,56 @@ def insertSatellite(tle_id, catnr, name, type):
     # TODO: return something so frontend knows if repeated addition
 
 def insertTLE(catnr, line1, line2, datetime):
-    epoch = float(line1[18:32])
-    conn = sqlite3.connect(db_path)
 
     # Open a cursor to perform database operations
+    conn = sqlite3.connect(db_path)
     cur = conn.cursor()
 
-    # Insert parsed data into the database
-    sql = """
-    INSERT OR IGNORE INTO TLE_Data (catnr, line1, line2, epoch, update_time)
-    VALUES (?, ?, ?, ?, ?);
-    """
+    # Set default catnr (return -1 for automatic update)
+    current_value = -1
 
-    cur.execute(sql, (catnr, line1, line2, epoch, datetime))
-    conn.commit()
+    # Insert manual TLE
+    if catnr == None:
+        # Retrieve the current value from the first row
+        cur.execute('SELECT value FROM Manual_Catnr LIMIT 1')
+        current_value = cur.fetchone()[0]
+
+        print(f'Adding manual TLE with catnr {current_value}')
+        sys.stdout.flush()
+
+        # Update the value in the table
+        new_value = current_value + 1
+        cur.execute('UPDATE Manual_Catnr SET value = ?', (new_value,))
+        conn.commit()
+
+        # Insert data into the database
+        sql = """
+        INSERT OR IGNORE INTO TLE_Data (catnr, line1, line2, update_time)
+        VALUES (?, ?, ?, ?);
+        """
+
+        cur.execute(sql, (current_value, line1, line2, datetime))
+        conn.commit()
+
+    # Insert automatic TLE
+    else: 
+        epoch = float(line1[18:32])
+
+        # Insert data into the database
+        sql = """
+        INSERT OR IGNORE INTO TLE_Data (catnr, line1, line2, epoch, update_time)
+        VALUES (?, ?, ?, ?, ?);
+        """
+
+        cur.execute(sql, (catnr, line1, line2, epoch, datetime))
+        conn.commit()
 
     # Close the connection
     cur.close()
     conn.close()
+
+    # Return catnr of manual added satellite
+    return current_value
 
 def insertPass(satellite_id, time, azm, elv, range):
     conn = sqlite3.connect(db_path)
