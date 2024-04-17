@@ -49,6 +49,7 @@ function showPresetSelectOptions(){
 }
 
 function updatePresetListDisplay(){
+    console.log("REFRESH")
     var listname = document.getElementById("selectPresetDropdown").value
     document.getElementById("presetListTitle").textContent = listname;
 
@@ -437,3 +438,5 @@ document.getElementById("renamePresetBtn").onclick = function() {
 document.addEventListener("DOMContentLoaded", function() {
     populatePresetDropdowns(onStartup=true);
 });
+
+const interval = setInterval(updatePresetListDisplay, 6000);
