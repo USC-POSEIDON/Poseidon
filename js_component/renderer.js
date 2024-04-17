@@ -139,35 +139,6 @@ function trackComponentState(id, isOpen = true) {
   updateWindowsDropdown(); // Ensure dropdown updates immediately after state changes
 }
 
-function updateWindowsDropdown() {
-    const dropdownContent = $('#windowsDropdownContent');
-    dropdownContent.empty();
-
-    const allComponents = [
-        { id: 'cesium_component', title: 'Cesium' },
-        { id: 'calendar_component', title: 'Calendar' },
-        { id: 'PassTime_component', title: 'PassTime' },
-        { id: 'Telemetry_component', title: 'TelemetryData' },
-        { id: 'Command_Generation_component', title: 'CommandGeneration' },
-    ];
-
-    allComponents.forEach(component => {
-        const exists = componentStates[component.id];
-        let menuItem = $(`
-          <div class="menu-item">
-            <span class="menu-title">${component.title}</span>
-            <span class="menu-action">${exists ? '&#10003;' : ''}</span>
-          </div>
-        `);
-
-        menuItem.on('click', () => {
-            const shouldShow = !exists;
-            toggleComponentVisibility(component.id, component.title, shouldShow);
-        });
-
-        dropdownContent.append(menuItem);
-    });
-}
 
 function toggleComponentVisibility(id, title, shouldShow) {
   const items = goldenLayout.root.getItemsById(id);

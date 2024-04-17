@@ -1,3 +1,4 @@
+// Initialize the Cesium Viewer
 var viewer = new Cesium.Viewer('cesiumContainer', {
     animation: false,      
     baseLayerPicker: false, 
@@ -25,6 +26,7 @@ var viewer = new Cesium.Viewer('cesiumContainer', {
     duration: 2  
 });
 
+// 3D to 2D switch button
 document.getElementById('demensionBtn').addEventListener('click', function() {
   var scene = viewer.scene;
   
