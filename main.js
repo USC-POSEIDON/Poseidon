@@ -7,9 +7,10 @@ const spawn = require('child_process').spawn;
 const axios = require('axios');
 
 let mainWindow;
-let splashScreen; // Splash screen window
+let splashScreen;
 let tleFlaskProcess = null;
 
+// on ready event for initializing the app
 app.on('ready', function() {
     // Splash Screen setup
     splashScreen = new BrowserWindow({
@@ -133,6 +134,9 @@ app.on('ready', function() {
     // Check if the server is up before proceeding
     checkServerIsUp();
 
+
+
+    // ipc communication defination
     // Additional main window and app event handlers
     ipcMain.on('open-devtools', (event, arg) => {
         const webContents = event.sender;
@@ -168,34 +172,6 @@ app.on('ready', function() {
         });
     });
 
-    //save-file not being used right now TODO
-    ipcMain.on('save-file', async (event, fileType, fileData) => {
-        const mainWindow = BrowserWindow.getFocusedWindow(); // Ensure you get the currently focused window
-    
-        const { filePath } = await dialog.showSaveDialog(mainWindow, {
-            title: `Save ${fileType}`,
-            // Add filters here if you want to restrict the file type, for example:
-            filters: [
-                { name: 'Text Files', extensions: ['txt', 'csv'] },
-                { name: 'All Files', extensions: ['*'] }
-            ]
-        });
-    
-        if (filePath) {
-            try {
-                // Write the fileData to the specified filePath
-                await fs.writeFile(filePath, fileData);
-                console.log(`Successfully saved file to ${filePath}`);
-                // Optionally, you can send a response back to the renderer process if needed
-                event.reply('save-file-success', `File successfully saved to ${filePath}`);
-            } catch (error) {
-                console.error(`Failed to save the file: ${error}`);
-                // Handle errors, such as sending an error message back to the renderer process
-                event.reply('save-file-error', `Failed to save the file: ${error.message}`);
-            }
-        }
-    });
-
     ipcMain.handle('save-file-dialog', async (event, fileName, fileData) => {
         const mainWindow = BrowserWindow.getFocusedWindow();
         const csvData = fileData;
@@ -219,6 +195,8 @@ app.on('ready', function() {
         }
     });
     
+
+    // Event handler for when the main window is closed
     mainWindow.on('closed', function() {
         mainWindow = null;
     });

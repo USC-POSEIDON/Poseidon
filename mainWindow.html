@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="./node_modules/golden-layout/src/css/goldenlayout-dark-theme.css">
 </head>
 <body>
+    <!-- Top Menu Bar -->
     <div id="topMenuBar">
         <ul>
             <li>Config
@@ -31,6 +32,8 @@
             </li>
         </ul>
     </div>
+
+    <!--Ground Station Button popup Modal-->
     <div id="groundStationModal">
         <div>
             <h2>Update Ground Station Position</h2>
@@ -57,6 +60,7 @@
         </div>
     </div>
     
+    <!--Preference Button popup Modal-->
     <div id="preferenceModal">
         <div>
             <h2>User Preference</h2>
@@ -72,37 +76,8 @@
         </div>
     </div>
 
-    <div id="commandGeneration">
-        <div>
-            <label for="commandDropdown">Select Command:</label>
-            <select id="commandDropdown" onchange="populateParameters()">
-                <option value="" disabled selected>Select command</option>
-                <!-- Commands will be populated dynamically -->
-            </select>
 
-            <div id="parameterInputs">
-                <!-- Parameters will be populated dynamically based on the selected command -->
-            </div>
-
-            <button id="saveButton" style="display: none;">Save</button>
-            <button id="addButton">Add Command</button>
-            <div style="height: 10px;"></div>
-            
-            <div class="commands-list">
-                <label>Command List</label>
-                <ul id="commandList">
-                    <!-- Command items will be populated dynamically -->
-                </ul>
-            </div>
-
-            <button id="generateButton">Generate</button>
-            <button id="clearButton">Clear Commands</button>
-            <textarea id="generatedCommandsText" style="display: none;"></textarea>
-            <button id="exportButton">Export</button>
-            <div style="height: 50px;"></div>
-        </div>
-    </div>
-
+    <!--Manage Preset Button popup Modal-->
     <div id="managePresetModal" style="display: none;">
         <div>
             <h2>Manage Preset List</h2>
@@ -129,6 +104,8 @@
             <button id="closePresetModal">Close</button>
         </div>
     </div>
+
+    <!-- Popups Messages-->
     <div class="popup" id="searchPopupError">Error adding satellite</div>
     <div class="popup" id="searchPopupSucc">Satellite Added</div>
     <div class="popup" id="searchPopupOverflow">Please refine your keywords</div>
@@ -136,9 +113,8 @@
     <div class="popup" id="listCreate">New list created</div>
     <div class="popup" id="listDelete">List deleted</div>
     <div class="popup" id="unexpected">Unexpected Error</div>
-    
-    <div id="goldenLayoutContainer"></div> 
 
+    <!--Cesium earth window Container-->
     <div>
         <div id="cesiumContainer">
             <button id="demensionBtn">Switch to 2D</button>
@@ -195,9 +171,45 @@
             <div class="currentTimeText" id="currentTimeText">APR 15 2024 10:00:00</div>
         </div>
     </div>
+
+        <!--Calendar Inframe Winow-->
         <div id="calendarModal">
             <iframe src="https://poseidon-scheduler.web.app/" scrolling="yes"></iframe>
         </div>
+
+        <!-- Command Generation Window -->
+    <div id="commandGeneration">
+        <div>
+            <label for="commandDropdown">Select Command:</label>
+            <select id="commandDropdown" onchange="populateParameters()">
+                <option value="" disabled selected>Select command</option>
+                <!-- Commands will be populated dynamically -->
+            </select>
+
+            <div id="parameterInputs">
+                <!-- Parameters will be populated dynamically based on the selected command -->
+            </div>
+
+            <button id="saveButton" style="display: none;">Save</button>
+            <button id="addButton">Add Command</button>
+            <div style="height: 10px;"></div>
+            
+            <div class="commands-list">
+                <label>Command List</label>
+                <ul id="commandList">
+                    <!-- Command items will be populated dynamically -->
+                </ul>
+            </div>
+
+            <button id="generateButton">Generate</button>
+            <button id="clearButton">Clear Commands</button>
+            <textarea id="generatedCommandsText" style="display: none;"></textarea>
+            <button id="exportButton">Export</button>
+            <div style="height: 50px;"></div>
+        </div>
+    </div>
+
+        <!--Pass Time Table Window-->
         <div id="PassTime"> 
             <table id="PassTimeTable">
                 <thead>
@@ -214,6 +226,8 @@
                 </tbody>
             </table>
         </div>
+
+        <!--Telemetry Table Window-->
         <div id="TelemetryContainer">
             <table id="telemetryTable">
                 <tr>
@@ -260,12 +274,14 @@
             </table>
         </div>
     </div>
-    <!-- Development -->
+
+    <!-- Development packages-->
     <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
     <script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script>
     <script src="https://unpkg.com/@popperjs/core@2"></script>
     <script src="https://unpkg.com/tippy.js@6"></script>
     
+    <!-- js functions import-->
     <script src="./js_component/cesium.js"></script>
     <script src="./js_component/orbit.js"></script>
     <script src="./js_component/renderer.js"></script>
@@ -275,7 +291,5 @@
     <script src="./js_component/passtime.js"></script>
     <script src="./js_component/presetList.js"></script>
     <script src="./js_component/search.js"></script>
-
-    
 </body>
 </html>
