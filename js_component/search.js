@@ -38,7 +38,10 @@ function getNameSearchResults(name){
     var type = document.getElementById("presetDropdown").value;
     var formData = new FormData();
     formData.append('listname', type);
-
+    if(type === ""){
+        showPopupNotification("Please select a list", "error");
+        return;
+    }
     //console.log(`Searching for satellites with name ${name}`);
 
     fetch(`http://127.0.0.1:5000/satellites/get/names/${name}`)
@@ -107,9 +110,7 @@ function addTLEByCatnr(catnr){
     var type = document.getElementById("presetDropdown").value;
     var formData = new FormData();
     formData.append('listname', type);
-
-    //console.log(`Adding sat ${catnr} to list ${type}`);
-    if(type === "Select preset to add to"){
+    if(type === ""){
         showPopupNotification("Please select a list", "error");
         return;
     }
