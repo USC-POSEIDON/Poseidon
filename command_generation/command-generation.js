@@ -216,7 +216,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return commandString;
     }
       
-
     // Function to add a command to the list or update existing command
     function addCommandToList(commandString, index = -1) {
         let listItem;
