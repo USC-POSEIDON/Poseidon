@@ -3,7 +3,7 @@ const tippy = require('tippy.js');
 
 // Refresh the preset list display
 function updatePresetListDisplay(){
-    console.log("REFRESH")
+    //console.log("REFRESH")
     var listname = document.getElementById("selectPresetDropdown").value
     document.getElementById("presetListTitle").textContent = listname;
 
@@ -285,7 +285,7 @@ document.getElementById("deletePresetBtn").onclick = function() {
     })
     .then(function (responseData) {
         // Handle the response data here
-        console.log(responseData);
+        //console.log(responseData);
         showPopupNotification("Preset List Deleted", "pass");
         populatePresetDropdowns();
     })

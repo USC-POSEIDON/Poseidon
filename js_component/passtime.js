@@ -29,9 +29,8 @@ function predictPasses(){
     Promise.all(promises)
         .then(results => {
             // Do something with the results after all requests have returned successfully
-            // console.log('All requests have returned successfully:', results);
             const data = JSON.parse(JSON.stringify(results));
-            console.log(data)
+            //console.log(data)
 
             let combinedList = [];
             data.forEach(function(passList){

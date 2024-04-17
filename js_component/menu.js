@@ -157,13 +157,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Invoke saving function with converted CSV data
                 ipcRenderer.invoke('save-file-dialog', 'AllSatellitesPassTime.csv', csvData)
                     .then(filePath => {
-                        console.log('File saved to:', filePath);
+                        showPopupNotification("Pass time data saved to file", "pass")
+                        //console.log('File saved to:', filePath);
                     })
                     .catch(err => {
+                        showPopupNotification(err, "error")
                         console.error('Failed to save file:', err);
                     });
             })
             .catch(error => {
+                showPopupNotification(error, "error")
                 console.error("An error occurred with the fetch requests:", error);
             });
     });

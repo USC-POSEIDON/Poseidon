@@ -4,7 +4,7 @@ const catnrMap = {};
 
 // Search function for user to search satellites by name or catalog number
 function performSearch(){
-    console.log("Performing Search.")
+    //console.log("Performing Search.")
     const searchValue = document.getElementById('satelliteSearchInput').value;
     if (selectedSearchType === 'name') {
         getNameSearchResults(searchValue);
@@ -34,11 +34,12 @@ function performSearch(){
 
 // Get search results based on name
 function getNameSearchResults(name){
+    showPopupNotification("Searching...", "pass");
     var type = document.getElementById("presetDropdown").value;
     var formData = new FormData();
     formData.append('listname', type);
 
-    console.log(`Searching for satellites with name ${name}`);
+    //console.log(`Searching for satellites with name ${name}`);
 
     fetch(`http://127.0.0.1:5000/satellites/get/names/${name}`)
     .then(function (response) {
@@ -90,7 +91,6 @@ function displayResults(results) {
         listItem.addEventListener('click', function() {
             satelliteSearchInput.value = "";
             searchResults.style.display = 'none';
-            console.log("clicked on " + listItem.textContent + " with catnr " + listItem.catnr);
             addTLEByCatnr(listItem.catnr);
         });
         // Append the item and add a divider
@@ -103,12 +103,12 @@ function displayResults(results) {
 
 // Add the satellite to the selected list by catalog number
 function addTLEByCatnr(catnr){
-    console.log(`Adding satellite with catnr ${catnr}`)
+    //console.log(`Adding satellite with catnr ${catnr}`)
     var type = document.getElementById("presetDropdown").value;
     var formData = new FormData();
     formData.append('listname', type);
 
-    console.log(`Adding sat ${catnr} to list ${type}`);
+    //console.log(`Adding sat ${catnr} to list ${type}`);
 
     fetch(`http://127.0.0.1:5000//satellites/post/catnr/${catnr}`, {
         method: "POST",
@@ -155,7 +155,7 @@ function addManualTLE(line1, line2, name){
     })
     .then(function (responseData) {
         // Satellite successfully added to list
-        console.log(responseData);
+        //console.log(responseData);
         showPopupNotification("Satellite successfully added to list", "pass");
         updatePresetListDisplay();
     })
