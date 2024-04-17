@@ -140,12 +140,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const seconds = String(now.getSeconds()).padStart(2, '0');
         
         // Concatenate the components into a string in military time format
-        const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds} (Local)`;
         
         document.getElementById('currentTimeText').textContent = formattedDateTime;
     }
     updateDateTime();
     setInterval(updateDateTime, 1000); 
 });
+
+document.getElementById('currentTimeText').onclick({}
 
 setInterval(updateTelemetryData, 5000);

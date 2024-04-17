@@ -18,15 +18,6 @@ def createTables():
     # Open a cursor to perform database operations
     cur = conn.cursor()
 
-    # # Define the tables to be dropped
-    # tables_to_drop = ['Satellites', 'TLE_Data', 'Satellite_Passes']
-
-    # # Loop through each table name and drop it if it exists
-    # for table_name in tables_to_drop:
-    #     cur.execute(f"DROP TABLE IF EXISTS {table_name}")
-
-    conn.commit()
-
     # Create tables
     cur.execute("""
         CREATE TABLE IF NOT EXISTS Ground_Station (
@@ -64,8 +55,6 @@ def createTables():
 
     conn.commit()
 
-
-
     cur.execute("""
         CREATE TABLE IF NOT EXISTS Manual_Catnr (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -82,19 +71,6 @@ def createTables():
         WHERE NOT EXISTS (SELECT 1 FROM Manual_Catnr)
     ''')
     conn.commit() 
-
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS Satellite_Passes (
-            pass_id INTEGER PRIMARY KEY AUTOINCREMENT,
-            satellite_id INTEGER REFERENCES Satellites(satellite_id),
-            time TIMESTAMP,
-            azm REAL,
-            elv REAL,
-            range REAL
-        );
-    """)
-
-    conn.commit()
 
     cur.execute("""
         CREATE TABLE IF NOT EXISTS Preset_Names (
@@ -168,8 +144,6 @@ def insertSatellite(tle_id, catnr, name, type):
     cur.close()
     conn.close()
 
-    # TODO: return something so frontend knows if repeated addition
-
 def insertTLE(catnr, line1, line2, datetime):
 
     # Open a cursor to perform database operations
@@ -221,25 +195,6 @@ def insertTLE(catnr, line1, line2, datetime):
 
     # Return catnr of manual added satellite
     return current_value
-
-def insertPass(satellite_id, time, azm, elv, range):
-    conn = sqlite3.connect(db_path)
-
-    # Open a cursor to perform database operations
-    cur = conn.cursor()
-
-    # Insert parsed data into the database
-    sql = """
-    INSERT INTO Satellite_Passes (satellite_id, time, azm, elv, range)
-    VALUES (?, ?, ?, ?, ?)
-    """
-
-    cur.execute(sql, (satellite_id, time, azm, elv, range))
-    conn.commit()
-
-    # Close the connection
-    cur.close()
-    conn.close()
 
 def insertPreset(name):
     conn = sqlite3.connect(db_path)
@@ -338,61 +293,6 @@ def getSatelliteID(catnr):
     else:
         return None # Return None if no row was returned
 
-
-def getPassesbyName(name):
-    conn = sqlite3.connect(db_path)
-                            
-    # Open a cursor to perform database operations
-    cur = conn.cursor()
-
-    # Prepare the SQL query with JOIN to link Satellite_Passes to the Satellites table using the satellite name
-    query = """
-    SELECT Satellite_Passes.*
-    FROM Satellite_Passes
-    JOIN Satellites ON Satellite_Passes.satellite_id = Satellites.satellite_id
-    WHERE Satellites.name = ?
-    """
-
-    # Execute a SELECT statement
-    cur.execute(query, (name,))
-
-    # Retrieve the results
-    rows = cur.fetchall()
-
-    # Close the cursor and the connection
-    cur.close()
-    conn.close()
-
-    return rows
-
-
-def getPassesbyName(name):
-    conn = sqlite3.connect(db_path)
-
-    # Open a cursor to perform database operations
-    cur = conn.cursor()
-
-    # Prepare the SQL query to join Satellite_Passes with Satellites and select passes by satellite name
-    query = """
-    SELECT Satellite_Passes.*
-    FROM Satellite_Passes
-    INNER JOIN Satellites ON Satellite_Passes.satellite_id = Satellites.satellite_id
-    WHERE Satellites.name = ?
-    """
-
-    # Execute a SELECT statement
-    cur.execute(query, (name,))
-
-    # Retrieve the results
-    rows = cur.fetchall()
-
-    # Close the cursor and the connection
-    cur.close()
-    conn.close()
-
-    return rows
-
-
 def getAllCatnrs():
     '''Get a list of catalog numbers of all satellites.'''
     conn = sqlite3.connect(db_path)
@@ -454,28 +354,9 @@ def getSatellitesInPreset(type):
     JOIN TLE_Data ON Satellites.tle_id = TLE_Data.tle_id
     WHERE type = ?
     """
-    # TODO: maybe remove catnr, name from Satellites table. just be mapping of TLE_id -> preset name
 
     # Execute a SELECT statement
     cur.execute(query, (type,))
-
-    # Retrieve the results
-    rows = cur.fetchall()
-
-    # Close the cursor and the connection
-    cur.close()
-    conn.close()
-
-    return rows
-
-def getAllTLEs():
-    conn = sqlite3.connect(db_path)
-
-    # Open a cursor to perform database operations
-    cur = conn.cursor()
-
-    # Execute a SELECT statement (unchanged)
-    cur.execute("SELECT * FROM tle_data")
 
     # Retrieve the results
     rows = cur.fetchall()
@@ -626,26 +507,6 @@ def updateTLE(catnr, line1, line2, datetime):
     conn.commit()
 
     # Close the connection
-    cur.close()
-    conn.close()
-
-def printTLE():
-    conn = sqlite3.connect(db_path)
-
-    # Open a cursor to perform database operations
-    cur = conn.cursor()
-
-    # Execute a SELECT statement
-    cur.execute("SELECT * FROM TLE_Data")
-
-    # Retrieve the results
-    rows = cur.fetchall()
-
-    # Print the results
-    for row in rows:
-        print(row)
-
-    # Close the cursor and the connection
     cur.close()
     conn.close()
     

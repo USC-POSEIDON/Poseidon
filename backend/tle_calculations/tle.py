@@ -251,6 +251,3 @@ def deleteSatellite(catnr, listname):
     
     deleteSatelliteFromList(catnr, listname)
     return jsonify({"message": "DELETE request successful"}), 200
-
-if __name__ == "__main__":
-    pass
