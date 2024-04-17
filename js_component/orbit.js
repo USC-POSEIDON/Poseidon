@@ -362,14 +362,30 @@ document.addEventListener('DOMContentLoaded', function() {
     setInterval(updateDateTime, 1000); 
 });
 
+var timezoneSelect = document.getElementById("timeFormat");
+
 document.getElementById('currentTimeText').onclick = function () {
-    if(timezone === "UTC")
+    if(timezone === "UTC"){
         timezone = "Local";
-    else
+        timezoneSelect.value = "LOC";
+    }
+    else{
         timezone = "UTC"
+        timezoneSelect.value = "UTC";
+    }
     
     updateDateTime();
 }
+
+timezoneSelect.addEventListener("change", function() {
+    console.log("Change");
+    var selectedValue = timezoneSelect.value;
+    if(selectedValue === "UTC"){
+        timezone = "UTC";
+    } else {
+        timezone = "Local";
+    }
+});
 
 initializeViewer(); 
 startOrbitUpdatesPerOrbitalPeriod(satrec);
