@@ -192,7 +192,7 @@ function populatePresetDropdowns(onStartup=false) {
     })
     .catch(function (error) {
         // Handle errors here
-        showPopupList("unexpected");
+        showPopupNotification(error, "error");
         console.log(error);
     });
 }
@@ -213,56 +213,6 @@ function populateDynamicOptions(presets, dropdownElement, selectedValue = ""){
         if(selectOptionToDisable !== null){
             selectOptionToDisable.selected = true;
         }
-    }
-}
-
-// Show popup messages for actions
-function showPopupList(code) {
-    //console.log("Popping up");
-    // Show the popup
-    var popCreate = document.getElementById("listCreate");
-    var popRename = document.getElementById("listRename");
-    var popDelete = document.getElementById("listDelete");
-    var unexpected = document.getElementById("unexpected");
-    if(code == "popCreate"){
-        popCreate.classList.add("show");
-        setTimeout(function() {
-            popCreate.style.opacity = "0"; // Change opacity
-            setTimeout(function() {
-                popCreate.classList.remove("show");
-                popCreate.style.opacity = ""; // Reset opacity after transition
-            }, 500); // Wait for the transition to complete (0.5s)
-        }, 1000);
-    }
-    else if(code == "popRename"){
-        popRename.classList.add("show");
-        setTimeout(function() {
-            popRename.style.opacity = "0"; // Change opacity
-            setTimeout(function() {
-                popRename.classList.remove("show");
-                popRename.style.opacity = ""; // Reset opacity after transition
-            }, 500); // Wait for the transition to complete (0.5s)
-        }, 1000);
-    }
-    else if(code == "popDelete"){
-        popDelete.classList.add("show");
-        setTimeout(function() {
-            popDelete.style.opacity = "0"; // Change opacity
-            setTimeout(function() {
-                popDelete.classList.remove("show");
-                popDelete.style.opacity = ""; // Reset opacity after transition
-            }, 500); // Wait for the transition to complete (0.5s)
-        }, 1000);
-    }
-    else{
-        unexpected.classList.add("show");
-        setTimeout(function() {
-            unexpected.style.opacity = "0"; // Change opacity
-            setTimeout(function() {
-                unexpected.classList.remove("show");
-                unexpected.style.opacity = ""; // Reset opacity after transition
-            }, 500); // Wait for the transition to complete (0.5s)
-        }, 1000);
     }
 }
 
@@ -309,13 +259,13 @@ document.getElementById("addPresetBtn").onclick = function() {
     })
     .then(function (responseData) {
         // Handle the response data here
-        console.log(responseData);
-        showPopupList("popCreate");
+        //console.log(responseData);
+        showPopupNotification("Preset List Created", "pass");
         populatePresetDropdowns();
     })
     .catch(function (error) {
         // Handle errors here
-        showPopupList("unexpected");
+        showPopupNotification(error, "error");
         console.log(error);
     });
 }
@@ -334,12 +284,12 @@ document.getElementById("deletePresetBtn").onclick = function() {
     .then(function (responseData) {
         // Handle the response data here
         console.log(responseData);
-        showPopupList("popDelete");
+        showPopupNotification("Preset List Deleted", "pass");
         populatePresetDropdowns();
     })
     .catch(function (error) {
         // Handle errors here
-        showPopupList("unexpected");
+        showPopupNotification(error, "error");
         console.log(error);
     });
 }
@@ -359,12 +309,12 @@ document.getElementById("renamePresetBtn").onclick = function() {
     .then(function (responseData) {
         // Handle the response data here
         console.log(responseData);
-        showPopupList("popRename");
+        showPopupNotification("Preset List Renamed", "pass");
         populatePresetDropdowns();
     })
     .catch(function (error) {
         // Rename unsuccessful
-        showPopupList("unexpected");
+        showPopupNotification(error, "error");
         console.log(error);
         
     });
