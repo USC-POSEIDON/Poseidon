@@ -7,7 +7,6 @@ function updateTelemetryTLE(line1, line2){
 }
 
 function updateTelemetryData() {
-    // TODO: get TLE data depending on which satellite is selected
     fetch(`http://127.0.0.1:5000/calculations/telemetry?`+ new URLSearchParams({
         s: defaultTleLine1,
         t: defaultTleLine2,
