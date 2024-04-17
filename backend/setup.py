@@ -13,6 +13,6 @@ setup(
         'skyfield',
         'setuptools',
         'waitress',
-        'dateutil'
+        'python-dateutil'
     ],
 )
