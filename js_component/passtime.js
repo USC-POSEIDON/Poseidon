@@ -1,3 +1,4 @@
+//Predicts passes for selected satellites
 function predictPasses(){
     var checkboxes = document.querySelectorAll('#presetList input[type="checkbox"]');
     var satellite;
@@ -24,7 +25,6 @@ function predictPasses(){
             }));
         }
     });
-
     // Wait for all promises to resolve
     Promise.all(promises)
         .then(results => {
@@ -42,13 +42,12 @@ function predictPasses(){
             updatePassTimeDisplay(combinedList);
         })
         .catch(error => console.error('Error:', error));
-
 }
 
+//Updates the pass time table with the pass data
 function updatePassTimeDisplay(data){
     var tableBody = document.querySelector('#PassTimeTable tbody');
     tableBody.innerHTML = '';
-
     data.forEach(function(pass) {
         var rise = pass["rise"]
         var set = pass["set"];
@@ -84,7 +83,7 @@ function updatePassTimeDisplay(data){
     }); 
 }
 
-
+//Beauty print the date string
 function parseDateString(dateString) {
     // Split the date string by space
     const parts = dateString.split(" ");

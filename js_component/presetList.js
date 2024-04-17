@@ -1,53 +1,7 @@
-const tippy = require('tippy.js');
 // import 'tippy.js/dist/tippy.css'; // optional for styling
+const tippy = require('tippy.js');
 
-function showPresetSelectOptions(){
-    //console.log("showing preset options");
-    fetch(`http://127.0.0.1:5000//satellites/get/allpresets`)
-    .then(function (response) {
-        if (!response.ok) {
-            throw new Error("HTTP error, status = " + response.status);
-        }
-        return response.json();
-    })
-    .then(function (responseData) {
-        // Handle the response data here
-        console.log(responseData);
-        const data = JSON.parse(JSON.stringify(responseData));
-
-        // Get the div element
-        var select = document.getElementById("presetSelectionToShowing");
-
-        // Clear any existing content
-        select.innerHTML = "";
-
-        // Create a select element
-        // var select = document.createElement("select");
-
-        // Define the options
-        var options = data.names;
-
-        // Add default option
-        var option = document.createElement("option");
-        option.text = "Change Preset";
-        option.value = "";
-        option.disabled = true;
-        select.add(option);
-
-        // Loop through options and create option elements
-        for (var i = 0; i < options.length; i++) {
-            var option = document.createElement("option");
-            option.text = options[i];
-            option.value = options[i];
-            select.add(option);
-        }
-    })
-    .catch(function (error) {
-        // Handle errors here
-        console.log(error);
-    });
-}
-
+// Refresh the preset list display
 function updatePresetListDisplay(){
     console.log("REFRESH")
     var listname = document.getElementById("selectPresetDropdown").value
