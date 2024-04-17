@@ -2,7 +2,6 @@ const tippy = require('tippy.js');
 // import 'tippy.js/dist/tippy.css'; // optional for styling
 
 function showPresetSelectOptions(){
-
     //console.log("showing preset options");
     fetch(`http://127.0.0.1:5000//satellites/get/allpresets`)
     .then(function (response) {
@@ -48,7 +47,6 @@ function showPresetSelectOptions(){
         console.log(error);
     });
 }
-
 
 function updatePresetListDisplay(){
     var listname = document.getElementById("selectPresetDropdown").value
@@ -180,7 +178,6 @@ function removeSatelliteFromPreset(catnr, listname){
     });
 }
 
-
 function handleCheckboxChange() {
     // Get all checkboxes within the div
     var checkboxes = document.querySelectorAll('#presetList input[type="checkbox"]');
@@ -203,8 +200,6 @@ function handleCheckboxChange() {
         updateTelemetryTableLable(satellite.name);
     }
 }
-
-
 
 function populatePresetDropdowns(onStartup=false) {
     fetch(`http://127.0.0.1:5000//satellites/get/allpresets`)
@@ -285,9 +280,54 @@ function populateDynamicOptions(presets, dropdownElement, selectedValue = ""){
     }
 }
 
-function handleOptionClick(event){
-    console.log("otpion click handler");
-    event.stopPropagation();
+
+function showPopupList(code) {
+    console.log("Popping up");
+    // Show the popup
+    var popCreate = document.getElementById("listCreate");
+    var popRename = document.getElementById("listRename");
+    var popDelete = document.getElementById("listDelete");
+    var unexpected = document.getElementById("unexpected");
+    if(code == "popCreate"){
+        popCreate.classList.add("show");
+        setTimeout(function() {
+            popCreate.style.opacity = "0"; // Change opacity
+            setTimeout(function() {
+                popCreate.classList.remove("show");
+                popCreate.style.opacity = ""; // Reset opacity after transition
+            }, 500); // Wait for the transition to complete (0.5s)
+        }, 1000);
+    }
+    else if(code == "popRename"){
+        popRename.classList.add("show");
+        setTimeout(function() {
+            popRename.style.opacity = "0"; // Change opacity
+            setTimeout(function() {
+                popRename.classList.remove("show");
+                popRename.style.opacity = ""; // Reset opacity after transition
+            }, 500); // Wait for the transition to complete (0.5s)
+        }, 1000);
+    }
+    else if(code == "popDelete"){
+        popDelete.classList.add("show");
+        setTimeout(function() {
+            popDelete.style.opacity = "0"; // Change opacity
+            setTimeout(function() {
+                popDelete.classList.remove("show");
+                popDelete.style.opacity = ""; // Reset opacity after transition
+            }, 500); // Wait for the transition to complete (0.5s)
+        }, 1000);
+    }
+    else{
+        unexpected.classList.add("show");
+        setTimeout(function() {
+            unexpected.style.opacity = "0"; // Change opacity
+            setTimeout(function() {
+                unexpected.classList.remove("show");
+                unexpected.style.opacity = ""; // Reset opacity after transition
+            }, 500); // Wait for the transition to complete (0.5s)
+        }, 1000);
+    }
 }
 
 document.getElementById("managePresets").onclick = function() {
@@ -392,56 +432,6 @@ document.getElementById("renamePresetBtn").onclick = function() {
         console.log(error);
         
     });
-}
-
-function showPopupList(code) {
-    console.log("Popping up");
-
-    // Show the popup
-    var popCreate = document.getElementById("listCreate");
-    var popRename = document.getElementById("listRename");
-    var popDelete = document.getElementById("listDelete");
-    var unexpected = document.getElementById("unexpected");
-    if(code == "popCreate"){
-        popCreate.classList.add("show");
-        setTimeout(function() {
-            popCreate.style.opacity = "0"; // Change opacity
-            setTimeout(function() {
-                popCreate.classList.remove("show");
-                popCreate.style.opacity = ""; // Reset opacity after transition
-            }, 500); // Wait for the transition to complete (0.5s)
-        }, 1000);
-    }
-    else if(code == "popRename"){
-        popRename.classList.add("show");
-        setTimeout(function() {
-            popRename.style.opacity = "0"; // Change opacity
-            setTimeout(function() {
-                popRename.classList.remove("show");
-                popRename.style.opacity = ""; // Reset opacity after transition
-            }, 500); // Wait for the transition to complete (0.5s)
-        }, 1000);
-    }
-    else if(code == "popDelete"){
-        popDelete.classList.add("show");
-        setTimeout(function() {
-            popDelete.style.opacity = "0"; // Change opacity
-            setTimeout(function() {
-                popDelete.classList.remove("show");
-                popDelete.style.opacity = ""; // Reset opacity after transition
-            }, 500); // Wait for the transition to complete (0.5s)
-        }, 1000);
-    }
-    else{
-        unexpected.classList.add("show");
-        setTimeout(function() {
-            unexpected.style.opacity = "0"; // Change opacity
-            setTimeout(function() {
-                unexpected.classList.remove("show");
-                unexpected.style.opacity = ""; // Reset opacity after transition
-            }, 500); // Wait for the transition to complete (0.5s)
-        }, 1000);
-    }
 }
 
 document.addEventListener("DOMContentLoaded", function() {
