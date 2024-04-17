@@ -51,6 +51,11 @@ function updateTelemetryData() {
     });
 }
 
+
+function updateTelemetryTableLable(name){
+    document.getElementById('telProperty').textContent = "Property(" + name + ")";
+}
+
 function calculateAzEl(positionEci, observerGd, gmst) {
     var positionEcf = satellite.eciToEcf(positionEci, gmst);
     var lookAngles = satellite.ecfToLookAngles(observerGd, positionEcf);

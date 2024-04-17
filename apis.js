@@ -12,7 +12,7 @@ class BasicSatellite {
 
 function showPresetSelectOptions(){
 
-    console.log("showing preset options");
+    //console.log("showing preset options");
     fetch(`http://127.0.0.1:5000//satellites/get/allpresets`)
     .then(function (response) {
         if (!response.ok) {
@@ -71,7 +71,7 @@ function updatePresetListDisplay(){
     })
     .then(function (responseData) {
         // Handle the response data here
-        console.log(responseData);
+        //console.log(responseData);
         const data = JSON.parse(JSON.stringify(responseData));
 
         // Get the div element
@@ -141,7 +141,7 @@ function handleSatelliteHover(item, catnr){
         return response.json();
     })
     .then(function (responseData) {
-        console.log(responseData);
+        //console.log(responseData);
         const data = JSON.parse(JSON.stringify(responseData));
 
         var updateInfo = "Last updated: " + data.time;
@@ -181,7 +181,7 @@ function removeSatelliteFromPreset(catnr, listname){
         return response.json();
     })
     .then(function (data) {
-        console.log(data);
+        //console.log(data);
     })
     .catch(function (error) {
         console.log(error);
@@ -206,9 +206,9 @@ function handleCheckboxChange() {
 
     // Perform action if exactly one checkbox is checked
     if (checkedCount === 1) {
-        console.log('Exactly one checkbox is checked!');
         updateTelemetryTLE(satellite.line1, satellite.line2);
         updateSatelliteTLE(satellite.line1, satellite.line2);
+        updateTelemetryTableLable(satellite.name);
     }
 }
 
@@ -244,7 +244,7 @@ function predictPasses(){
     Promise.all(promises)
         .then(results => {
             // Do something with the results after all requests have returned successfully
-            console.log('All requests have returned successfully:', results);
+            // console.log('All requests have returned successfully:', results);
             const data = JSON.parse(JSON.stringify(results));
             console.log(data)
 
