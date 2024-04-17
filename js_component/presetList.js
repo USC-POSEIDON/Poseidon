@@ -71,7 +71,9 @@ function handleSatelliteHover(item, catnr){
     .then(function (responseData) {
         //console.log(responseData);
         const data = JSON.parse(JSON.stringify(responseData));
-        var updateInfo = "Last updated: " + data.time;
+
+        var updateInfo = "Last updated: " + data.time + " (Local)";
+
         tippy.default(item, {
             delay: 500,
             content: updateInfo,
@@ -324,4 +326,4 @@ document.addEventListener("DOMContentLoaded", function() {
     populatePresetDropdowns(onStartup=true);
 });
 
-const interval = setInterval(updatePresetListDisplay, 6000);
+const interval = setInterval(updatePresetListDisplay, 6 * 60 * 60 * 1000);

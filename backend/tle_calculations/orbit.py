@@ -7,7 +7,7 @@ from sgp4.api import Satrec, jday, SGP4_ERRORS
 from sgp4.conveniences import dump_satrec, jday_datetime, UTC
 from skyfield.api import EarthSatellite, load, wgs84
 import scipy.constants as const
-from flask import Flask, request, jsonify
+from flask import Flask, abort, request, jsonify
 
 from tle_calculations.database import *
 from tle_calculations import app
@@ -19,7 +19,6 @@ DEFAULT_UPLINK_FREQ = 145.000
 DEFAULT_DOWNLINK_FREQ = 145.000
 
 # Global Vars 
-# TODO: init latlon with stored value on startup
 observer = wgs84.latlon(GS_LATITUDE, GS_LONGITUDE)
 ts = load.timescale()
 
@@ -86,30 +85,26 @@ def getPassTimeInfo():
     Raises:
         RuntimeError: If passes not predicted as expected.
     """
-    # TODO: check if catnr matches TLE?
-    
-
-    
+        
     s = request.args.get('s')
     t = request.args.get('t')
     catnr = request.args.get('catnr')
     satname = request.args.get('name')
 
-    # TODO: decide error behavior
     if not s:
-        return "No TLE line 1", 400
+        abort(400, description='GET request unsuccessful: no TLE line 1')
     if not t:
-        return "No TLE line 2", 400
+        abort(400, description='GET request unsuccessful: no TLE line 2')
     if not catnr: 
-        return "No CatNr", 400
+        abort(400, description='GET request unsuccessful: no catalog number')
     if not satname: 
-        return "No sat name", 400
+        abort(400, description='GET request unsuccessful: no satellite name')
 
     try:
         days = int(request.args.get('days')) if request.args.get('days') else 7
         min_deg = float(request.args.get('min_deg')) if request.args.get('min_deg') else 5.0
     except:
-        return "Incorrect type for days or min_deg.", 400
+        abort(400, description="Incorrect type for days or min_deg.")
 
     # Create Skyfield satellite and observer (groundstation) objects
     satellite = EarthSatellite(s, t, satname, ts)
@@ -172,18 +167,20 @@ def getCurrentTelemetry():
             rec (MHz)
             trans (MHz)
     """
-    getAllCatnrs()
+    # Just for testing
+    getAllCatnrs() 
+
     s = request.args.get('s')
     t = request.args.get('t')
 
     if not s or not t:
-        return "Missing TLE Line", 400
+        abort(400, description='Missing TLE line.')
 
     try:
         downlink = float(request.args.get('downlink')) if request.args.get('downlink') else DEFAULT_DOWNLINK_FREQ
         uplink = float(request.args.get('uplink')) if request.args.get('uplink') else DEFAULT_UPLINK_FREQ
     except:
-        return "Incorrect type for uplink/downlink frequency.", 400
+        abort(400, description='Incorrect type for uplink/downlink frequency.')
 
     # TODO: add csv parsing for up/downlink
 
@@ -254,47 +251,3 @@ def changeGroundStation():
     updateGSCoordinates(lat, lon)
 
     return jsonify({"message": "Ground station updated successfully"}), 200
-
-
-
-if __name__ == "__main__":
-    rangeToPredict = input("Enter passtime range (days from present): ")
-    f = open("tle_data.txt", 'r')
-    while 1: 
-        name = f.readline()
-        s = f.readline()
-        t = f.readline()
-
-        if not name: # EOF
-            break
-        # getPassTimeInfo(s, t, 0, name=name)
-
-        for i in range(20): 
-            time.sleep(1)
-            (getCurrentTelemetry(s,t))
-    
-    f.close()
-
-
-
-'''
-Things to remember/consider
-[1] Beware that events might not always be in the order rise-culminate-set. 
-    Some satellites culminate several times between rising and setting.
-[2] ~~Keeping a list of EarthSatellite objects instead of txt of TLE's?~~
-[3] Desired info: pass times (within 30 sec), azimuth/elevation angles (within 10 deg), 
-    min/max slant range (within 50 km), doppler shift range (within 5 MHz)
-[4] Converting pass times from UTC -> local time?
-
-
-# Skyfield method for getting satellites from CelesTrak (loads to gp.php)
-stations_url = 'http://celestrak.org/NORAD/elements/stations.txt'
-active_url = f"{BASE_URL}?GROUP=active&{DEFAULT_FORMAT}"
-satellites = load.tle_file(active_url, reload=True)
-print('Loaded', len(satellites), 'satellites')
-
-by_number = {sat.model.satnum: sat for sat in satellites}
-satellite = by_number[DODONA_CATNR]
-print(satellite)
-
-'''
