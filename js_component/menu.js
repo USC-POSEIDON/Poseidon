@@ -25,6 +25,7 @@ function jsonToCSV(jsonArray) {
     return csvRows.join('\n');
 }
 
+// Function to toggle the visibility of a Top Menu Bar component
 function updateWindowsDropdown() {
     const dropdownContent = $('#windowsDropdownContent');
     dropdownContent.empty();
@@ -55,7 +56,7 @@ function updateWindowsDropdown() {
     });
 }
 
-// Helper function to update the Windows dropdown
+// Helper function to update the individual Windows dropdown
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('#topMenuBar > ul > li').forEach(item => {
         item.addEventListener('mouseenter', function() {
