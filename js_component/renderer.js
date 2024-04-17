@@ -1,8 +1,11 @@
+// This file is responsible for rendering the GoldenLayout components and managing their state
+
 const $ = window.$ = window.jQuery =  require('jquery')
 
 const GoldenLayout = require('golden-layout');
 let closedComponents = [];
 
+// Create a new GoldenLayout instance
 let goldenLayout = new GoldenLayout({
     settings: {
         showPopoutIcon: false,
@@ -56,6 +59,7 @@ let goldenLayout = new GoldenLayout({
     }]
 });
 
+// ----------------- Start the goldenlayout component init ----------------- //
 goldenLayout.registerComponent('cesium_component', function(container, state) {
   // Check if the cesiumContainer is already detached and stored
   let cesiumContainer = $('#cesiumContainer');
@@ -65,6 +69,7 @@ goldenLayout.registerComponent('cesium_component', function(container, state) {
 
   container.getElement().append(cesiumContainer); // Reattach
 
+  // Handle the destroy event to make sure the component is detached and stored
   container.on('destroy', function() {
     closedComponents['cesium_component'] = cesiumContainer.detach(); // Detach and store
     trackComponentState('cesium_component', false);
@@ -132,6 +137,8 @@ goldenLayout.registerComponent('Command_Generation_component', function (contain
   });
 });
 
+// ----------------- End of the goldenlayout component init ----------------- //
+
 let componentStates = {};
 
 function trackComponentState(id, isOpen = true) {
@@ -139,7 +146,7 @@ function trackComponentState(id, isOpen = true) {
   updateWindowsDropdown(); // Ensure dropdown updates immediately after state changes
 }
 
-
+// Update the Windows dropdown to reflect the current state of the components
 function toggleComponentVisibility(id, title, shouldShow) {
   const items = goldenLayout.root.getItemsById(id);
   console.log(goldenLayout.root.getItemsById(id));
@@ -150,10 +157,10 @@ function toggleComponentVisibility(id, title, shouldShow) {
   }
 }
 
+// add component to current layout
 function addComponentToLayout(id) {
   const componentConfig = getComponentConfig(id);
   console.log(componentConfig);
-
   if (componentConfig) {
       let targetContainer = goldenLayout.root.contentItems[0];
     
@@ -170,15 +177,14 @@ function addComponentToLayout(id) {
               targetContainer = targetContainer.contentItems[targetContainer.contentItems.length - 1];
           }
       }
-    
       targetContainer.addChild(componentConfig);
-      
       trackComponentState(id, true);
   } else {
       console.error(`Component config not found for id: ${id}`);
   }
 }
 
+// Get the component config based on the component ID
 function getComponentConfig(id) {
   const configMap = {
       'cesium_component': {
@@ -217,10 +223,10 @@ function getComponentConfig(id) {
         componentState: {} 
       }
   };
-
   return configMap[id] || null;
 }
 
+// Update the Windows dropdown to reflect the current state of the components
 function removeComponentFromLayout(componentId) {
   const items = goldenLayout.root.getItemsById(componentId);
   if (items.length) {
@@ -232,6 +238,7 @@ function removeComponentFromLayout(componentId) {
   updateWindowsDropdown();
 }
 
+// Handle destroying components
 goldenLayout.on('itemDestroyed', function(component) {
   const componentId = component.config.id;
   if (componentId) {
@@ -239,6 +246,7 @@ goldenLayout.on('itemDestroyed', function(component) {
   }
 });
 
+// Handle initializing components
 goldenLayout.on('initialised', function() {
     ['cesium_component', 'calendar_component', 'PassTime_component', 'Telemetry_component', 'Command_Generation_component'].forEach(id => {
         trackComponentState(id, true);

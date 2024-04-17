@@ -18,50 +18,33 @@ function updatePresetListDisplay(){
         // Handle the response data here
         //console.log(responseData);
         const data = JSON.parse(JSON.stringify(responseData));
-
-        // Get the div element
-        var ul = document.getElementById("presetList");
-
-        // Clear existing content
-        ul.innerHTML = '';
+        var ul = document.getElementById("presetList"); // Get the div element
+        ul.innerHTML = '';        // Clear existing content
         ul.style.overflowY = 'auto'; 
         ul.style.maxHeight = '150px'; 
-
-        // Define the options
-        var options = data.satellites;
-
-        // Sort by name alphabetically
-        options.sort((a, b) => a[1].localeCompare(b[1]));
-
-        // Populate list with satellite names
-        options.forEach(function(satellite) {
+        var options = data.satellites;// Define the options
+        options.sort((a, b) => a[1].localeCompare(b[1]));// Sort by name alphabetically
+        options.forEach(function(satellite) { // Populate list with satellite names
             var catnr = satellite[0];
             var name = satellite[1];
             var line1 = satellite[2];
             var line2 = satellite[3];
-
             var li = document.createElement("li");
             li.classList.add("list-item");
-
             // Set on-hover for each list item
             li.addEventListener('mouseenter', function() {
                 handleSatelliteHover(li, catnr); 
             });
-
             var label = document.createElement("label");
-
             var checkbox = document.createElement("input");
             checkbox.type = "checkbox";
             checkbox.addEventListener('change', handleCheckboxChange);
             checkbox.BasicSatellite = new BasicSatellite(name, catnr, line1, line2);
-
             label.appendChild(checkbox);
             label.appendChild(document.createTextNode(" " + name)); // Add space before name
-
             // Associate catnr + listname with li
             li.dataset.catnr = catnr;
             li.dataset.listname = listname;
-
             li.appendChild(label);
             addXButton(li);
             ul.appendChild(li);
@@ -72,9 +55,9 @@ function updatePresetListDisplay(){
         // Handle errors here
         console.log(error);
     });
-
 }
 
+// Shows last update time on hover in the preset list
 function handleSatelliteHover(item, catnr){
     fetch(`http://127.0.0.1:5000/satellites/get/updatetime/${catnr}`, { 
         method: 'GET'
@@ -102,6 +85,7 @@ function handleSatelliteHover(item, catnr){
     });
 }
 
+// Add delete button to each satellite in the preset list
 function addXButton(li) {
     var closeButton = document.createElement("button");
     closeButton.classList.add("x-button");
@@ -115,6 +99,7 @@ function addXButton(li) {
     li.appendChild(closeButton);
 }
 
+// Remove satellite from preset list and update in backend
 function removeSatelliteFromPreset(catnr, listname){
     fetch(`http://127.0.0.1:5000/satellites/delete/satellite/${catnr}/${listname}`, { 
         method: 'DELETE'
@@ -133,21 +118,19 @@ function removeSatelliteFromPreset(catnr, listname){
     });
 }
 
+// if only one checkbox is checked, perform update orbit and telemetry
 function handleCheckboxChange() {
     // Get all checkboxes within the div
     var checkboxes = document.querySelectorAll('#presetList input[type="checkbox"]');
-    
     // Count the number of checked checkboxes
     var checkedCount = 0;
     var satellite;
-
     checkboxes.forEach(function(checkbox) {
         if (checkbox.checked) {
             satellite = checkbox.BasicSatellite;
             checkedCount++;
         }
     });
-
     // Perform action if exactly one checkbox is checked
     if (checkedCount === 1) {
         updateTelemetryTLE(satellite.line1, satellite.line2);
@@ -156,6 +139,7 @@ function handleCheckboxChange() {
     }
 }
 
+// Show all available presets in dropdowns
 function populatePresetDropdowns(onStartup=false) {
     fetch(`http://127.0.0.1:5000//satellites/get/allpresets`)
     .then(function (response) {
@@ -221,12 +205,11 @@ function populateDynamicOptions(presets, dropdownElement, selectedValue = ""){
         const optionElement = new Option(preset, preset);
         dropdownElement.appendChild(optionElement);
         if (preset == selectedValue) {
-            console.log("match at " + preset + selectedValue);
+            //console.log("match at " + preset + selectedValue);
             matchFound = true;
             optionElement.setAttribute('selected', 'selected');
         }
     });
-
     if(!matchFound){
         var selectOptionToDisable = dropdownElement.querySelector("option[value='']");
         if(selectOptionToDisable !== null){
@@ -235,9 +218,9 @@ function populateDynamicOptions(presets, dropdownElement, selectedValue = ""){
     }
 }
 
-
+// Show popup messages for actions
 function showPopupList(code) {
-    console.log("Popping up");
+    //console.log("Popping up");
     // Show the popup
     var popCreate = document.getElementById("listCreate");
     var popRename = document.getElementById("listRename");

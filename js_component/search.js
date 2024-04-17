@@ -1,43 +1,8 @@
 let selectedSearchType = 'name'; // Default value
+const searchResults = document.getElementById('searchResults');
+const catnrMap = {};
 
-document.getElementById('searchOptions').addEventListener('change', function(event) {
-    var presetSelection = document.getElementById('presetSelection');
-    var searchDropdown = document.getElementsByClassName('search-dropdown')[0];
-    var tleInputContainer = document.getElementById('tleInputContainer');
-    var searchButton = document.getElementById('searchButton');
-    var satelliteSearchInput = document.getElementById('satelliteSearchInput');
-    // Check if the changed element is a radio button
-    if (event.target.type === 'radio') {
-        selectedSearchType = event.target.value;
-        
-        presetSelection.style.display = 'none';
-        searchDropdown.style.display = 'none';
-        tleInputContainer.style.display = 'none';
-
-        if (event.target.value === 'name') {
-            // Show elements for 'By Name' search
-            presetSelection.style.display = 'block';
-            searchDropdown.style.display = 'block';
-            searchButton.textContent = "Search";
-            satelliteSearchInput.placeholder = "Enter your search query";
-        } else if (event.target.value === 'catalog') {
-            // Show elements for 'By Catalog #' search
-            presetSelection.style.display = 'block';
-            searchDropdown.style.display = 'block';
-            searchButton.textContent = "Add";
-            satelliteSearchInput.placeholder = "Enter a catalog number";
-        } else if (event.target.value === 'manual') {
-            // Show elements for 'Manual' entry
-            presetSelection.style.display = 'block';
-            tleInputContainer.style.display = 'block';
-            searchButton.textContent = "Add";
-            satelliteSearchInput.placeholder = "Enter Satellite Name"; 
-        }
-    }
-});
-
-/* ======================= Search Functions ======================= */
-
+// Search function for user to search satellites by name or catalog number
 function performSearch(){
     console.log("Performing Search.")
     const searchValue = document.getElementById('satelliteSearchInput').value;
@@ -67,24 +32,7 @@ function performSearch(){
     }
 }
 
-document.getElementById('searchButton').addEventListener('click', performSearch);
-
-document.getElementById('addTleButton').addEventListener('click', performSearch);
-
-document.getElementById('satelliteSearchInput').addEventListener('keypress', function(event) {
-    // Check if Enter key is pressed (key code 13)
-    if (event.keyCode === 13) {
-      // Prevent the default action (e.g., form submission)
-      event.preventDefault();
-      // Perform the search
-      performSearch();
-    }
-  });
-
-/* ======================= Name Input Functions ======================= */
-
-const searchResults = document.getElementById('searchResults');
-
+// Get search results based on name
 function getNameSearchResults(name){
     var type = document.getElementById("presetDropdown").value;
     var formData = new FormData();
@@ -119,8 +67,7 @@ function getNameSearchResults(name){
     });
 }
 
-const catnrMap = {};
-
+// Display search results for search by Name
 function displayResults(results) {
     // Clear previous results
     searchResults.innerHTML = '';
@@ -136,11 +83,9 @@ function displayResults(results) {
         let formattedCatnr = String(catnr).padStart(5, '0');
         listItem.textContent = name + " (" + formattedCatnr + ")";
         listItem.catnr = catnr;
-    
         // Style for hover tooltip and cursor pointer
         listItem.style.cursor = 'pointer';
         listItem.title = 'Click to add';
-    
         // Adding event listener for click
         listItem.addEventListener('click', function() {
             satelliteSearchInput.value = "";
@@ -148,25 +93,15 @@ function displayResults(results) {
             console.log("clicked on " + listItem.textContent + " with catnr " + listItem.catnr);
             addTLEByCatnr(listItem.catnr);
         });
-    
         // Append the item and add a divider
         searchResults.appendChild(listItem);
         listItem.style.borderBottom = '1px solid #ccc'; // Adding a divider line
     }
-    
-
     // Show search results container
     searchResults.style.display = results.length > 0 ? 'block' : 'none';
 }
 
-document.addEventListener('click', function(event) {
-    if (!searchResults.contains(event.target)) {
-        searchResults.style.display = 'none';
-    }
-});
-
-/* ======================= Add By TLE ======================= */
-
+// Add the satellite to the selected list by catalog number
 function addTLEByCatnr(catnr){
     console.log(`Adding satellite with catnr ${catnr}`)
     var type = document.getElementById("presetDropdown").value;
@@ -199,6 +134,7 @@ function addTLEByCatnr(catnr){
     });
 }
 
+// Add satellite with user input TLE
 function addManualTLE(line1, line2, name){
     var type = document.getElementById("presetDropdown").value;
     if(line1 == "" || line2 == "" || name == ""){
@@ -233,44 +169,9 @@ function addManualTLE(line1, line2, name){
     });
 }
 
-function addManualTLE(line1, line2, name){
-    if(line1 == "" || line2 == "" || name == ""){
-        showPopup("popFail");
-    }
-
-    var type = document.getElementById("presetDropdown").value;
-    var formData = new FormData();
-    formData.append('s', line1);
-    formData.append('t', line2);
-    formData.append('name', name);
-    formData.append('listname', type);
-
-    fetch(`http://127.0.0.1:5000/satellites/post/manual/tle`, {
-        method: "POST",
-        body: formData
-    })
-    .then(function (response) {
-        if (!response.ok) {
-            throw new Error("HTTP error, status = " + response.status);
-        }
-        return response.json();
-    })
-    .then(function (responseData) {
-        // Satellite successfully added to list
-        console.log(responseData);
-        showPopupSearch("popSucc");
-        updatePresetListDisplay();
-    })
-    .catch(function (error) {
-        // Handle errors here
-        console.log(error);
-        showPopupSearch("popFail");
-    });
-}
-
+// Popup notification for search
 function showPopupSearch(code) {
-    console.log("Popping up");
-
+    //console.log("Popping up");
     // Show the popup
     var popFail = document.getElementById("searchPopupError");
     var popSucc = document.getElementById("searchPopupSucc");
@@ -317,3 +218,60 @@ function showPopupSearch(code) {
         }, 1000);
     }
 }
+
+document.getElementById('searchOptions').addEventListener('change', function(event) {
+    var presetSelection = document.getElementById('presetSelection');
+    var searchDropdown = document.getElementsByClassName('search-dropdown')[0];
+    var tleInputContainer = document.getElementById('tleInputContainer');
+    var searchButton = document.getElementById('searchButton');
+    var satelliteSearchInput = document.getElementById('satelliteSearchInput');
+    // Check if the changed element is a radio button
+    if (event.target.type === 'radio') {
+        selectedSearchType = event.target.value;
+        
+        presetSelection.style.display = 'none';
+        searchDropdown.style.display = 'none';
+        tleInputContainer.style.display = 'none';
+
+        if (event.target.value === 'name') {
+            // Show elements for 'By Name' search
+            presetSelection.style.display = 'block';
+            searchDropdown.style.display = 'block';
+            searchButton.textContent = "Search";
+            satelliteSearchInput.placeholder = "Enter your search query";
+        } else if (event.target.value === 'catalog') {
+            // Show elements for 'By Catalog #' search
+            presetSelection.style.display = 'block';
+            searchDropdown.style.display = 'block';
+            searchButton.textContent = "Add";
+            satelliteSearchInput.placeholder = "Enter a catalog number";
+        } else if (event.target.value === 'manual') {
+            // Show elements for 'Manual' entry
+            presetSelection.style.display = 'block';
+            tleInputContainer.style.display = 'block';
+            searchButton.textContent = "Add";
+            satelliteSearchInput.placeholder = "Enter Satellite Name"; 
+        }
+    }
+});
+
+document.getElementById('searchButton').addEventListener('click', performSearch);
+
+document.getElementById('addTleButton').addEventListener('click', performSearch);
+
+// Handle enter when search
+document.getElementById('satelliteSearchInput').addEventListener('keypress', function(event) {
+    // Check if Enter key is pressed (key code 13)
+    if (event.keyCode === 13) {
+      // Prevent the default action (e.g., form submission)
+      event.preventDefault();
+      // Perform the search
+      performSearch();
+    }
+});
+
+document.addEventListener('click', function(event) {
+    if (!searchResults.contains(event.target)) {
+        searchResults.style.display = 'none';
+    }
+});
