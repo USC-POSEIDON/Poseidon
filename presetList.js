@@ -91,6 +91,27 @@ document.getElementById("closePresetModal").onclick = function() {
     document.getElementById("managePresetModal").style.display = "none";
 }
 
+document.getElementById("selectAll").onclick = function() {
+    //if any checkboxes are checked, uncheck all
+    var checkboxes = document.querySelectorAll('#presetList input[type="checkbox"]');
+    var anyChecked = false;
+    checkboxes.forEach(checkbox => {
+        if(checkbox.checked){
+            anyChecked = true;
+        }
+    });
+    if(anyChecked){
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = false;
+        });
+    }
+    else{
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = true;
+        });
+    }
+}
+
 document.getElementById("addPresetBtn").onclick = function() {
     const newName = document.getElementById("addPresetInput").value;
     fetch(`http://127.0.0.1:5000//satellites/post/preset/${newName}`, {

@@ -231,6 +231,11 @@ iframe {
     cursor: pointer;
 }
 
+#selectAll{
+    display: none;
+    margin-bottom: 10px;
+}
+
 #groundStationModal, #managePresetModal, #preferenceModal {
     display: none; 
     position: fixed; 

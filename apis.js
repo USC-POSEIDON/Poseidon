@@ -121,6 +121,7 @@ function updatePresetListDisplay(){
             addXButton(li);
             ul.appendChild(li);
         }); 
+        document.getElementById("selectAll").style.display = 'block';
     })
     .catch(function (error) {
         // Handle errors here
@@ -186,6 +187,7 @@ function removeSatelliteFromPreset(catnr, listname){
         console.log(error);
     });
 }
+
 
 function handleCheckboxChange() {
     // Get all checkboxes within the div
@@ -282,7 +284,7 @@ function updatePassTimeDisplay(data){
                     dateCell.textContent = passline["date"] + ' ' + "(Rise)";
                     break;
                 case 1:
-                    dateCell.textContent = passline["date"] + ' ' + "(Culminate)";
+                    dateCell.textContent = passline["date"] + ' ' + "(Closest Pt)";
                     break;
                 case 2:
                     dateCell.textContent = passline["date"] + ' ' + "(Set)";
