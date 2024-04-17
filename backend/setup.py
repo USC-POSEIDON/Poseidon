@@ -12,6 +12,7 @@ setup(
         'requests',
         'skyfield',
         'setuptools',
+        'waitress',
         'dateutil'
     ],
 )

@@ -149,7 +149,6 @@ function trackComponentState(id, isOpen = true) {
 // Update the Windows dropdown to reflect the current state of the components
 function toggleComponentVisibility(id, title, shouldShow) {
   const items = goldenLayout.root.getItemsById(id);
-  console.log(goldenLayout.root.getItemsById(id));
   if (shouldShow && items.length === 0) {
       addComponentToLayout(id);
   } else if (!shouldShow && items.length > 0) {
@@ -160,7 +159,6 @@ function toggleComponentVisibility(id, title, shouldShow) {
 // add component to current layout
 function addComponentToLayout(id) {
   const componentConfig = getComponentConfig(id);
-  console.log(componentConfig);
   if (componentConfig) {
       let targetContainer = goldenLayout.root.contentItems[0];
     

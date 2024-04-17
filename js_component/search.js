@@ -4,7 +4,7 @@ const catnrMap = {};
 
 // Search function for user to search satellites by name or catalog number
 function performSearch(){
-    console.log("Performing Search.")
+    //console.log("Performing Search.")
     const searchValue = document.getElementById('satelliteSearchInput').value;
     if (selectedSearchType === 'name') {
         getNameSearchResults(searchValue);
@@ -15,14 +15,14 @@ function performSearch(){
         const line1 = document.getElementById('tleLine1Input').value;
         const line2 = document.getElementById('tleLine2Input').value;
         const name = document.getElementById('satelliteNameInput').value;
-        if(isValidTLE(line1, line2)){
+        if(name == "" || line1 == "" || line2 == ""){
+            document.getElementById('tle-error').textContent = "Please fill out all fields";
+        }
+        else if(isValidTLE(line1, line2)){
             addManualTLE(line1, line2, name);
             document.getElementById('tleLine1Input').value = 'Enter TLE Line 1';
             document.getElementById('tleLine2Input').value = 'Enter TLE Line 2';
             document.getElementById('satelliteNameInput').value = 'Enter Satellite Name';
-        }
-        else if(name == "" || line1 == "" || line2 == ""){
-            document.getElementById('tle-error').textContent = "Please fill out all fields";
         }
         else{
             document.getElementById('tle-error').textContent = "Invalid TLE";
@@ -34,11 +34,15 @@ function performSearch(){
 
 // Get search results based on name
 function getNameSearchResults(name){
+    showPopupNotification("Searching...", "pass");
     var type = document.getElementById("presetDropdown").value;
     var formData = new FormData();
     formData.append('listname', type);
-
-    console.log(`Searching for satellites with name ${name}`);
+    if(type === ""){
+        showPopupNotification("Please select a list", "error");
+        return;
+    }
+    //console.log(`Searching for satellites with name ${name}`);
 
     fetch(`http://127.0.0.1:5000/satellites/get/names/${name}`)
     .then(function (response) {
@@ -49,20 +53,20 @@ function getNameSearchResults(name){
     })
     .then(function (responseData) {
         // Handle the response data here
-        console.log(responseData);
+        //console.log(responseData);
         const data = JSON.parse(JSON.stringify(responseData));
         const names = data.satellites;
 
         // Display search results
         if (names.length > 20) {
-            showPopupSearch("popResultOverflow");
+            showPopupNotification("Please Refine your search. Too many results.", "error");
             return;
         }
         displayResults(names);
     })
     .catch(function (error) {
         // Handle errors here
-        showPopupList("unexpected");
+        showPopupNotification(error, "error");
         console.log(error);
     });
 }
@@ -90,7 +94,6 @@ function displayResults(results) {
         listItem.addEventListener('click', function() {
             satelliteSearchInput.value = "";
             searchResults.style.display = 'none';
-            console.log("clicked on " + listItem.textContent + " with catnr " + listItem.catnr);
             addTLEByCatnr(listItem.catnr);
         });
         // Append the item and add a divider
@@ -103,12 +106,14 @@ function displayResults(results) {
 
 // Add the satellite to the selected list by catalog number
 function addTLEByCatnr(catnr){
-    console.log(`Adding satellite with catnr ${catnr}`)
+    //console.log(`Adding satellite with catnr ${catnr}`)
     var type = document.getElementById("presetDropdown").value;
     var formData = new FormData();
     formData.append('listname', type);
-
-    console.log(`Adding sat ${catnr} to list ${type}`);
+    if(type === ""){
+        showPopupNotification("Please select a list", "error");
+        return;
+    }
 
     fetch(`http://127.0.0.1:5000//satellites/post/catnr/${catnr}`, {
         method: "POST",
@@ -123,23 +128,20 @@ function addTLEByCatnr(catnr){
     })
     .then(function (responseData) {
         // Satellite successfully added to list
-        console.log(responseData);
-        showPopupSearch("popSucc");
+        //console.log(responseData);
+        showPopupNotification("Satellite successfully added to list", "pass");
         updatePresetListDisplay();
     })
     .catch(function (error) {
         // Handle errors here
         console.log(error);
-        showPopupSearch("popFail");
+        showPopupNotification(error, "error");
     });
 }
 
 // Add satellite with user input TLE
 function addManualTLE(line1, line2, name){
     var type = document.getElementById("presetDropdown").value;
-    if(line1 == "" || line2 == "" || name == ""){
-        showPopup("popFail");
-    }
     var formData = new FormData();
     formData.append('s', line1);
     formData.append('t', line2);
@@ -158,65 +160,15 @@ function addManualTLE(line1, line2, name){
     })
     .then(function (responseData) {
         // Satellite successfully added to list
-        console.log(responseData);
-        showPopupSearch("popSucc");
+        //console.log(responseData);
+        showPopupNotification("Satellite successfully added to list", "pass");
         updatePresetListDisplay();
     })
     .catch(function (error) {
         // Handle errors here
         console.log(error);
-        showPopupSearch("popFail");
+        showPopupNotification(error, "error");
     });
-}
-
-// Popup notification for search
-function showPopupSearch(code) {
-    //console.log("Popping up");
-    // Show the popup
-    var popFail = document.getElementById("searchPopupError");
-    var popSucc = document.getElementById("searchPopupSucc");
-    var popResultOverflow = document.getElementById("searchPopupOverflow");
-    var unexpected = document.getElementById("unexpected");
-    if(code == "popSucc"){
-        popSucc.classList.add("show");
-        setTimeout(function() {
-            popSucc.style.opacity = "0"; // Change opacity
-            setTimeout(function() {
-                popSucc.classList.remove("show");
-                popSucc.style.opacity = ""; // Reset opacity after transition
-            }, 500); // Wait for the transition to complete (0.5s)
-        }, 1000);
-    }
-    else if(code == "popResultOverflow"){
-        popResultOverflow.classList.add("show");
-        setTimeout(function() {
-            popResultOverflow.style.opacity = "0"; // Change opacity
-            setTimeout(function() {
-                popResultOverflow.classList.remove("show");
-                popResultOverflow.style.opacity = ""; // Reset opacity after transition
-            }, 500); // Wait for the transition to complete (0.5s)
-        }, 1000);
-    }
-    else if(code == "popFail"){
-        popFail.classList.add("show");
-        setTimeout(function() {
-            popFail.style.opacity = "0"; // Change opacity
-            setTimeout(function() {
-                popFail.classList.remove("show");
-                popFail.style.opacity = ""; // Reset opacity after transition
-            }, 500); // Wait for the transition to complete (0.5s)
-        }, 1000);
-    }
-    else{
-        unexpected.classList.add("show");
-        setTimeout(function() {
-            unexpected.style.opacity = "0"; // Change opacity
-            setTimeout(function() {
-                unexpected.classList.remove("show");
-                unexpected.style.opacity = ""; // Reset opacity after transition
-            }, 500); // Wait for the transition to complete (0.5s)
-        }, 1000);
-    }
 }
 
 document.getElementById('searchOptions').addEventListener('change', function(event) {

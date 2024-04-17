@@ -64,7 +64,7 @@ function initializeViewer() {
             return response.json();
         })
         .then(function (responseData) {
-            console.log(responseData);  // Log the response data
+            //console.log(responseData);  // Log the response data
             const data = JSON.parse(JSON.stringify(responseData));
             const lat = data.lat;
             const lon = data.lon; 
@@ -103,9 +103,9 @@ function updateGroundStation(lat, lon){
     if (groundStationEntity) {
         groundStationEntity.position = newGroundStationPosition;
         document.getElementById('GSLocText').textContent = 'GS: ' + latitude + '°, ' + longitude + '°';
-        console.log('Ground Station position initialized to:', latitude, longitude);
+        //console.log('Ground Station position initialized to:', latitude, longitude);
     } else {
-        console.log('Ground Station entity not found.');
+        //console.log('Ground Station entity not found.');
     }   
 }
 
@@ -128,7 +128,7 @@ function updateGroundStationBackEnd(lat, lon){
         return response.json();
     })
     .then(function (data) {
-        console.log(data);  // Log the response data
+        //console.log(data);  // Log the response data
     })
     .catch(function (error) {
         console.log(error);
@@ -203,22 +203,6 @@ function createOrUpdateOrbitPath(satrec) {
 
 // Function to validate TLE format
 function isValidTLE(line1, line2) {
-    console.log("Is TLE valid?");
-    console.log(line1);
-    console.log(line2);
-    if(line1.length !== 69){
-        console.log("line 1 len error");
-    }
-    if(line2.length !== 69){
-        console.log("line 2 len error");
-    }
-    if(line1.charAt(0) !== '1'){
-        console.log("line 1 char error");
-    }
-    if(line2.charAt(0) !== '2'){
-        console.log("line 2 char error");
-    }
-
     return line1.length === 69 && line2.length === 69 && line1.charAt(0) === '1' && line2.charAt(0) === '2';
 }
 
@@ -319,9 +303,10 @@ document.getElementById('updatePosition').addEventListener('click', function() {
      if (groundStationEntity) {
          groundStationEntity.position = newGroundStationPosition;
          document.getElementById('GSLocText').textContent = 'GS: ' + latitude + '°, ' + longitude + '°';
-         console.log('Ground Station position updated to:', latitude, longitude);
+         //console.log('Ground Station position updated to:', latitude, longitude);
+         showPopupNotification("Ground Station position updated", "pass");
      } else {
-         console.log('Ground Station entity not found.');
+         //console.log('Ground Station entity not found.');
      }
  
     console.log('Updated groundStationPosition:', groundStationPosition, updateGroundStationBackEnd(latitude, longitude), predictPasses());
