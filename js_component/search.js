@@ -109,6 +109,10 @@ function addTLEByCatnr(catnr){
     formData.append('listname', type);
 
     //console.log(`Adding sat ${catnr} to list ${type}`);
+    if(type === "Select preset to add to"){
+        showPopupNotification("Please select a list", "error");
+        return;
+    }
 
     fetch(`http://127.0.0.1:5000//satellites/post/catnr/${catnr}`, {
         method: "POST",

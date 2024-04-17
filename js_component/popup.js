@@ -3,6 +3,7 @@ function showPopupNotification(Message, type) {
     //console.log("Popping up");
     // Show the popup
     var popNotifcation = document.getElementById("popNotifcation");
+    popNotifcation.style.backgroundColor = "#333";
     if(type === "error"){
         popNotifcation.style.backgroundColor = "#f44336";
     }
@@ -14,5 +15,5 @@ function showPopupNotification(Message, type) {
             popNotifcation.classList.remove("show");
             popNotifcation.style.opacity = ""; // Reset opacity after transition
         }, 500); // Wait for the transition to complete (0.5s)
-    }, 2000);
+    }, 1500);
 }
