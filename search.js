@@ -125,9 +125,9 @@ function displayResults(results) {
     // Clear previous results
     searchResults.innerHTML = '';
     searchResults.style.overflowY = 'auto'; 
-    searchResults.style.maxHeight = '50px'; 
+    searchResults.style.maxHeight = '70px'; 
+    searchResults.style.marginLeft = '0px';
 
-    // Display the first 5 results
     for (let i = 0; i < results.length; i++) {
         const result = results[i];
         const name = result[0];
@@ -136,14 +136,24 @@ function displayResults(results) {
         let formattedCatnr = String(catnr).padStart(5, '0');
         listItem.textContent = name + " (" + formattedCatnr + ")";
         listItem.catnr = catnr;
+    
+        // Style for hover tooltip and cursor pointer
+        listItem.style.cursor = 'pointer';
+        listItem.title = 'Click to add';
+    
+        // Adding event listener for click
         listItem.addEventListener('click', function() {
-            satelliteSearchInput.value = ""; // Set the input value to the clicked result
-            searchResults.style.display = 'none'; // Hide the search results
+            satelliteSearchInput.value = "";
+            searchResults.style.display = 'none';
             console.log("clicked on " + listItem.textContent + " with catnr " + listItem.catnr);
             addTLEByCatnr(listItem.catnr);
         });
+    
+        // Append the item and add a divider
         searchResults.appendChild(listItem);
+        listItem.style.borderBottom = '1px solid #ccc'; // Adding a divider line
     }
+    
 
     // Show search results container
     searchResults.style.display = results.length > 0 ? 'block' : 'none';
