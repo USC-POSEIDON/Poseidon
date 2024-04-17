@@ -87,7 +87,7 @@ function updatePassTimeDisplay(data){
 
 //Beauty print the date string
 function parseDateString(dateString) {
-    console.log(dateString);
+    //console.log(dateString);
 
     // Split the date string by space
     const parts = dateString.split(" ");

@@ -317,7 +317,8 @@ let timezone = "UTC";
 
 function updateDateTime() {
     let now = new Date();
-    
+
+    predictPasses();
     // Get the individual components of the date and time
     let year = now.getFullYear();
     let month = String(now.getMonth() + 1).padStart(2, '0');
