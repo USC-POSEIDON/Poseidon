@@ -61,8 +61,8 @@ function performSearch(){
         }
         else{
             document.getElementById('tle-error').textContent = "Invalid TLE";
-            document.getElementById('tleLine1Input').value = 'Enter TLE Line 1';
-            document.getElementById('tleLine2Input').value = 'Enter TLE Line 2';
+            document.getElementById('tleLine1Input').value = '';
+            document.getElementById('tleLine2Input').value = '';
         }
     }
 }
@@ -190,11 +190,10 @@ function addTLEByCatnr(catnr){
 }
 
 function addManualTLE(line1, line2, name){
+    var type = document.getElementById("presetDropdown").value;
     if(line1 == "" || line2 == "" || name == ""){
         showPopup("popFail");
     }
-
-    var type = document.getElementById("presetDropdown").value;
     var formData = new FormData();
     formData.append('s', line1);
     formData.append('t', line2);

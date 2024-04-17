@@ -231,7 +231,7 @@ iframe {
     cursor: pointer;
 }
 
-#groundStationModal, #managePresetModal {
+#groundStationModal, #managePresetModal, #preferenceModal {
     display: none; 
     position: fixed; 
     z-index: 2000; 
@@ -245,7 +245,7 @@ iframe {
     padding-top: 60px;
 }
 
-#groundStationModal > div, #managePresetModal > div {
+#groundStationModal > div, #managePresetModal > div, #preferenceModal > div {
     background-color: #fefefe;
     margin: auto;
     padding: 20px;

@@ -65,11 +65,7 @@ function initializeViewer() {
         console.log('Updated groundStationPosition:', groundStationPosition, updateGroundStationBackEnd(latitude, longitude), predictPasses());
         document.getElementById('groundStationModal').style.display = "none";
     });
-      
-    document.getElementById('closeModal').addEventListener('click', function() {
-        document.getElementById('groundStationModal').style.display = "none";
-    });
-
+    
     viewer.entities.add({
         id: 'groundStation',
         position: groundStationPosition,

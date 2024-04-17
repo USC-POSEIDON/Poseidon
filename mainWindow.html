@@ -16,6 +16,7 @@
             <li>Config
                 <div class="dropdown-content">
                     <a href="#Ground_Station" id="groundStationLink">Ground Station</a>
+                    <a href="#Preference" id="preference">Preferences</a>
                     <a href="#Debug_Window" id="debugWindow">Debug Window</a>
                 </div>
             </li>
@@ -56,6 +57,20 @@
         </div>
     </div>
     
+    <div id="preferenceModal">
+        <div>
+            <h2>User Preference</h2>
+            <label for="timeFormat">Time Format:</label>
+            <select id="timeFormat">
+                <option value="24">UTC</option>
+                <option value="12">Local</option>
+            </select>
+            <br><br>
+            <label for="commandFile">Command File upload:</label>
+            <br><br>
+            <button id="closePref">Close</button>
+        </div>
+    </div>
 
     <div id="commandGeneration">
         <div>
@@ -160,6 +175,7 @@
                     <input type="text" id="tleLine2Input" placeholder="Enter TLE Line 2">
                     <input type="text" id="satelliteNameInput" placeholder="Enter Satellite Name">
                     <button id="addTleButton">Add</button>
+                    <br><br>
                     <span id="tle-error" style="color: red;"></span>
                 </div>
                 <div id="searchOptions">

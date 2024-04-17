@@ -43,6 +43,11 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('groundStationModal').style.display = 'block';
     });
 
+    document.getElementById('preference').addEventListener('click', function(event) {
+        event.preventDefault();
+        document.getElementById('preferenceModal').style.display = 'block';
+    });
+
     document.getElementById('debugWindow').addEventListener('click', function(event) {
         event.preventDefault();
         ipcRenderer.send('open-devtools', 'devtools');
@@ -111,8 +116,18 @@ document.addEventListener('DOMContentLoaded', function() {
         if (event.key === 'Escape') { 
             document.getElementById('groundStationModal').style.display = 'none';
             document.getElementById('managePresetModal').style.display = 'none';
+            document.getElementById('preferenceModal').style.display = 'none';
         }
     });
+
+    document.getElementById('closeModal').addEventListener('click', function() {
+        document.getElementById('groundStationModal').style.display = "none";
+    });
+
+    document.getElementById('closePref').addEventListener('click', function() {
+        document.getElementById('preferenceModal').style.display = "none";
+    });
+
 
     // Initialize or update the Windows dropdown
     updateWindowsDropdown();
