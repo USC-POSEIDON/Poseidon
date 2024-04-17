@@ -7,6 +7,9 @@ function updateTelemetryTLE(line1, line2){
 }
 
 function updateTelemetryData() {
+    if (defaultTleLine1 == '' || defaultTleLine2 == '') {
+        return;
+    }
     fetch(`http://127.0.0.1:5000/calculations/telemetry?`+ new URLSearchParams({
         s: defaultTleLine1,
         t: defaultTleLine2,

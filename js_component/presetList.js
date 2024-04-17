@@ -150,7 +150,7 @@ function populatePresetDropdowns(onStartup=false) {
     })
     .then(function (responseData) {
         // Handle the response data here
-        console.log(responseData);
+        //console.log(responseData);
         const data = JSON.parse(JSON.stringify(responseData));
         const presets = data.names;
 
