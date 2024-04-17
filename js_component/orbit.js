@@ -1,6 +1,15 @@
 var TleLine1 = '';
 var TleLine2 = '';
 
+class BasicSatellite {
+    constructor(name, catnr, line1, line2) {
+        this.catnr = catnr;
+        this.name = name;
+        this.line1 = line1;
+        this.line2 = line2;
+    }
+}
+
 // Initialize satellite record from default TLE
 var satrec;
 if (TleLine1 !== '' && TleLine2 !== '') {
@@ -136,6 +145,31 @@ function initializeViewer() {
         }); 
     });
 }
+
+function updateGroundStationBackEnd(lat, lon){
+    fetch(`http://127.0.0.1:5000/calculations/post/groundstation`, { 
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            lat: lat,
+            lon: lon
+        })
+    })
+    .then(function (response) {
+        if (!response.ok) {
+            throw new Error("HTTP error, status = " + response.status);
+        }
+        return response.json();
+    })
+    .then(function (data) {
+        console.log(data);  // Log the response data
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+};
 
 // Function to update satellite TLE from user input
 function updateSatelliteTLE(tleLine1, tleLine2) {

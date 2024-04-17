@@ -20,7 +20,7 @@ app.on('ready', function() {
         alwaysOnTop: true
     });
     splashScreen.loadURL(url.format({
-        pathname: path.join(__dirname, 'splash.html'), 
+        pathname: path.join(__dirname, './splash_screen/splash.html'), 
         protocol: 'file:',
         slashes: true
     }));
