@@ -1,6 +1,7 @@
 import json
 import sys
 from datetime import datetime, timezone, timedelta
+from dateutil import tz
 import time
 
 from sgp4.api import Satrec, jday, SGP4_ERRORS
@@ -23,19 +24,22 @@ observer = wgs84.latlon(GS_LATITUDE, GS_LONGITUDE)
 ts = load.timescale()
 
 class PassLine:
-    def __init__(self, date, az, el, range):
+    def __init__(self, name, catnr, label, date, az, el, range):
+        self.name = name
+        self.catnr = catnr
+        self.label = label
         self.date = date
         self.az = az
         self.el = el
         self.range = range
 
-class Pass:
-    def __init__(self, name, catnr, rise: PassLine, culminate: PassLine, set: PassLine):
-        self.name = name
-        self.catnr = catnr
-        self.rise = rise
-        self.culminate = culminate
-        self.set = set
+# class Pass:
+#     def __init__(self, name, catnr, rise: PassLine, culminate: PassLine, set: PassLine):
+#         self.name = name
+#         self.catnr = catnr
+#         self.rise = rise
+#         self.culminate = culminate
+#         self.set = set
 
 def initGroundStation():
     """ Set observer to ground station coordinates from database (if exists) """
@@ -65,20 +69,21 @@ def getPassTimeInfo():
         s: TLE line 1.
         t: TLE line 2.
         catnr
+        timezone: UTC / Local
     Optional params:
         name: Satellite name
         days: Number of days to predict (default 7).
         min_deg: Minimum degree for a pass (default 5.0°)
 
     Returns:
-        A list of Pass objects. 
-            Each Pass has a catnr (catalog number)
-                and three PassLines: rise, culminate, and set.
-            Each PassLine has:
+        A list of PassLine objects. 
+            Each PassLine has: 
+                catnr (catalog number)
                 date: UTC date string, formatted like so - 2024 Feb 12 21:41:06
                 az: Azimuth in degrees
                 el: Elevation in degrees
                 range: Slant range in km
+                label: rise/culminate/set
 
         And the corresponding JSON string.
 
@@ -90,6 +95,7 @@ def getPassTimeInfo():
     t = request.args.get('t')
     catnr = request.args.get('catnr')
     satname = request.args.get('name')
+    tz_select = request.args.get('timezone')
 
     if not s:
         abort(400, description='GET request unsuccessful: no TLE line 1')
@@ -99,6 +105,8 @@ def getPassTimeInfo():
         abort(400, description='GET request unsuccessful: no catalog number')
     if not satname: 
         abort(400, description='GET request unsuccessful: no satellite name')
+    if not timezone: 
+        abort(400, description='GET request unsuccessful: no timezone')
 
     try:
         days = int(request.args.get('days')) if request.args.get('days') else 7
@@ -118,28 +126,32 @@ def getPassTimeInfo():
 
     # Prediction
     t, events = satellite.find_events(observer, t0, t1, altitude_degrees=min_deg)
-    event_names = 'rise', 'culminate', 'set'
+    event_names = 'rise', 'closest pt.', 'set'
     passes = []
-    rise: PassLine = None
-    culminate: PassLine = None
-    set: PassLine = None
 
     for ti, event in zip(t, events):
         pos = difference.at(ti)
         alt, az, _ = pos.altaz()
         _, _, range, _, _, _ = pos.frame_latlon_and_rates(observer)
-        name = event_names[event]
+        label = event_names[event]
         date = ti.utc_strftime('%Y %b %d %H:%M:%S')
-        if name == 'rise':
-            rise = PassLine(date, az.degrees, alt.degrees, range.km)
-        elif name == 'culminate':
-            culminate = PassLine(date, az.degrees, alt.degrees, range.km)
-        else:
-            set = PassLine(date, az.degrees, alt.degrees, range.km)
-            # if rise == None:
-            #     raise RuntimeError
-            passes.append(Pass(satname, catnr, rise, culminate, set))
 
+        if tz_select != "UTC":
+            from_zone = tz.tzutc()
+            to_zone = tz.tzlocal()
+
+            # utc = datetime.utcnow()
+            utc = datetime.strptime(date, '%Y %b %d %H:%M:%S')
+
+            # Tell the datetime object that it's in UTC time zone
+            utc = utc.replace(tzinfo=from_zone)
+
+            # Convert time zone
+            local = utc.astimezone(to_zone)
+            date = local.strftime('%Y %b %d %H:%M:%S')
+
+        passes.append(PassLine(satname, catnr, label, date, az.degrees, alt.degrees, range.km))
+        
     json_string = json.dumps(passes, default=vars, indent=4)
     return json_string, 200
 

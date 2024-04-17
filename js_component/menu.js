@@ -124,6 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
         event.preventDefault();
         
         var checkboxes = document.querySelectorAll('#presetList input[type="checkbox"]:checked');
+        var tz = document.getElementById('timeFormat').value;
         const promises = [];
         
         checkboxes.forEach(checkbox => {
@@ -134,6 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 t: satellite.line2,
                 catnr: satellite.catnr,
                 name: satellite.name,
+                timezone: tz,
                 days: 1 
             });
             

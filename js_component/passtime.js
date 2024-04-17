@@ -2,6 +2,7 @@
 function predictPasses(){
     var checkboxes = document.querySelectorAll('#presetList input[type="checkbox"]');
     var satellite;
+    var tz = document.getElementById('timeFormat').value;
     const promises = [];
     checkboxes.forEach(function(checkbox) {
         if (checkbox.checked) {
@@ -11,6 +12,7 @@ function predictPasses(){
                 t: satellite.line2,
                 catnr: satellite.catnr,
                 name: satellite.name,
+                timezone: tz, 
                 days: 5
             }))
             .then(function (response) {
@@ -38,7 +40,20 @@ function predictPasses(){
                 combinedList = [...combinedList, ...passList];
             });
 
-            combinedList.sort((a, b) => parseDateString(a.rise.date) - parseDateString(b.rise.date));
+            combinedList.sort((a, b) => parseDateString(a.date) - parseDateString(b.date));
+            // combinedList.sort((a, b) => {
+            //     // Parse UTC dates to local dates
+            //     const dateA = new Date(a.rise.date);
+            //     const dateB = new Date(b.rise.date);
+                
+            //     // Convert UTC dates to local time
+            //     const localDateA = dateA.toLocaleString();
+            //     const localDateB = dateB.toLocaleString();
+                
+            //     // Compare the local dates
+            //     return parseDateString(localDateA) - parseDateString(localDateB);
+            // });
+            
             updatePassTimeDisplay(combinedList);
         })
         .catch(error => console.error('Error:', error));
@@ -49,42 +64,32 @@ function updatePassTimeDisplay(data){
     var tableBody = document.querySelector('#PassTimeTable tbody');
     tableBody.innerHTML = '';
     data.forEach(function(pass) {
-        var rise = pass["rise"]
-        var set = pass["set"];
-        var culminate = pass["culminate"];
-        var name = pass["name"]
-        var passlines = [rise, culminate, set];
-        var count = 0;
-        passlines.forEach(function(passline) {
-            var row = tableBody.insertRow();
-            var dateCell = row.insertCell(0);
-            var nameCell = row.insertCell(1);
-            var azCell = row.insertCell(2);
-            var elCell = row.insertCell(3);
-            var rangeCell = row.insertCell(4);
-            //case 0: rise, case 1: culminate, case 2: set
-            switch(count){
-                case 0:
-                    dateCell.textContent = passline["date"] + ' ' + "(Rise)";
-                    break;
-                case 1:
-                    dateCell.textContent = passline["date"] + ' ' + "(Closest Pt)";
-                    break;
-                case 2:
-                    dateCell.textContent = passline["date"] + ' ' + "(Set)";
-                    break;
-            }
-            nameCell.textContent = name;
-            azCell.textContent = passline["az"].toFixed(2) + '°';
-            elCell.textContent = passline["el"].toFixed(2) + '°';
-            rangeCell.textContent = passline["range"].toFixed(2) + ' km';
-            count++;
-        });
+        var name = pass["name"];
+        var az = pass["az"];
+        var el = pass["el"];
+        var range = pass["range"];
+        var date = pass["date"];
+        var label = pass["label"];
+
+        var row = tableBody.insertRow();
+        var dateCell = row.insertCell(0);
+        var nameCell = row.insertCell(1);
+        var azCell = row.insertCell(2);
+        var elCell = row.insertCell(3);
+        var rangeCell = row.insertCell(4);
+        
+        dateCell.textContent = `${date} (${label})`;
+        nameCell.textContent = name;
+        azCell.textContent = az.toFixed(2) + '°';
+        elCell.textContent = el.toFixed(2) + '°';
+        rangeCell.textContent = range.toFixed(2) + ' km';
     }); 
 }
 
 //Beauty print the date string
 function parseDateString(dateString) {
+    console.log(dateString);
+
     // Split the date string by space
     const parts = dateString.split(" ");
     

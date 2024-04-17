@@ -12,5 +12,6 @@ setup(
         'requests',
         'skyfield',
         'setuptools',
+        'dateutil'
     ],
 )
