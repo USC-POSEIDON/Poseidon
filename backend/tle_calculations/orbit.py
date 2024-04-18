@@ -1,15 +1,14 @@
 import json
 import sys
 from datetime import datetime, timezone, timedelta
-from dateutil import tz
-import time
-
+import pytz
+from datetime import datetime, timedelta
 from sgp4.api import Satrec, jday, SGP4_ERRORS
 from sgp4.conveniences import dump_satrec, jday_datetime, UTC
-from skyfield.api import EarthSatellite, load, wgs84
+from skyfield.api import EarthSatellite, load, wgs84, Topos
 import scipy.constants as const
 from flask import Flask, abort, request, jsonify
-
+from tzlocal import get_localzone
 from tle_calculations.database import *
 from tle_calculations import app
 
@@ -97,63 +96,49 @@ def getPassTimeInfo():
     satname = request.args.get('name')
     tz_select = request.args.get('timezone')
 
-    if not s:
-        abort(400, description='GET request unsuccessful: no TLE line 1')
-    if not t:
-        abort(400, description='GET request unsuccessful: no TLE line 2')
-    if not catnr: 
-        abort(400, description='GET request unsuccessful: no catalog number')
-    if not satname: 
-        abort(400, description='GET request unsuccessful: no satellite name')
-    if not timezone: 
-        abort(400, description='GET request unsuccessful: no timezone')
+    if not s or not t or not catnr:
+        abort(400, description='GET request unsuccessful: missing required TLE lines or catalog number.')
+    if not tz_select: 
+        abort(400, description='GET request unsuccessful: no timezone specified.')
 
     try:
-        days = int(request.args.get('days')) if request.args.get('days') else 7
-        min_deg = float(request.args.get('min_deg')) if request.args.get('min_deg') else 5.0
-    except:
+        days = int(request.args.get('days', 7))
+        min_deg = float(request.args.get('min_deg', 5.0))
+    except ValueError:
         abort(400, description="Incorrect type for days or min_deg.")
 
-    # Create Skyfield satellite and observer (groundstation) objects
+    ts = load.timescale()
     satellite = EarthSatellite(s, t, satname, ts)
-    difference = satellite - observer
 
-    # Set start and end time (UTC)
-    startDate = datetime.now(tz=timezone.utc)
-    endDate = startDate + timedelta(days = int(days))
+    startDate = datetime.now(pytz.utc)
+    endDate = startDate + timedelta(days=days)
     t0 = ts.utc(startDate.year, startDate.month, startDate.day)
     t1 = ts.utc(endDate.year, endDate.month, endDate.day)
 
-    # Prediction
     t, events = satellite.find_events(observer, t0, t1, altitude_degrees=min_deg)
-    event_names = 'rise', 'closest pt.', 'set'
+    event_names = ['rise', 'closest pt.', 'set']
     passes = []
 
     for ti, event in zip(t, events):
-        pos = difference.at(ti)
-        alt, az, _ = pos.altaz()
-        _, _, range, _, _, _ = pos.frame_latlon_and_rates(observer)
+        pos = satellite - observer
+        pos = pos.at(ti)
+        alt, az, dist = pos.altaz()
         label = event_names[event]
         date = ti.utc_strftime('%Y %b %d %H:%M:%S')
 
-        if tz_select != "UTC":
-            from_zone = tz.tzutc()
-            to_zone = tz.tzlocal()
+        if tz_select == "LOC":
+            to_zone = get_localzone()  # Get the local timezone of the server
+        else:
+            to_zone = pytz.timezone(tz_select)
 
-            # utc = datetime.utcnow()
-            utc = datetime.strptime(date, '%Y %b %d %H:%M:%S')
+        utc = datetime.strptime(date, '%Y %b %d %H:%M:%S').replace(tzinfo=pytz.utc)
+        local = utc.astimezone(to_zone)
+        date = local.strftime('%Y %b %d %H:%M:%S')
 
-            # Tell the datetime object that it's in UTC time zone
-            utc = utc.replace(tzinfo=from_zone)
+        passes.append({'satname': satname, 'catnr': catnr, 'label': label, 'date': date, 'az': az.degrees, 'el': alt.degrees, 'range': dist.km})
 
-            # Convert time zone
-            local = utc.astimezone(to_zone)
-            date = local.strftime('%Y %b %d %H:%M:%S')
+    return jsonify(passes), 200
 
-        passes.append(PassLine(satname, catnr, label, date, az.degrees, alt.degrees, range.km))
-        
-    json_string = json.dumps(passes, default=vars, indent=4)
-    return json_string, 200
 
 @app.route('/calculations/telemetry', methods=['GET'])
 def getCurrentTelemetry():

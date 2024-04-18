@@ -40,20 +40,8 @@ function predictPasses(){
             });
 
             combinedList.sort((a, b) => parseDateString(a.date) - parseDateString(b.date));
-            // combinedList.sort((a, b) => {
-            //     // Parse UTC dates to local dates
-            //     const dateA = new Date(a.rise.date);
-            //     const dateB = new Date(b.rise.date);
-                
-            //     // Convert UTC dates to local time
-            //     const localDateA = dateA.toLocaleString();
-            //     const localDateB = dateB.toLocaleString();
-                
-            //     // Compare the local dates
-            //     return parseDateString(localDateA) - parseDateString(localDateB);
-            // });
-            
             updatePassTimeDisplay(combinedList);
+            console.log(combinedList);
         })
         .catch(error => console.error('Error:', error));
 }
@@ -63,7 +51,7 @@ function updatePassTimeDisplay(data){
     var tableBody = document.querySelector('#PassTimeTable tbody');
     tableBody.innerHTML = '';
     data.forEach(function(pass) {
-        var name = pass["name"];
+        var name = pass["satname"];
         var az = pass["az"];
         var el = pass["el"];
         var range = pass["range"];
