@@ -18,7 +18,8 @@ app.on('ready', function() {
         height: 835,
         transparent: true,
         frame: false,
-        alwaysOnTop: true
+        alwaysOnTop: false,
+        focusable: false
     });
     splashScreen.loadURL(url.format({
         pathname: path.join(__dirname, './splash_screen/splash.html'), 
@@ -36,8 +37,7 @@ app.on('ready', function() {
             nodeIntegration: true,
             contextIsolation: false,
             enableRemoteModule: true,
-            webSecurity: false,
-            alwaysOnTop: false
+            webSecurity: false
         }
     });
 
