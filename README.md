@@ -68,10 +68,9 @@ First, package the python environment:
 ```bash
 cd backend
 python setup.py sdist
-python3 -m venv myenv
-source myenv/bin/activate  # On Windows use `myenv\Scripts\activate`
-pip install dist/tle_calculations-<version>.tar.gz
-pip install flask sgp4 scipy requests skyfield
+source myenv/bin/activate  
+pip install dist/tle_calculations-0.0.0.tar.gz
+pip install flask sgp4 scipy requests skyfield zoneinfo waitress setuptools
 pyinstaller --onefile --add-data "tle_calculations:tle_calculations" tle_calculations/run.py
 ```
 

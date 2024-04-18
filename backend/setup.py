@@ -13,6 +13,5 @@ setup(
         'skyfield',
         'setuptools',
         'waitress',
-        'tzlocal'
     ],
 )

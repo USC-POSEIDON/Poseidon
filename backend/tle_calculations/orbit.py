@@ -1,16 +1,14 @@
 import json
 import sys
 from datetime import datetime, timezone, timedelta
-import pytz
-from datetime import datetime, timedelta
 from sgp4.api import Satrec, jday, SGP4_ERRORS
 from sgp4.conveniences import dump_satrec, jday_datetime, UTC
 from skyfield.api import EarthSatellite, load, wgs84, Topos
 import scipy.constants as const
 from flask import Flask, abort, request, jsonify
-from tzlocal import get_localzone
 from tle_calculations.database import *
 from tle_calculations import app
+from zoneinfo import ZoneInfo
 
 # Constants
 GS_LATITUDE = 34.0208
@@ -93,28 +91,33 @@ def getPassTimeInfo():
     s = request.args.get('s')
     t = request.args.get('t')
     catnr = request.args.get('catnr')
-    satname = request.args.get('name')
-    tz_select = request.args.get('timezone')
+    satname = request.args.get('name', 'Unknown Satellite')
+    tz_select = request.args.get('timezone', 'UTC').strip()
 
     if not s or not t or not catnr:
-        abort(400, description='GET request unsuccessful: missing required TLE lines or catalog number.')
-    if not tz_select: 
-        abort(400, description='GET request unsuccessful: no timezone specified.')
+        abort(400, description='Missing required TLE or catalog number parameters')
 
     try:
-        days = int(request.args.get('days', 7))
-        min_deg = float(request.args.get('min_deg', 5.0))
+        days = int(request.args.get('days', '7'))
+        min_deg = float(request.args.get('min_deg', '5.0'))
     except ValueError:
-        abort(400, description="Incorrect type for days or min_deg.")
+        abort(400, description="Invalid 'days' or 'min_deg' parameter")
 
-    ts = load.timescale()
+    # Configure the timezone and start date
+    if tz_select.upper() == 'UTC':
+        timezone = ZoneInfo('UTC')
+        startDate = datetime.now(timezone)
+    else:
+        # If not UTC, use local time
+        startDate = datetime.now()
+
+    # Setup satellite and observer
     satellite = EarthSatellite(s, t, satname, ts)
-
-    startDate = datetime.now(pytz.utc)
     endDate = startDate + timedelta(days=days)
     t0 = ts.utc(startDate.year, startDate.month, startDate.day)
     t1 = ts.utc(endDate.year, endDate.month, endDate.day)
 
+    # Calculate events
     t, events = satellite.find_events(observer, t0, t1, altitude_degrees=min_deg)
     event_names = ['rise', 'closest pt.', 'set']
     passes = []
@@ -125,20 +128,24 @@ def getPassTimeInfo():
         alt, az, dist = pos.altaz()
         label = event_names[event]
         date = ti.utc_strftime('%Y %b %d %H:%M:%S')
-
-        if tz_select == "LOC":
-            to_zone = get_localzone()  # Get the local timezone of the server
+        utc = datetime.strptime(date, '%Y %b %d %H:%M:%S').replace(tzinfo=ZoneInfo("UTC"))
+        if tz_select.upper() == 'UTC':
+            local_date = utc.astimezone(ZoneInfo('UTC'))
         else:
-            to_zone = pytz.timezone(tz_select)
+            local_date = utc.astimezone()  # Automatically converts to local system timezone
+        formatted_date = local_date.strftime('%Y %b %d %H:%M:%S')
 
-        utc = datetime.strptime(date, '%Y %b %d %H:%M:%S').replace(tzinfo=pytz.utc)
-        local = utc.astimezone(to_zone)
-        date = local.strftime('%Y %b %d %H:%M:%S')
-
-        passes.append({'satname': satname, 'catnr': catnr, 'label': label, 'date': date, 'az': az.degrees, 'el': alt.degrees, 'range': dist.km})
+        passes.append({
+            'satname': satname,
+            'catnr': catnr,
+            'label': label,
+            'date': formatted_date,
+            'az': az.degrees,
+            'el': alt.degrees,
+            'range': dist.km
+        })
 
     return jsonify(passes), 200
-
 
 @app.route('/calculations/telemetry', methods=['GET'])
 def getCurrentTelemetry():
