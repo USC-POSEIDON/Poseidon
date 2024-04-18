@@ -36,7 +36,8 @@ app.on('ready', function() {
             nodeIntegration: true,
             contextIsolation: false,
             enableRemoteModule: true,
-            webSecurity: false
+            webSecurity: false,
+            alwaysOnTop: false
         }
     });
 
