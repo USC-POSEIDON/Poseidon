@@ -1,6 +1,6 @@
 {
-  "name": "front_end",
-  "version": "0.3.8",
+  "name": "poseidon",
+  "version": "0.4.0",
   "description": "Poseidon",
   "main": "main.js",
   "scripts": {
@@ -41,7 +41,7 @@
     "type": "git",
     "url": "git+ssh://git@github.com/CSCI401TEAM/XXXFront-end.git"
   },
-  "author": "Sid Qian",
+  "author": "Poseidon Team",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/CSCI401TEAM/XXXFront-end/issues"

@@ -1,15 +1,15 @@
-var defaultTleLine1 = '1 25544U 98067A   20053.19547778  .00000739  00000-0  21903-4 0  9991';
-var defaultTleLine2 = '2 25544  51.6415 357.7365 0004954 276.8582  58.3016 15.49238122215825';
+var defaultTleLine1 = '';
+var defaultTleLine2 = '';
 
 function updateTelemetryTLE(line1, line2){
     defaultTleLine1 = line1;
     defaultTleLine2 = line2;
 }
 
-
 function updateTelemetryData() {
-    
-    // TODO: get TLE data depending on which satellite is selected
+    if (defaultTleLine1 == '' || defaultTleLine2 == '') {
+        return;
+    }
     fetch(`http://127.0.0.1:5000/calculations/telemetry?`+ new URLSearchParams({
         s: defaultTleLine1,
         t: defaultTleLine2,
@@ -49,6 +49,11 @@ function updateTelemetryData() {
         // Handle errors here
         console.log(error);
     });
+}
+
+
+function updateTelemetryTableLable(name){
+    document.getElementById('telProperty').textContent = "Property(" + name + ")";
 }
 
 function calculateAzEl(positionEci, observerGd, gmst) {
@@ -121,26 +126,5 @@ function calculateRangeRate(observerEcf, positionEci, velocityEci, gmst) {
 
     return rangeRate; 
 }
-
-document.addEventListener('DOMContentLoaded', function() {
-    function updateDateTime() {
-        const now = new Date();
-        
-        // Get the individual components of the date and time
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const seconds = String(now.getSeconds()).padStart(2, '0');
-        
-        // Concatenate the components into a string in military time format
-        const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-        
-        document.getElementById('currentTimeText').textContent = formattedDateTime;
-    }
-    updateDateTime();
-    setInterval(updateDateTime, 1000); 
-});
 
 setInterval(updateTelemetryData, 5000);

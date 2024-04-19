@@ -11,11 +11,13 @@
     <link rel="stylesheet" href="./node_modules/golden-layout/src/css/goldenlayout-dark-theme.css">
 </head>
 <body>
+    <!-- Top Menu Bar -->
     <div id="topMenuBar">
         <ul>
             <li>Config
                 <div class="dropdown-content">
                     <a href="#Ground_Station" id="groundStationLink">Ground Station</a>
+                    <a href="#Preference" id="preference">Preferences</a>
                     <a href="#Debug_Window" id="debugWindow">Debug Window</a>
                 </div>
             </li>
@@ -30,6 +32,8 @@
             </li>
         </ul>
     </div>
+
+    <!--Ground Station Button popup Modal-->
     <div id="groundStationModal">
         <div>
             <h2>Update Ground Station Position</h2>
@@ -56,7 +60,118 @@
         </div>
     </div>
     
+    <!--Preference Button popup Modal-->
+    <div id="preferenceModal">
+        <div>
+            <h2>User Preference</h2>
+            <label for="timeFormat">Time Format:</label>
+            <select id="timeFormat">
+                <option value="UTC">UTC</option>
+                <option value="LOC">Local</option>
+            </select>
+            <br><br>
+            <label for="commandFile">Command File upload:</label>
+            <br><br>
+            <button id="closePref">Close</button>
+        </div>
+    </div>
 
+
+    <!--Manage Preset Button popup Modal-->
+    <div id="managePresetModal" style="display: none;">
+        <div>
+            <h2>Manage Preset List</h2>
+            <div>
+                <label for="addPresetInput">Add New List:</label>
+                <input type="text" id="addPresetInput" name="addPresetInput">
+                <button id="addPresetBtn">Add</button>
+            </div>
+            <div>
+                <label for="deletePresetDropdown">Delete List:</label>
+                <select id="deletePresetDropdown">
+                    <!-- Options will be populated dynamically -->
+                </select>
+                <button id="deletePresetBtn">Delete</button>
+            </div>
+            <div>
+                <label for="renamePresetDropdown">Rename List:</label>
+                <select id="renamePresetDropdown">
+                    <!-- Options will be populated dynamically -->
+                </select>
+                <input type="text" id="renamePresetInput" name="renamePresetInput" placeholder="New name">
+                <button id="renamePresetBtn">Rename</button>
+            </div>
+            <button id="closePresetModal">Close</button>
+        </div>
+    </div>
+
+    <!-- Popups Messages-->
+    <div class="popup" id="popNotifcation">Unexpected Error</div>
+
+    <!--Cesium earth window Container-->
+    <div>
+        <div id="cesiumContainer">
+            <button id="demensionBtn">Switch to 2D</button>
+            <div id="presetListContainer">
+                <p id="presetListTitle"></p>
+                <ul id="presetList" style="font-size: 12px;">
+                    <!-- Presets will be populated dynamically -->
+                    <li>
+                            <p>Choose a preset to view</p>
+                    </li>
+                </ul>
+                <button id="selectAll">Select/deselect All</button>
+                <div id="presetSelectionToShow">
+                    <select id="selectPresetDropdown" onchange="updatePresetListDisplay()">
+                        <option value="" disabled selected>Change Preset</option>
+                    </select>
+                </div>
+                <button id="managePresets">Manage presets</button>
+                <button id="predictPassesBtn" onclick="predictPasses()">Predict Passes</button>
+              </div>
+              
+              <div id="addSatelliteContainer">
+                <div id="presetSelection">
+                    <select id="presetDropdown">
+                        <option value="" disabled selected>Select preset to add to</option>
+                    </select>
+                </div>
+                <div class="search-dropdown">
+                    <input type="text" id="satelliteSearchInput" placeholder="Enter your search query">
+                    <button id="searchButton">Search</button>
+                    <ul class="search-results" id="searchResults" style="display: none;"></ul>
+                </div>
+                <div id="tleInputContainer" style="display: none;">
+                    <input type="text" id="tleLine1Input" placeholder="Enter TLE Line 1">
+                    <input type="text" id="tleLine2Input" placeholder="Enter TLE Line 2">
+                    <input type="text" id="satelliteNameInput" placeholder="Enter Satellite Name">
+                    <button id="addTleButton">Add</button>
+                    <br><br>
+                    <span id="tle-error" style="color: red;"></span>
+                </div>
+                <div id="searchOptions">
+                    <label>
+                        <input type="radio" name="searchType" value="name" checked> By Name
+                    </label>
+                    <label>
+                        <input type="radio" name="searchType" value="catalog"> By Catalog #
+                    </label>
+                    <label>
+                        <input type="radio" name="searchType" value="manual"> Manual
+                    </label>
+                </div>
+            </div>
+            <div class="GSLocText" id="GSLocText">GS: loc</div>
+            <div class="currentTimeText" id="currentTimeText" style="cursor: pointer;">APR 15 2024 10:00:00</div>
+        </div>
+    </div>
+
+        <!--Calendar Inframe Winow-->
+        <div id="calendarModal">
+            <iframe src="https://poseidon-scheduler.web.app/" scrolling="yes"></iframe>
+        </div>
+
+        <!-- Command Generation Window -->
     <div id="commandGeneration">
         <div>
             <label for="commandDropdown">Select Command:</label>
@@ -88,104 +203,12 @@
         </div>
     </div>
 
-    <div id="managePresetModal" style="display: none;">
-        <div>
-            <h2>Manage Preset List</h2>
-            <div>
-                <label for="addPresetInput">Add New List:</label>
-                <input type="text" id="addPresetInput" name="addPresetInput">
-                <button id="addPresetBtn">Add</button>
-            </div>
-            <div>
-                <label for="deletePresetDropdown">Delete List:</label>
-                <select id="deletePresetDropdown">
-                    <!-- Options will be populated dynamically -->
-                </select>
-                <button id="deletePresetBtn">Delete</button>
-            </div>
-            <div>
-                <label for="renamePresetDropdown">Rename List:</label>
-                <select id="renamePresetDropdown">
-                    <!-- Options will be populated dynamically -->
-                </select>
-                <input type="text" id="renamePresetInput" name="renamePresetInput" placeholder="New name">
-                <button id="renamePresetBtn">Rename</button>
-            </div>
-            <button id="closePresetModal">Close</button>
-        </div>
-    </div>
-    <div class="popup" id="searchPopupError">Error adding satellite</div>
-    <div class="popup" id="searchPopupSucc">Satellite Added</div>
-    <div class="popup" id="searchPopupOverflow">Please refine your keywords</div>
-    <div class="popup" id="listRename">List renamed</div>
-    <div class="popup" id="listCreate">New list created</div>
-    <div class="popup" id="listDelete">List deleted</div>
-    <div class="popup" id="unexpected">Unexpected Error</div>
-    
-    <div id="goldenLayoutContainer"></div> 
-
-    <div>
-        <div id="cesiumContainer">
-            <button id="demensionBtn">Switch to 2D</button>
-            <div id="presetListContainer">
-                <p id="presetListTitle"></p>
-                <ul id="presetList" style="font-size: 12px;">
-                    <!-- Presets will be populated dynamically -->
-                    <li>
-                            <p>Choose a preset to view</p>
-                    </li>
-                </ul>
-                <div id="presetSelectionToShow">
-                    <select id="selectPresetDropdown" onchange="updatePresetListDisplay()">
-                        <option value="" disabled selected>Change Preset</option>
-                    </select>
-                </div>
-                <button id="managePresets">Manage presets</button>
-                <button id="predictPassesBtn" onclick="predictPasses()">Predict Passes</button>
-              </div>
-              
-              <div id="addSatelliteContainer">
-                <div id="presetSelection">
-                    <select id="presetDropdown">
-                        <option value="" disabled selected>Select preset to add to</option>
-                    </select>
-                </div>
-                <div class="search-dropdown">
-                    <input type="text" id="satelliteSearchInput" placeholder="Enter your search query">
-                    <button id="searchButton">Search</button>
-                    <ul class="search-results" id="searchResults" style="display: none;"></ul>
-                </div>
-                <div id="tleInputContainer" style="display: none;">
-                    <input type="text" id="tleLine1Input" placeholder="Enter TLE Line 1">
-                    <input type="text" id="tleLine2Input" placeholder="Enter TLE Line 2">
-                    <input type="text" id="satelliteNameInput" placeholder="Enter Satellite Name">
-                    <button id="addTleButton">Add</button>
-                    <span id="tle-error" style="color: red;"></span>
-                </div>
-                <div id="searchOptions">
-                    <label>
-                        <input type="radio" name="searchType" value="name" checked> By Name
-                    </label>
-                    <label>
-                        <input type="radio" name="searchType" value="catalog"> By Catalog #
-                    </label>
-                    <label>
-                        <input type="radio" name="searchType" value="manual"> Manual
-                    </label>
-                </div>
-            </div>
-            <div class="GSLocText" id="GSLocText">GS: loc</div>
-            <div class="currentTimeText" id="currentTimeText">APR 15 2024 10:00:00</div>
-        </div>
-    </div>
-        <div id="calendarModal">
-            <iframe src="https://poseidon-scheduler.web.app/" scrolling="yes"></iframe>
-        </div>
+        <!--Pass Time Table Window-->
         <div id="PassTime"> 
             <table id="PassTimeTable">
                 <thead>
                     <tr>
-                        <th>Date</th>
+                        <th id="datePasstime">Date</th>
                         <th>Name</th>
                         <th>Az</th>
                         <th>El</th>
@@ -197,10 +220,12 @@
                 </tbody>
             </table>
         </div>
+
+        <!--Telemetry Table Window-->
         <div id="TelemetryContainer">
             <table id="telemetryTable">
                 <tr>
-                    <th>Property</th>
+                    <th id="telProperty">Property</th>
                     <th>Value</th>
                 </tr>
                 <tr>
@@ -243,23 +268,23 @@
             </table>
         </div>
     </div>
-    <!-- Development -->
+
+    <!-- Development packages-->
     <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
     <script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script>
-
     <script src="https://unpkg.com/@popperjs/core@2"></script>
     <script src="https://unpkg.com/tippy.js@6"></script>
     
-    <script src="cesium.js"></script>
-    <script src="orbit.js"></script>
-    <script src="renderer.js"></script>
-    <script src="menu.js"></script>
-    <script src="telemetry.js"></script>
-    <script src="command_generation/command-generation.js"></script>
-    <script src="apis.js"></script>
-    <script src="presetList.js"></script>
-    <script src="search.js"></script>
-
-    
+    <!-- js functions import-->
+    <script src="./js_component/cesium.js"></script>
+    <script src="./js_component/popup.js"></script>
+    <script src="./js_component/orbit.js"></script>
+    <script src="./js_component/menu.js"></script>
+    <script src="./js_component/renderer.js"></script>
+    <script src="./js_component/telemetry.js"></script>
+    <script src="./command_generation/command-generation.js"></script>
+    <script src="./js_component/passtime.js"></script>
+    <script src="./js_component/presetList.js"></script>
+    <script src="./js_component/search.js"></script>
 </body>
 </html>

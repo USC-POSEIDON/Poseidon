@@ -231,7 +231,12 @@ iframe {
     cursor: pointer;
 }
 
-#groundStationModal, #managePresetModal {
+#selectAll{
+    display: none;
+    margin-bottom: 10px;
+}
+
+#groundStationModal, #managePresetModal, #preferenceModal {
     display: none; 
     position: fixed; 
     z-index: 2000; 
@@ -245,7 +250,7 @@ iframe {
     padding-top: 60px;
 }
 
-#groundStationModal > div, #managePresetModal > div {
+#groundStationModal > div, #managePresetModal > div, #preferenceModal > div {
     background-color: #fefefe;
     margin: auto;
     padding: 20px;
@@ -356,8 +361,8 @@ iframe {
     display: none;
     position: fixed;
     z-index: 2000; 
-    right: 0;
-    top: 0;
+    right: 10px;
+    top: 10px;
     width: 100; 
     height: 100; 
     background-color: #333;
