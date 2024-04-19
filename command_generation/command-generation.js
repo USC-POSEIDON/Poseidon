@@ -19,13 +19,38 @@ document.addEventListener('DOMContentLoaded', function () {
     const parameterInputs = document.getElementById('parameterInputs');
     const commandList = document.getElementById('commandList');
     const commandStringArray = [];
-    let data;
 
-    // Function to populate the command dropdown with alphabetized families and commands
-    fetch(`command_generation/CubeSatCommandLibrary.json`)
-        .then(response => response.json())
-        .then(dataResponse => {
-            data = dataResponse;
+    let data = JSON.parse(localStorage.getItem('jsonData')); // Retrieve the JSON data from local storage
+
+    // Function to handle file upload and parse JSON
+    document.getElementById('commandFile').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            try {
+                data = JSON.parse(e.target.result); // Assign the parsed JSON data to the data variable
+                console.log('Parsed JSON data:', data); // Log the parsed data for debugging
+                localStorage.setItem('jsonData', JSON.stringify(data)); // Save the JSON data to local storage
+                console.log('Data saved to local storage:', data); // Log the saved data for debugging
+                document.getElementById('noJsonMessage').textContent = ''; // Clear any error message
+                // Call functions that depend on the data variable
+                populateCommandDropdown(data);
+            } catch (error) {
+                document.getElementById('noJsonMessage').textContent = 'Error parsing JSON file';
+                document.getElementById('noJsonMessage').style.color = 'red';
+                console.error('Error parsing JSON file:', error);
+            }
+        };
+        reader.readAsText(file);
+    });
+
+    // Function to populate the command dropdown with data from JSON
+    function populateCommandDropdown(data) {
+        const noJsonMessage = document.getElementById('noJsonMessage');
+        if (data) {
+            noJsonMessage.style.display = 'none';
+
             data.sort((a, b) => a.Family.localeCompare(b.Family));
             const groupedCommands = {};
 
@@ -37,6 +62,13 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             const dropdown = document.getElementById('commandDropdown');
+            dropdown.innerHTML = '';
+
+            const emptyOption = document.createElement('option');
+            emptyOption.value = '';
+            emptyOption.textContent = 'Select command';
+            dropdown.appendChild(emptyOption);
+
             for (const family in groupedCommands) {
                 const optgroup = document.createElement('optgroup');
                 optgroup.label = family;
@@ -51,8 +83,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 dropdown.appendChild(optgroup);
             }
-        })
-        .catch(error => console.error('Error fetching commands:', error));
+        } else {
+            noJsonMessage.style.display = 'block';
+            console.error('No JSON data found in local storage.');
+        }
+    }
+
+    populateCommandDropdown(data);
 
     // Function to populate parameters based on selected command
     window.populateParameters = function () {
@@ -91,7 +128,6 @@ document.addEventListener('DOMContentLoaded', function () {
                             const selectedOption = param.Options.find(option => option.Command === selectedOptionValue);
                             
                             if (selectedOption && selectedOption.Parameters && selectedOption.Parameters.length > 0) {
-                                // Clear previously populated nested dropdown
                                 clearNestedParameters(parameterInputs);
 
                                 selectedOption.Parameters.forEach(nestedParam => {
@@ -102,7 +138,6 @@ document.addEventListener('DOMContentLoaded', function () {
                                     let nestedInput;
 
                                     if (nestedParam.Type === 'Dropdown') {
-                                        // Create a new select element for nested dropdowns
                                         const nestedSelect = document.createElement('select');
                                         nestedSelect.name = `${param.Name}_nested`;
 
@@ -130,7 +165,6 @@ document.addEventListener('DOMContentLoaded', function () {
                                 clearNestedParameters(parameterInputs);
                             }
                         });
-                        
                         parameterInputs.appendChild(label);
                         parameterInputs.appendChild(select);
                     } else {
@@ -142,7 +176,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         parameterInputs.appendChild(label);
                         parameterInputs.appendChild(input);
                     }
-                    
                     parameterInputs.appendChild(document.createElement('br'));
                 });
             }
@@ -208,11 +241,9 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             return paramString;
         }
-    
         if (selectedCommandData.Parameters && selectedCommandData.Parameters.length > 0) {
             commandString += generateParamString(selectedCommandData.Parameters);
         }
-    
         return commandString;
     }
       
@@ -235,7 +266,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     console.error('Command string is undefined.');
                 }
             });
-
             commandList.appendChild(listItem);
         } else {
             listItem = commandList.children[index];
@@ -268,11 +298,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     break;
                 }
             }
-
             if (selectedCommand.Parameters && selectedCommand.Parameters.length > 0) {
                 populateParameters();
             }
-            
         } else {
             console.error(`Command with ID '${commandID}' not found.`);
         }
