@@ -70,7 +70,8 @@
                 <option value="LOC">Local</option>
             </select>
             <br><br>
-            <label for="commandFile">Command File upload:</label>
+            <label for="commandFile">Command JSON file upload:</label>
+            <input type="file" id="commandFile" accept=".json">
             <br><br>
             <button id="closePref">Close</button>
         </div>
@@ -174,6 +175,7 @@
         <!-- Command Generation Window -->
     <div id="commandGeneration">
         <div>
+            <div id="noJsonMessage" style="display: none; color: red;">No JSON uploaded</div>
             <label for="commandDropdown">Select Command:</label>
             <select id="commandDropdown" onchange="populateParameters()">
                 <option value="" disabled selected>Select command</option>

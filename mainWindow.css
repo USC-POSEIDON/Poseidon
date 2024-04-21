@@ -208,29 +208,6 @@ iframe {
     color: white;
 }
 
-#commandGeneration {
-    width: 100%;
-    height: 100%;
-    background-color: #f0f0f0;
-    padding: 10px;
-}
-
-#commandDropdown {
-    width: 200px;
-    padding: 5px;
-}
-
-#parameterInputs {
-    margin-top: 10px;
-}
-
-#executeCommand {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px;
-    cursor: pointer;
-}
-
 #selectAll{
     display: none;
     margin-bottom: 10px;
@@ -281,25 +258,33 @@ iframe {
     margin-top: 10px;
 }
 
-#addButton {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px;
+#addButton, #generateButton, #clearButton, #exportButton {
+    background-color: #222;
+    border-radius: 4px;
+    color: #fff;
     cursor: pointer;
+    font-family: "Farfetch Basis","Helvetica Neue",Arial,sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.5;
+    margin: 0;
+    padding: 5px 15px 5px;
+    touch-action: manipulation;
+
 }
 
 #generateButton, #clearButton {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    cursor: pointer;
     display: inline-block;
-    margin-right: 10px;
+}
+
+#exportButton {
+    display: block;
+    margin-top: 10px;
     bottom: 60px;
 }
 
 #addButton:hover, #generateButton:hover, #clearButton:hover, #exportButton:hover {
-    background-color: #45a049;
+    opacity: .75;
 }
 
 #generatedCommandsText {
@@ -307,24 +292,6 @@ iframe {
     height: auto;
     resize: vertical;
     margin-top: 10px;
-}
-
-#exportButton {
-    background-color: #4CAF50;
-    color: white;
-    display: block;
-    padding: 10px;
-    cursor: pointer;
-    margin-top: 10px;
-    bottom: 60px;
-}
-
-.commands-list {
-    flex: 1;
-}
-
-.commands-list h2 {
-    margin-bottom: 5px;
 }
 
 #parameterInputs {
