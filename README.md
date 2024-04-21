@@ -30,16 +30,17 @@ cd backend # Get into the backend dir
 ```
 
 ```bash
-# Install all the requirements to local env
+# Option 1: Install all the requirements to local env
 pip install -r requirements.txt 
 /path/to/your/desired/python3 -m pip install -e .
 
-# ---conda(SUGGESTED)--- #
-conda create --name Poseidon --file requirements.txt
+# Option 2: conda (SUGGESTED) 
+conda create --name Poseidon python=3.9
 conda activate Poseidon
+pip install -r requirements.txt
 pip install -e . 
 
-# or creating an virtual env #
+# Option 3: create a virtual env 
 # ---for windows--- #
 python -m venv venv 
 .\venv\Scripts\activate 
@@ -58,7 +59,9 @@ npm start # Start the application
 ```
 
 **Note for error "“run” can’t be opened because Apple cannot check it for malicious software."
-Right-click (or control-click) on the backend/dist/run executable in Finder, and select Open from the context menu. This action brings up a dialog with an option to open the app anyway. This method only needs to be done once, as macOS will remember your choice for this app in the future.
+Right-click (or control-click) on the backend/dist/run executable in Finder, and select Open from the context menu. This action brings up a dialog with an option to open the app anyway. This method only needs to be done once, as macOS will remember your choice for this app in the future. 
+
+**Note: Python vers. 3.9 required. Some packages aren't supported in later versions.
 
 ## Packaging the Application
 For packaging the application, electron-builder is preferred. It can easily package and build a ready-for-distribution Electron app for macOS, Windows, and Linux.
