@@ -34,13 +34,7 @@ cd backend # Get into the backend dir
 pip install flask sgp4 scipy requests skyfield waitress setuptools
 /path/to/your/desired/python3 -m pip install -e .
 
-# ---conda(SUGGESTED)--- #
-conda create --name Poseidon python=3.9
-conda activate Poseidon
-pip install flask sgp4 scipy requests skyfield waitress setuptools
-pip install -e . 
-
-# Option 3: create a virtual env 
+# Option 2: create a virtual env 
 # ---for windows--- #
 python -m venv venv 
 .\venv\Scripts\activate 
@@ -53,9 +47,11 @@ source venv/bin/activate
 pip install flask sgp4 scipy requests skyfield waitress setuptools
 pip install -e . 
 
+# Option 3: use conda
 # ---conda--- #
-conda create --name Poseidon --file requirements.txt
+conda create --name Poseidon python=3.9
 conda activate Poseidon
+pip install flask sgp4 scipy requests skyfield waitress setuptools
 pip install -e . 
 ```
 
