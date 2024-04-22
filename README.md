@@ -36,9 +36,9 @@ pip install flask sgp4 scipy requests skyfield waitress setuptools
 
 # Option 2: create a virtual env 
 # ---for windows--- #
-python -m venv venv 
-.\venv\Scripts\activate 
-pip install flask sgp4 scipy requests skyfield waitress setuptools
+py -3.9 -m venv <venv-name> 
+.\<venv-name>\Scripts\activate 
+pip install flask sgp4 scipy requests skyfield waitress setuptools tzdata
 pip install -e . 
 
 # ---for linux and mac--- #
@@ -73,6 +73,18 @@ First, package the python environment:
 cd backend
 python setup.py sdist
 pip install dist/tle_calculations-0.0.0.tar.gz
+
+# For windows only: In run.spec, change
+datas=[
+    ('tle_calculations', 'tle_calculations'),
+    ('./venv/lib/python3.11/site-packages/waitress', 'waitress')
+]
+# to 
+datas=[
+    ('tle_calculations', 'tle_calculations'),
+    ('./<venv-name>/Lib/site-packages/waitress', 'waitress')
+]
+
 pyinstaller run.spec
 ```
 
