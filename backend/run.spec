@@ -1,11 +1,13 @@
 # -*- mode: python ; coding: utf-8 -*-
 
-
 a = Analysis(
     ['tle_calculations/run.py'],
-    pathex=[],
+    pathex=['.'],
     binaries=[],
-    datas=[('tle_calculations', 'tle_calculations')],
+    datas=[
+        ('tle_calculations', 'tle_calculations'),
+        ('./venv/lib/python3.11/site-packages/waitress', 'waitress')
+    ],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -13,6 +15,7 @@ a = Analysis(
     excludes=[],
     noarchive=False,
 )
+
 pyz = PYZ(a.pure)
 
 exe = EXE(
@@ -35,3 +38,4 @@ exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
 )
+

@@ -31,25 +31,25 @@ cd backend # Get into the backend dir
 
 ```bash
 # Install all the requirements to local env
-pip install -r requirements.txt 
+pip install flask sgp4 scipy requests skyfield waitress setuptools
 /path/to/your/desired/python3 -m pip install -e .
-
-# ---conda(SUGGESTED)--- #
-conda create --name Poseidon --file requirements.txt
-conda activate Poseidon
-pip install -e . 
 
 # or creating an virtual env #
 # ---for windows--- #
 python -m venv venv 
 .\venv\Scripts\activate 
-pip install -r requirements.txt
+pip install flask sgp4 scipy requests skyfield waitress setuptools
 pip install -e . 
 
 # ---for linux and mac--- #
 python3 -m venv venv 
 source venv/bin/activate
-pip install -r requirements.txt
+pip install flask sgp4 scipy requests skyfield waitress setuptools
+pip install -e . 
+
+# ---conda--- #
+conda create --name Poseidon --file requirements.txt
+conda activate Poseidon
 pip install -e . 
 ```
 
@@ -68,10 +68,8 @@ First, package the python environment:
 ```bash
 cd backend
 python setup.py sdist
-source myenv/bin/activate  
 pip install dist/tle_calculations-0.0.0.tar.gz
-pip install flask sgp4 scipy requests skyfield zoneinfo waitress setuptools
-pyinstaller --onefile --add-data "tle_calculations:tle_calculations" tle_calculations/run.py
+pyinstaller run.spec
 ```
 
 Second, install electron-builder as a dev dependency:
