@@ -137,3 +137,7 @@ venv
 backend/poseidon.db
 .DS_Store
 
+dist/*
+*/dist/*
+*/build/*
+
