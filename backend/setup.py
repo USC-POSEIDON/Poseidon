@@ -13,5 +13,6 @@ setup(
         'skyfield',
         'setuptools',
         'waitress',
+        'tzdata'
     ],
 )

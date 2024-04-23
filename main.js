@@ -45,10 +45,10 @@ app.on('ready', function() {
     let pythonExecutable = path.join(__dirname, 'backend/dist', process.platform === "win32" ? "run.exe" : "run");
     if (app.isPackaged) {
         // Path for packaged app
-        pythonExecutable = path.join(process.resourcesPath, '..', 'backend/dist', process.platform === "win32" ? "run.exe" : "run");
+        pythonExecutable = path.join(process.resourcesPath, '..', process.platform === "win32" ? 'backend/dist/run/run.exe' : 'backend/dist/run');
     } else {
         // Path for development
-        pythonExecutable = path.join(__dirname, 'backend/dist', process.platform === "win32" ? "run.exe" : "run");
+        pythonExecutable = path.join(__dirname, process.platform === "win32" ? 'backend/dist/run/run.exe' : 'backend/dist/run');
     }
     console.log("Python executable: ", pythonExecutable);
     tleFlaskProcess = spawn(pythonExecutable, { stdio: ['pipe', 'pipe', 'pipe'] });
@@ -63,6 +63,8 @@ app.on('ready', function() {
 
     // Function to delay execution
     const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+    console.error(`TLEFlaskProcess PID: ${tleFlaskProcess.pid}`)
 
     // Every 6 hour TLE refresh
     const refreshTLE = async () => {
