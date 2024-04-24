@@ -16,7 +16,7 @@ This desktop application is built with Electron and integrates various functiona
 - **Signal Processing**: Signal window for signal-related functionalities (update pending).
 
 ## User Manual 
-https://github.com/USC-POSEIDON/Poseidon/blob/main/POSEIDON%20User%20Manual%20(1).pdf
+[USER MANUAL](https://github.com/USC-POSEIDON/Poseidon/blob/main/POSEIDON%20User%20Manual%20(1).pdf)
 
 ## Running the Program 
 Choose the latest release from this repository and install
