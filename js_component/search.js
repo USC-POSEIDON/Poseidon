@@ -20,14 +20,14 @@ function performSearch(){
         }
         else if(isValidTLE(line1, line2)){
             addManualTLE(line1, line2, name);
-            document.getElementById('tleLine1Input').value = 'Enter TLE Line 1';
-            document.getElementById('tleLine2Input').value = 'Enter TLE Line 2';
-            document.getElementById('satelliteNameInput').value = 'Enter Satellite Name';
+            document.getElementById('tleLine1Input').placeholder = 'Enter TLE Line 1';
+            document.getElementById('tleLine2Input').placeholder = 'Enter TLE Line 2';
+            document.getElementById('satelliteNameInput').placeholder = 'Enter Satellite Name';            
         }
         else{
             document.getElementById('tle-error').textContent = "Invalid TLE";
-            document.getElementById('tleLine1Input').value = '';
-            document.getElementById('tleLine2Input').value = '';
+            document.getElementById('tleLine1Input').placeholder = 'Enter TLE Line 1';
+            document.getElementById('tleLine2Input').placeholder = 'Enter TLE Line 2';
         }
     }
 }
