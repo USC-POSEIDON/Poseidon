@@ -59,6 +59,8 @@ let goldenLayout = new GoldenLayout({
     }]
 });
 
+// Add additional Golden layout component above to ensure its placement //
+
 // ----------------- Start the goldenlayout component init ----------------- //
 goldenLayout.registerComponent('cesium_component', function(container, state) {
   // Check if the cesiumContainer is already detached and stored
@@ -136,6 +138,8 @@ goldenLayout.registerComponent('Command_Generation_component', function (contain
       updateWindowsDropdown();
   });
 });
+
+// Add additional Golden layout component initialization here //
 
 // ----------------- End of the goldenlayout component init ----------------- //
 
@@ -224,6 +228,8 @@ function getComponentConfig(id) {
   return configMap[id] || null;
 }
 
+// Add additional Golden layout component config here //
+
 // Update the Windows dropdown to reflect the current state of the components
 function removeComponentFromLayout(componentId) {
   const items = goldenLayout.root.getItemsById(componentId);
@@ -251,5 +257,7 @@ goldenLayout.on('initialised', function() {
     });
     updateWindowsDropdown();
 });
+
+// Add additional Golden layout component on open initialization here //
 
 goldenLayout.init();
