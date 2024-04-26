@@ -10,7 +10,7 @@ This desktop application is built with Electron and integrates various functiona
 - **3D Orbit Visualization**: Real-time satellite orbit visualization with Cesium.
 - **Telemetry Data Calculation And Visualization**: Real-time telemetry data update for corresponding TLE/satellite input
 - **TLE Data Input**: Input box for TLE data with validation functionality.
-- **Command Input**: Chat window for command input.
+- **Command Input**: Chat window for command input and generation.
 - **Calendar**: Calendar window for scheduling (waiting for backend integration).
 - **Motor Control**: Motor control interface (update pending).
 - **Signal Processing**: Signal window for signal-related functionalities (update pending).
@@ -48,14 +48,6 @@ python3 -m venv venv
 source venv/bin/activate
 pip install flask sgp4 scipy requests skyfield waitress setuptools
 pip install -e . 
-
-# Option 3: use conda
-# ---conda--- #
-conda create --name Poseidon python=3.9
-conda activate Poseidon
-pip install flask sgp4 scipy requests skyfield waitress setuptools
-pip install -e . 
-```
 
 ```bash
 npm start # Start the application
