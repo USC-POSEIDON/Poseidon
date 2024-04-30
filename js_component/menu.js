@@ -10,16 +10,17 @@ function jsonToCSV(jsonArray) {
     // Define CSV headers
     const headers = 'CatNr,Name,Event,Date,Azimuth,Elevation,Slant Range';
     csvRows.push(headers);
+    console.log(jsonArray);
 
-    jsonArray.forEach(entry => {
-        entry.forEach(pass => {
-            const baseData = `${pass.catnr},${pass.name}`;
-            ['rise', 'culminate', 'set'].forEach(eventType => {
-                const event = pass[eventType];
-                const row = `${baseData},${eventType},${event.date},${event.az},${event.el},${event.range}`;
-                csvRows.push(row);
-            });
-        });
+    jsonArray.forEach(function(pass) {
+        var name = pass["satname"];
+        var az = pass["az"];
+        var el = pass["el"];
+        var range = pass["range"];
+        var date = pass["date"];
+        var label = pass["label"];
+        console.log(name);
+        csvRows.push(`${pass.catnr},${name},${label},${date},${az},${el},${range}`);
     });
 
     return csvRows.join('\n');
@@ -136,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 catnr: satellite.catnr,
                 name: satellite.name,
                 timezone: tz,
-                days: 1 
+                days: 5 
             });
             
             promises.push(fetch(`http://127.0.0.1:5000/calculations/passes?${params}`)
@@ -153,20 +154,20 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Call ipc from main.js to save the file
         Promise.all(promises)
-            .then(data => {
-                // Convert fetched JSON data to CSV format
-                const csvData = jsonToCSV(data);
-                // Invoke saving function with converted CSV data
-                ipcRenderer.invoke('save-file-dialog', 'AllSatellitesPassTime.csv', csvData)
-                    .then(filePath => {
-                        showPopupNotification("Pass time data saved to file", "pass")
-                        //console.log('File saved to:', filePath);
-                    })
-                    .catch(err => {
-                        showPopupNotification(err, "error")
-                        console.error('Failed to save file:', err);
-                    });
-            })
+        .then(results => {
+            // Do something with the results after all requests have returned successfully
+            const data = JSON.parse(JSON.stringify(results));
+
+            let combinedList = [];
+            data.forEach(function(passList){
+                combinedList = [...combinedList, ...passList];
+            });
+
+            combinedList.sort((a, b) => parseDateString(a.date) - parseDateString(b.date));
+            const csvData = jsonToCSV(combinedList);
+            ipcRenderer.invoke('save-file-dialog', 'pass_times.csv', csvData);
+
+        })
             .catch(error => {
                 showPopupNotification(error, "error")
                 console.error("An error occurred with the fetch requests:", error);

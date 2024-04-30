@@ -41,7 +41,6 @@ function predictPasses(){
 
             combinedList.sort((a, b) => parseDateString(a.date) - parseDateString(b.date));
             updatePassTimeDisplay(combinedList);
-            console.log(combinedList);
         })
         .catch(error => console.error('Error:', error));
 }
