@@ -49,12 +49,7 @@ source venv/bin/activate
 pip install flask sgp4 scipy requests skyfield waitress setuptools
 pip install -e . 
 
-# ---set up api key for cesium --- #
-# add this line to js-components/cesium.js first line
-# cesium token can be find on their offical website (ion.cesium.com)
-Cesium.Ion.defaultAccessToken = 'your_access_token_here';
 
-```bash
 npm start # Start the application
 ```
 
