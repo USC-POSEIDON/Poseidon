@@ -49,7 +49,7 @@ source venv/bin/activate
 pip install flask sgp4 scipy requests skyfield waitress setuptools
 pip install -e . 
 
-```bash
+
 npm start # Start the application
 ```
 
