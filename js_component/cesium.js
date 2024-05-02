@@ -1,4 +1,6 @@
 // Initialize the Cesium Viewer
+let apiKey = localStorage.getItem('cesiumApiKey');
+Cesium.Ion.defaultAccessToken = apiKey;
 var viewer = new Cesium.Viewer('cesiumContainer', {
     animation: false,      
     baseLayerPicker: false, 

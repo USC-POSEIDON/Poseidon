@@ -177,3 +177,19 @@ document.addEventListener('DOMContentLoaded', function() {
     updateWindowsDropdown();
 });
 
+document.getElementById('uploadAPI').addEventListener('click', function(event) {
+    // Retrieve the API key from the input element
+    var apiKey = document.getElementById('cesiumAPI').value;
+
+    try {
+        // Save the API key in localStorage
+        localStorage.setItem('cesiumApiKey', apiKey);
+        Cesium.Ion.defaultAccessToken = apiKey;
+        // reload the page to apply the changes
+        location.reload();
+        console.log('API Key saved successfully');
+    } catch (error) {
+        console.error('Failed to save API Key', error);
+    }
+});
+
