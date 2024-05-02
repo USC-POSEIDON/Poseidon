@@ -42,22 +42,22 @@ app.on('ready', function() {
     });
 
     // ----------------- Start the TLE Flask server for deploy mode ----------------- //
-    // let pythonExecutable = path.join(__dirname, 'backend/dist', process.platform === "win32" ? "run.exe" : "run");
-    // if (app.isPackaged) {
-    //     // Path for packaged app
-    //     pythonExecutable = path.join(process.resourcesPath, '..', process.platform === "win32" ? 'backend/dist/run/run.exe' : 'backend/dist/run');
-    // } else {
-    //     // Path for development
-    //     pythonExecutable = path.join(__dirname, process.platform === "win32" ? 'backend/dist/run/run.exe' : 'backend/dist/run');
-    // }
-    // console.log("Python executable: ", pythonExecutable);
-    // tleFlaskProcess = spawn(pythonExecutable, { stdio: ['pipe', 'pipe', 'pipe'] });
+    let pythonExecutable = path.join(__dirname, 'backend/dist', process.platform === "win32" ? "run.exe" : "run");
+    if (app.isPackaged) {
+        // Path for packaged app
+        pythonExecutable = path.join(process.resourcesPath, '..', process.platform === "win32" ? 'backend/dist/run/run.exe' : 'backend/dist/run');
+    } else {
+        // Path for development
+        pythonExecutable = path.join(__dirname, process.platform === "win32" ? 'backend/dist/run/run.exe' : 'backend/dist/run');
+    }
+    console.log("Python executable: ", pythonExecutable);
+    tleFlaskProcess = spawn(pythonExecutable, { stdio: ['pipe', 'pipe', 'pipe'] });
 
     // ----------------- End of the TLE Flask server for deploy mode ----------------- //
 
     // ----------------- Start the TLE Flask server for development mode ----------------- //
-    const pythonCommand = process.platform === "win32" ? "python" : "python3";
-    tleFlaskProcess = spawn(pythonCommand, ['-m', 'tle_calculations.run']);
+    // const pythonCommand = process.platform === "win32" ? "python" : "python3";
+    // tleFlaskProcess = spawn(pythonCommand, ['-m', 'tle_calculations.run']);
 
     // ----------------- End of the TLE Flask server for development mode ----------------- //
 
