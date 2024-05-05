@@ -1360,7 +1360,7 @@
         "Options": [
           {
             "Name": "CheckVersionOfFlash",
-            "Description": "The X position of the satellite.",
+            "Description": "Check Version of Flash.",
             "Command": "1",
             "Translation": "Check Version of Flash"
           },
@@ -1737,7 +1737,7 @@
       {
         "Name": "CallSign",
         "Type": "String",
-        "Description": "The X position of the satellite.",
+        "Description": "Assign a new callsign.",
         "Enclosure": "\""
       }
     ]
